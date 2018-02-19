@@ -1,0 +1,15 @@
+apply plugin: "com.axelor.app-module"
+
+apply {
+	version = "5.0.0-SNAPSHOT"
+}
+
+axelor {
+	title "Axelor :: Traversier"
+	description "Traversier module"
+}
+
+dependencies {
+	compile project(":modules:axelor-human-resource")
+}
+
