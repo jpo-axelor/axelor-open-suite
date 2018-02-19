@@ -1,10 +1,22 @@
-//Include all modules
+// Include all modules
 rootProject.name = "axelor-erp"
 
-def modules = []
-file("modules").traverse(type: groovy.io.FileType.DIRECTORIES, maxDepth: 1) { it ->
-    if(new File(it, "build.gradle").exists()) { modules.add(it) }
+def modules = new File('modules/abs').listFiles().findAll {
+    dir -> new File(dir, 'build.gradle').exists() && (
+        dir.name.endsWith('-base') &&
+        dir.name.endsWith('-account') &&
+        dir.name.endsWith('-crm') &&
+        dir.name.endsWith('-sale') &&
+        dir.name.endsWith('-project') &&
+        dir.name.endsWith('-bank-payment') &&
+        dir.name.endsWith('-human-resource')
+    )
 }
+
+modules.addAll(new File('modules').listFiles().findAll { dir ->
+    new File(dir, 'build.gradle').exists()
+})
+
 
 modules.each { dir ->
 	include "modules:$dir.name"
