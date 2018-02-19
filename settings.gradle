@@ -1,22 +1,32 @@
 // Include all modules
-rootProject.name = "axelor-erp"
+rootProject.name = "traversier-erp"
 
-def modules = new File('modules/abs').listFiles().findAll {
-    dir -> new File(dir, 'build.gradle').exists() && (
-        dir.name.endsWith('-base') &&
-        dir.name.endsWith('-account') &&
-        dir.name.endsWith('-crm') &&
-        dir.name.endsWith('-sale') &&
-        dir.name.endsWith('-project') &&
-        dir.name.endsWith('-bank-payment') &&
-        dir.name.endsWith('-human-resource')
+def modules = new File('modules/abs').listFiles().findAll { dir ->
+    new File(dir, 'build.gradle').exists() && (
+            dir.name.startsWith('axelor-') &&
+                    !dir.name.endsWith('-business-production') &&
+                    !dir.name.endsWith('-business-project') &&
+                    !dir.name.endsWith('-cash-management') &&
+                    !dir.name.endsWith('-client-portal') &&
+                    !dir.name.endsWith('-contract') &&
+                    !dir.name.endsWith('-fleet') &&
+                    !dir.name.endsWith('-helpdesk') &&
+                    !dir.name.endsWith('-marketing') &&
+                    !dir.name.endsWith('-prestashop') &&
+                    !dir.name.endsWith('-production') &&
+                    !dir.name.endsWith('-purchase') &&
+                    !dir.name.endsWith('-quality') &&
+                    !dir.name.endsWith('-stock') &&
+                    !dir.name.endsWith('-supplier-management') &&
+                    !dir.name.endsWith('-supplychain') &&
+                    !dir.name.endsWith('-talent') &&
+                    !dir.name.endsWith('-teamsapp')
     )
 }
 
-modules.addAll(new File('modules').listFiles().findAll { dir ->
-    new File(dir, 'build.gradle').exists()
+modules.addAll(new File('modules').listFiles().findAll {
+    dir -> new File(dir, 'build.gradle').exists()
 })
-
 
 modules.each { dir ->
 	include "modules:$dir.name"
