@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<domain-models xmlns="http://axelor.com/xml/ns/domain-models"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:schemaLocation="http://axelor.com/xml/ns/domain-models http://axelor.com/xml/ns/domain-models/domain-models_5.0.xsd">
+
+    <module name="tn" package="com.axelor.apps.tn.db"/>
+
+    <entity name="Frequency">
+
+        <string name="summary" namecolumn="true"/>
+
+        <boolean name="monday" title="Lundi"/>
+        <boolean name="tuesday" title="Mardi"/>
+        <boolean name="wednesday" title="Mercredi"/>
+        <boolean name="thursday" title="Jeudi"/>
+        <boolean name="friday" title="Vendredi"/>
+        <boolean name="saturday" title="Samedi"/>
+        <boolean name="sunday" title="Dimanche"/>
+
+        <string name="frequencyTypeSelect" title="Type de fréquence" default="monthDays" selection="frequency.tn.frequencytype.select"/>
+        <integer name="everyNWeeks" title="Toutes les N semaines" min="1" default="1"/>
+        <boolean name="first" title="Premiers"/>
+        <boolean name="second" title="Deuxièmes"/>
+        <boolean name="third" title="Troisièmes"/>
+        <boolean name="fourth" title="Quatrièmes"/>
+        <boolean name="fifth" title="Cinquièmes"/>
+        <boolean name="last" title="Derniers"/>
+
+        <boolean name="january" title="Janvier" default="true"/>
+        <boolean name="february" title="Février" default="true"/>
+        <boolean name="march" title="Mars" default="true"/>
+        <boolean name="april" title="Avril" default="true"/>
+        <boolean name="may" title="Mai" default="true"/>
+        <boolean name="june" title="Juin" default="true"/>
+        <boolean name="july" title="Juillet" default="true"/>
+        <boolean name="august" title="Août" default="true"/>
+        <boolean name="september" title="Septembre" default="true"/>
+        <boolean name="october" title="Octobre" default="true"/>
+        <boolean name="november" title="Novembre" default="true"/>
+        <boolean name="december" title="Décembre" default="true"/>
+
+        <extra-code>
+            <![CDATA[
+                // Frequency Type Select
+                public static final String FREQUENCY_TYPE_MONTH_DAYS = "monthDays";
+                public static final String FREQUENCY_TYPE_EVERY_N_WEEKS = "everyNWeeks";
+            ]]>
+        </extra-code>
+
+    </entity>
+
+</domain-models>

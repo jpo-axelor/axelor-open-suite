@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.0.xsd">
+
+    <grid name="frequency-grid" title="Fréquences" model="com.axelor.apps.tn.db.Frequency">
+        <field name="summary"/>
+    </grid>
+
+    <form name="frequency-form" title="Fréquence" model="com.axelor.apps.tn.db.Frequency" width="large">
+        <panel>
+            <field name="summary" showTitle="false" readonly="true" css="bold" colSpan="12"/>
+        </panel>
+
+        <panel>
+            <panel title="Type de fréquence" colSpan="12">
+                <field name="frequencyTypeSelect" onChange="action-frequency-method-compute-summary" selection="frequency.tn.frequencytype.select"/>
+                <panel>
+                    <field name="everyNWeeks" showIf="frequencyTypeSelect == 'everyNWeeks'" onChange="action-frequency-method-compute-summary" hidden="true" colSpan="12"/>
+                    <field name="first" showIf="frequencyTypeSelect == 'monthDays'" onChange="action-frequency-method-compute-summary" hidden="true" colSpan="2"/>
+                    <field name="second" showIf="frequencyTypeSelect == 'monthDays'" onChange="action-frequency-method-compute-summary" hidden="true" colSpan="2"/>
+                    <field name="third" showIf="frequencyTypeSelect == 'monthDays'" onChange="action-frequency-method-compute-summary" hidden="true" colSpan="2"/>
+                    <field name="fourth" showIf="frequencyTypeSelect == 'monthDays'" onChange="action-frequency-method-compute-summary" hidden="true" colSpan="2"/>
+                    <field name="fifth" showIf="frequencyTypeSelect == 'monthDays'" onChange="action-frequency-method-compute-summary" hidden="true" colSpan="2"/>
+                    <field name="last" showIf="frequencyTypeSelect == 'monthDays'" onChange="action-frequency-method-compute-summary" hidden="true" colSpan="2"/>
+                </panel>
+            </panel>
+
+            <panel title="Jours" colSpan="12" itemSpan="1">
+                <field name="monday" onChange="action-frequency-method-compute-summary"/>
+                <field name="tuesday" onChange="action-frequency-method-compute-summary"/>
+                <field name="wednesday" onChange="action-frequency-method-compute-summary"/>
+                <field name="thursday" onChange="action-frequency-method-compute-summary"/>
+                <field name="friday" onChange="action-frequency-method-compute-summary"/>
+                <field name="saturday" onChange="action-frequency-method-compute-summary"/>
+                <field name="sunday" onChange="action-frequency-method-compute-summary"/>
+            </panel>
+
+            <panel title="Mois" colSpan="12" itemSpan="1">
+                <field name="january" onChange="action-frequency-method-compute-summary"/>
+                <field name="february" onChange="action-frequency-method-compute-summary"/>
+                <field name="march" onChange="action-frequency-method-compute-summary"/>
+                <field name="april" onChange="action-frequency-method-compute-summary"/>
+                <field name="may" onChange="action-frequency-method-compute-summary"/>
+                <field name="june" onChange="action-frequency-method-compute-summary"/>
+                <field name="july" onChange="action-frequency-method-compute-summary"/>
+                <field name="august" onChange="action-frequency-method-compute-summary"/>
+                <field name="september" onChange="action-frequency-method-compute-summary"/>
+                <field name="october" onChange="action-frequency-method-compute-summary"/>
+                <field name="november" onChange="action-frequency-method-compute-summary"/>
+                <field name="december" onChange="action-frequency-method-compute-summary"/>
+            </panel>
+        </panel>
+    </form>
+
+    <action-method name="action-frequency-method-compute-summary">
+        <call class="com.axelor.apps.tn.web.FrequencyController" method="computeSummary"/>
+    </action-method>
+
+</object-views>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<domain-models xmlns="http://axelor.com/xml/ns/domain-models"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:schemaLocation="http://axelor.com/xml/ns/domain-models http://axelor.com/xml/ns/domain-models/domain-models_5.0.xsd">
+
+    <module name="tn" package="com.axelor.apps.tn.db"/>
+
+    <entity name="PlanningLine">
+
+        <many-to-one name="employee" title="Employé" ref="com.axelor.apps.hr.db.Employee"/>
+        <many-to-one name="project" title="Projet" ref="com.axelor.apps.project.db.Project"/>
+        <time name="timeStart" title="Heure de début"/>
+        <time name="timeEnd" title="Heure de fin"/>
+        <many-to-one name="frequency" title="Fréquence" ref="com.axelor.apps.tn.db.Frequency"/>
+
+    </entity>
+
+</domain-models>

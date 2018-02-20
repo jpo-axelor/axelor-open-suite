@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.0.xsd">
+
+    <grid name="planning-line-grid" title="Lignes de planning" model="com.axelor.apps.tn.db.PlanningLine">
+        <field name="employee"/>
+        <field name="project"/>
+        <field name="timeStart"/>
+        <field name="timeEnd"/>
+        <field name="frequency"/>
+    </grid>
+
+    <form name="planning-line-form" title="Ligne de planning" model="com.axelor.apps.tn.db.PlanningLine">
+        <panel>
+            <field name="employee"/>
+            <field name="project"/>
+            <field name="timeStart" colSpan="3"/>
+            <field name="timeEnd" colSpan="3"/>
+            <field name="frequency" canNew="true"/>
+        </panel>
+    </form>
+
+</object-views>

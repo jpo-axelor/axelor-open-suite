@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.0.xsd">
+
+    <menuitem name="menu-traversier" title="Traversier" icon="fa-recycle" icon-background="#E0A936"/>
+
+
+    <menuitem name="traversier-planningline" parent="menu-traversier" title="Lignes de planning" action="traversier.planningline"/>
+
+    <action-view name="traversier.planningline" title="Lignes de planning" model="com.axelor.apps.tn.db.PlanningLine">
+        <view type="grid" name="planning-line-grid"/>
+        <view type="form" name="planning-line-form"/>
+    </action-view>
+
+
+    <menuitem name="traversier-frequency" parent="menu-traversier" title="Fréquences" action="traversier.frequency"/>
+
+    <action-view name="traversier.frequency" title="Fréquences" model="com.axelor.apps.tn.db.Frequency">
+        <view type="grid" name="frequency-grid"/>
+        <view type="form" name="frequency-form"/>
+    </action-view>
+
+</object-views>
