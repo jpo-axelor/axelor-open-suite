@@ -3,7 +3,7 @@
                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                xsi:schemaLocation="http://axelor.com/xml/ns/domain-models http://axelor.com/xml/ns/domain-models/domain-models_5.0.xsd">
 
-    <module name="tn" package="com.axelor.apps.tn.db"/>
+    <module name="timecard" package="com.axelor.apps.timecard.db"/>
 
     <entity name="Frequency">
 
@@ -17,7 +17,7 @@
         <boolean name="saturday" title="Samedi"/>
         <boolean name="sunday" title="Dimanche"/>
 
-        <string name="frequencyTypeSelect" title="Type de fréquence" default="monthDays" selection="frequency.tn.frequencytype.select"/>
+        <string name="frequencyTypeSelect" title="Type de fréquence" default="monthDays" selection="frequency.timecard.frequencytype.select"/>
         <integer name="everyNWeeks" title="Toutes les N semaines" min="1" default="1"/>
         <boolean name="first" title="Premiers"/>
         <boolean name="second" title="Deuxièmes"/>

@@ -1,7 +1,7 @@
-package com.axelor.apps.tn.service;
+package com.axelor.apps.timecard.service;
 
-import com.axelor.apps.tn.db.Frequency;
-import com.axelor.apps.tn.db.repo.FrequencyRepository;
+import com.axelor.apps.timecard.db.Frequency;
+import com.axelor.apps.timecard.db.repo.FrequencyRepository;
 
 public class FrequencyServiceImpl implements FrequencyService {
 

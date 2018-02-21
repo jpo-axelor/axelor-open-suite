@@ -3,7 +3,7 @@
                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                xsi:schemaLocation="http://axelor.com/xml/ns/domain-models http://axelor.com/xml/ns/domain-models/domain-models_5.0.xsd">
 
-    <module name="tn" package="com.axelor.apps.tn.db"/>
+    <module name="timecard" package="com.axelor.apps.timecard.db"/>
 
     <entity name="PlanningLine">
 
@@ -11,7 +11,7 @@
         <many-to-one name="project" title="Projet" ref="com.axelor.apps.project.db.Project"/>
         <time name="timeStart" title="Heure de début"/>
         <time name="timeEnd" title="Heure de fin"/>
-        <many-to-one name="frequency" title="Fréquence" ref="com.axelor.apps.tn.db.Frequency"/>
+        <many-to-one name="frequency" title="Fréquence" ref="com.axelor.apps.timecard.db.Frequency"/>
 
     </entity>
 

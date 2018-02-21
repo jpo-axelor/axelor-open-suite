@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.0.xsd">
+
+    <grid name="planning-line-grid" title="Lignes de planning" model="com.axelor.apps.timecard.db.PlanningLine">
+        <field name="employee"/>
+        <field name="project"/>
+        <field name="timeStart"/>
+        <field name="timeEnd"/>
+        <field name="frequency"/>
+    </grid>
+
+    <form name="planning-line-form" title="Ligne de planning" model="com.axelor.apps.timecard.db.PlanningLine">
+        <panel>
+            <field name="employee"/>
+            <field name="project"/>
+            <field name="timeStart" colSpan="3"/>
+            <field name="timeEnd" colSpan="3"/>
+            <field name="frequency" canNew="true" grid-view="frequency-grid" form-view="frequency-form"/>
+        </panel>
+
+        <panel title="Mensualisation">
+            <field name="$mensu" title="Mensualisation" readonly="true"/>
+            <spacer/>
+
+            <panel colSpan="12" title=" ">
+                <field name="$startDate" title="Date de début" widget="Date"/>
+                <field name="$endDate" title="Date de fin" widget="Date"/>
+                <button name="computeMensu" title="Compute mensu" onClick="action-planningline-method-compute-mensu"/>
+            </panel>
+        </panel>
+    </form>
+
+    <action-method name="action-planningline-method-compute-mensu">
+        <call class="com.axelor.apps.timecard.web.PlanningLineController" method="computeMensu"/>
+    </action-method>
+
+</object-views>

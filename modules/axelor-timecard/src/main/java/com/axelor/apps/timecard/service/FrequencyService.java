@@ -1,6 +1,6 @@
-package com.axelor.apps.tn.service;
+package com.axelor.apps.timecard.service;
 
-import com.axelor.apps.tn.db.Frequency;
+import com.axelor.apps.timecard.db.Frequency;
 
 public interface FrequencyService {
 

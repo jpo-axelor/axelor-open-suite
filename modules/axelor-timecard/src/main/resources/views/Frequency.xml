@@ -3,18 +3,18 @@
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.0.xsd">
 
-    <grid name="frequency-grid" title="Fréquences" model="com.axelor.apps.tn.db.Frequency">
+    <grid name="frequency-grid" title="Fréquences" model="com.axelor.apps.timecard.db.Frequency">
         <field name="summary"/>
     </grid>
 
-    <form name="frequency-form" title="Fréquence" model="com.axelor.apps.tn.db.Frequency" width="large">
+    <form name="frequency-form" title="Fréquence" model="com.axelor.apps.timecard.db.Frequency" width="large">
         <panel>
             <field name="summary" showTitle="false" readonly="true" css="bold" colSpan="12"/>
         </panel>
 
         <panel>
             <panel title="Type de fréquence" colSpan="12">
-                <field name="frequencyTypeSelect" onChange="action-frequency-method-compute-summary" selection="frequency.tn.frequencytype.select"/>
+                <field name="frequencyTypeSelect" onChange="action-frequency-method-compute-summary" selection="frequency.timecard.frequencytype.select"/>
                 <panel>
                     <field name="everyNWeeks" showIf="frequencyTypeSelect == 'everyNWeeks'" onChange="action-frequency-method-compute-summary" hidden="true" colSpan="12"/>
                     <field name="first" showIf="frequencyTypeSelect == 'monthDays'" onChange="action-frequency-method-compute-summary" hidden="true" colSpan="2"/>
@@ -54,7 +54,7 @@
     </form>
 
     <action-method name="action-frequency-method-compute-summary">
-        <call class="com.axelor.apps.tn.web.FrequencyController" method="computeSummary"/>
+        <call class="com.axelor.apps.timecard.web.FrequencyController" method="computeSummary"/>
     </action-method>
 
 </object-views>

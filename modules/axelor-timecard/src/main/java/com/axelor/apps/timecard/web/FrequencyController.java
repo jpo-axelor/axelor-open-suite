@@ -1,7 +1,7 @@
-package com.axelor.apps.tn.web;
+package com.axelor.apps.timecard.web;
 
-import com.axelor.apps.tn.db.Frequency;
-import com.axelor.apps.tn.service.FrequencyService;
+import com.axelor.apps.timecard.db.Frequency;
+import com.axelor.apps.timecard.service.FrequencyService;
 import com.axelor.inject.Beans;
 import com.axelor.rpc.ActionRequest;
 import com.axelor.rpc.ActionResponse;

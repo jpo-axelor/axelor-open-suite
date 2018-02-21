@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<domain-models xmlns="http://axelor.com/xml/ns/domain-models"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:schemaLocation="http://axelor.com/xml/ns/domain-models http://axelor.com/xml/ns/domain-models/domain-models_5.0.xsd">
+
+    <module name="timecard" package="com.axelor.apps.timecard.db"/>
+
+    <entity name="TimeCardLine">
+
+        <many-to-one name="project" title="Projet" ref="com.axelor.apps.project.db.Project"/>
+        <many-to-one name="product" title="Activité" ref="com.axelor.apps.base.db.Product" required="true"/>
+        <many-to-one name="employee" title="Employé" ref="com.axelor.apps.hr.db.Employee" readonly="true"/>
+        <datetime name="startDateTime" title="Date et heure de début"/>
+        <datetime name="endDateTime" title="Date et heure de fin"/>
+        <many-to-one name="timeCard" ref="com.axelor.apps.timecard.db.TimeCard" title="Pointage" readonly="true"/>
+        <decimal name="duration" title="Durée"/>
+        <string name="comments" title="Commentaires" large="true"/>
+        <string name="typeSelect" title="Type de ligne" selection="timecardline.timecard.type.select"/>
+
+    </entity>
+
+</domain-models>
