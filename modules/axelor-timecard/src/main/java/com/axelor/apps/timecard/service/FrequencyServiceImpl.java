@@ -1,23 +1,39 @@
 package com.axelor.apps.timecard.service;
 
+import com.axelor.apps.base.service.app.AppBaseService;
 import com.axelor.apps.timecard.db.Frequency;
 import com.axelor.apps.timecard.db.repo.FrequencyRepository;
+import com.google.inject.Inject;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class FrequencyServiceImpl implements FrequencyService {
+
+    protected AppBaseService appBaseService;
+
+    @Inject
+    public FrequencyServiceImpl(AppBaseService appBaseService) {
+        this.appBaseService = appBaseService;
+    }
 
     @Override
     public String computeSummary(Frequency frequency) {
         StringBuilder summary = new StringBuilder();
 
         // Frequency
-        if (frequency.getFrequencyTypeSelect().equals(FrequencyRepository.FREQUENCY_TYPE_EVERY_N_WEEKS)) {
+        if (frequency.getFrequencyTypeSelect().equals(FrequencyRepository.TYPE_EVERY_N_WEEKS)) {
             if (frequency.getEveryNWeeks() == 1) {
                 summary.append("Toutes les semaines");
             } else {
                 summary.append("Toutes les ").append(frequency.getEveryNWeeks()).append(" semaines");
             }
             summary.append(", les");
-        } else if (frequency.getFrequencyTypeSelect().equals(FrequencyRepository.FREQUENCY_TYPE_MONTH_DAYS)) {
+        } else if (frequency.getFrequencyTypeSelect().equals(FrequencyRepository.TYPE_MONTH_DAYS)) {
             summary.append("Tous les ");
             if (frequency.getFirst()) {
                 summary.append("premiers");
@@ -40,14 +56,8 @@ public class FrequencyServiceImpl implements FrequencyService {
                 }
                 summary.append("quatrièmes");
             }
-            if (frequency.getFifth()) {
-                if (frequency.getFirst() || frequency.getSecond() || frequency.getThird() || frequency.getFourth()) {
-                    summary.append(", ");
-                }
-                summary.append("cinquièmes");
-            }
             if (frequency.getLast()) {
-                if (frequency.getFirst() || frequency.getSecond() || frequency.getThird() || frequency.getFourth() || frequency.getFifth()) {
+                if (frequency.getFirst() || frequency.getSecond() || frequency.getThird() || frequency.getFourth()) {
                     summary.append(", ");
                 }
                 summary.append("derniers");
@@ -191,5 +201,104 @@ public class FrequencyServiceImpl implements FrequencyService {
         summary.append(".");
 
         return summary.toString();
+    }
+
+    @Override
+    public List<LocalDate> getDates(Frequency frequency) {
+        int year = appBaseService.getTodayDate().getYear();
+        // LocalDate startDate = LocalDate.of(year, 1, 1);
+        // LocalDate endDate = LocalDate.of(year, 12, 31);
+
+        List<Integer> months = getMonths(frequency);
+        List<Integer> days = getDays(frequency);
+        List<Integer> occurences = getOccurences(frequency);
+
+        List<LocalDate> dates = new ArrayList<LocalDate>();
+
+        for (Integer month : months) {
+            for (Integer day : days) {
+                for (Integer occurence : occurences) {
+                    dates.add(getDay(day, occurence, year, month));
+                }
+            }
+        }
+
+        // dates.removeIf(d -> d.isBefore(startDate) || d.isAfter(endDate));
+
+        return dates;
+    }
+
+    public LocalDate getDay(int dayOfWeek, int dayOfWeekInMonth, int year, int month) {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.DAY_OF_WEEK, dayOfWeek);
+        cal.set(Calendar.DAY_OF_WEEK_IN_MONTH, dayOfWeekInMonth);
+        cal.set(Calendar.YEAR, year);
+        cal.set(Calendar.MONTH, month - 1);
+        return LocalDate.of(year, month, cal.get(Calendar.DATE));
+    }
+
+    @Override
+    public Set<Integer> getYears(LocalDate start, LocalDate end) {
+        Set<Integer> years = new HashSet<Integer>();
+
+        LocalDate startDate = LocalDate.from(start);
+        LocalDate endDate = LocalDate.from(end);
+
+        while(startDate.isBefore(endDate)) {
+            years.add(startDate.getYear());
+            startDate = startDate.plusMonths(1);
+        }
+
+        return years;
+    }
+
+    @Override
+    public List<Integer> getMonths(Frequency frequency) {
+        List<Integer> months = new ArrayList<Integer>();
+
+        if (frequency.getJanuary()) { months.add(1); }
+        if (frequency.getFebruary()) { months.add(2); }
+        if (frequency.getMarch()) { months.add(3); }
+        if (frequency.getApril()) { months.add(4); }
+        if (frequency.getMay()) { months.add(5); }
+        if (frequency.getJune()) { months.add(6); }
+        if (frequency.getJuly()) { months.add(7); }
+        if (frequency.getAugust()) { months.add(8); }
+        if (frequency.getSeptember()) { months.add(9); }
+        if (frequency.getOctober()) { months.add(10); }
+        if (frequency.getNovember()) { months.add(11); }
+        if (frequency.getDecember()) { months.add(12); }
+
+        return months;
+    }
+
+    @Override
+    public List<Integer> getDays(Frequency frequency) {
+        List<Integer> days = new ArrayList<Integer>();
+
+        if (frequency.getSunday()) { days.add(1); }
+        if (frequency.getMonday()) { days.add(2); }
+        if (frequency.getTuesday()) { days.add(3); }
+        if (frequency.getWednesday()) { days.add(4); }
+        if (frequency.getThursday()) { days.add(5); }
+        if (frequency.getFriday()) { days.add(6); }
+        if (frequency.getSaturday()) { days.add(7); }
+
+        return days;
+    }
+
+    @Override
+    public List<Integer> getOccurences(Frequency frequency) {
+        List<Integer> occurences = new ArrayList<Integer>();
+
+        // TODO: every N weeks
+
+        if (frequency.getFirst()) { occurences.add(1); }
+        if (frequency.getSecond()) { occurences.add(2); }
+        if (frequency.getThird()) { occurences.add(3); }
+        if (frequency.getFourth()) { occurences.add(4); }
+        if (frequency.getLast()) { occurences.add(-1); }
+
+        return occurences;
     }
 }

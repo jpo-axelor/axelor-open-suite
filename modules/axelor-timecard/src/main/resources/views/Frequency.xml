@@ -14,14 +14,13 @@
 
         <panel>
             <panel title="Type de fréquence" colSpan="12">
-                <field name="frequencyTypeSelect" onChange="action-frequency-method-compute-summary" selection="frequency.timecard.frequencytype.select"/>
+                <field name="frequencyTypeSelect" onChange="action-frequency-method-compute-summary" selection="frequency.timecard.frequency.type.select"/>
                 <panel>
                     <field name="everyNWeeks" showIf="frequencyTypeSelect == 'everyNWeeks'" onChange="action-frequency-method-compute-summary" hidden="true" colSpan="12"/>
                     <field name="first" showIf="frequencyTypeSelect == 'monthDays'" onChange="action-frequency-method-compute-summary" hidden="true" colSpan="2"/>
                     <field name="second" showIf="frequencyTypeSelect == 'monthDays'" onChange="action-frequency-method-compute-summary" hidden="true" colSpan="2"/>
                     <field name="third" showIf="frequencyTypeSelect == 'monthDays'" onChange="action-frequency-method-compute-summary" hidden="true" colSpan="2"/>
                     <field name="fourth" showIf="frequencyTypeSelect == 'monthDays'" onChange="action-frequency-method-compute-summary" hidden="true" colSpan="2"/>
-                    <field name="fifth" showIf="frequencyTypeSelect == 'monthDays'" onChange="action-frequency-method-compute-summary" hidden="true" colSpan="2"/>
                     <field name="last" showIf="frequencyTypeSelect == 'monthDays'" onChange="action-frequency-method-compute-summary" hidden="true" colSpan="2"/>
                 </panel>
             </panel>

@@ -17,13 +17,12 @@
         <boolean name="saturday" title="Samedi"/>
         <boolean name="sunday" title="Dimanche"/>
 
-        <string name="frequencyTypeSelect" title="Type de fréquence" default="monthDays" selection="frequency.timecard.frequencytype.select"/>
+        <string name="frequencyTypeSelect" title="Type de fréquence" default="monthDays" selection="frequency.timecard.frequency.type.select"/>
         <integer name="everyNWeeks" title="Toutes les N semaines" min="1" default="1"/>
         <boolean name="first" title="Premiers"/>
         <boolean name="second" title="Deuxièmes"/>
         <boolean name="third" title="Troisièmes"/>
         <boolean name="fourth" title="Quatrièmes"/>
-        <boolean name="fifth" title="Cinquièmes"/>
         <boolean name="last" title="Derniers"/>
 
         <boolean name="january" title="Janvier" default="true"/>
@@ -42,8 +41,8 @@
         <extra-code>
             <![CDATA[
                 // Frequency Type Select
-                public static final String FREQUENCY_TYPE_MONTH_DAYS = "monthDays";
-                public static final String FREQUENCY_TYPE_EVERY_N_WEEKS = "everyNWeeks";
+                public static final String TYPE_MONTH_DAYS = "monthDays";
+                public static final String TYPE_EVERY_N_WEEKS = "everyNWeeks";
             ]]>
         </extra-code>
 

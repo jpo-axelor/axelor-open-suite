@@ -9,9 +9,12 @@
 
         <many-to-one name="employee" title="Employé" ref="com.axelor.apps.hr.db.Employee"/>
         <many-to-one name="project" title="Projet" ref="com.axelor.apps.project.db.Project"/>
-        <time name="timeStart" title="Heure de début"/>
-        <time name="timeEnd" title="Heure de fin"/>
-        <many-to-one name="frequency" title="Fréquence" ref="com.axelor.apps.timecard.db.Frequency"/>
+        <time name="startTime" title="Heure de début" required="true"/>
+        <time name="endTime" title="Heure de fin" required="true"/>
+        <many-to-one name="frequency" title="Fréquence" ref="com.axelor.apps.timecard.db.Frequency" required="true"/>
+        <decimal name="mensualisation" title="Mensualisation (heures)" readonly="true"/>
+
+        <finder-method name="findByEmployee" using="employee" all="true"/>
 
     </entity>
 

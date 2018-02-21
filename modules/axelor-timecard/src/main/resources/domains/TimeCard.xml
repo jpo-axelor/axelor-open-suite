@@ -8,7 +8,7 @@
     <entity name="TimeCard">
 
         <integer name="statusSelect" selection="timecard.timecard.status.select" default="1" readonly="true"/>
-        <many-to-one name="employee" ref="com.axelor.apps.hr.db.Employee" title="Employé" required="true" readonly="true"/>
+        <many-to-one name="employee" ref="com.axelor.apps.hr.db.Employee" title="Employé" required="true"/>
         <one-to-many name="timeCardLineList" ref="com.axelor.apps.timecard.db.TimeCardLine" title="Lignes de pointage" mappedBy="timeCard" orphanRemoval="true"/>
         <date name="fromDate" title="A partir du"/>
         <date name="toDate" title="Au"/>

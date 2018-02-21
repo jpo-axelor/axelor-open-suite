@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.0.xsd">
+
+    <grid name="time-card-grid" title="Pointages" model="com.axelor.apps.timecard.db.TimeCard">
+        <field name="statusSelect"/>
+        <field name="company"/>
+        <field name="employee"/>
+        <field name="fromDate"/>
+        <field name="toDate"/>
+    </grid>
+
+    <form name="time-card-form" title="Pointage" model="com.axelor.apps.timecard.db.TimeCard" width="large">
+        <toolbar>
+            <button name="viewCalendar" title="Voir calendrier" icon="fa-calendar" onClick="action-time-card-view-show-calendar"/>
+        </toolbar>
+
+        <panel>
+            <field name="statusSelect" widget="NavSelect" showTitle="false"/>
+            <button name="generateTimeCardLines" title="Générer les lignes de pointage" onClick="save,action-time-card-method-generate-time-card-lines" colSpan="3"/>
+        </panel>
+
+        <panel>
+            <field name="company"/>
+            <field name="employee"/>
+            <field name="fromDate"/>
+            <field name="toDate"/>
+        </panel>
+
+        <panel-related field="timeCardLineList" grid-view="time-card-line-grid" form-view="time-card-line-form"/>
+
+        <panel>
+            <field name="validatedBy"/>
+            <field name="validationDate"/>
+            <field name="refusedBy"/>
+            <field name="refusalDate"/>
+            <field name="groundForRefusal"/>
+        </panel>
+    </form>
+
+    <action-method name="action-time-card-method-generate-time-card-lines">
+        <call class="com.axelor.apps.timecard.web.TimeCardController" method="generateTimeCardLines"/>
+    </action-method>
+
+    <action-view name="action-time-card-view-show-calendar" title="Pointage" model="com.axelor.apps.timecard.db.TimeCardLine">
+        <view type="calendar" name="time-card-line-calendar"/>
+        <domain>self.timeCard.id = :_timeCardId</domain>
+        <context name="_timeCardId" expr="eval: __self__.id"/>
+    </action-view>
+
+</object-views>

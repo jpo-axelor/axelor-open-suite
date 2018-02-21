@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.0.xsd">
+
+    <grid name="time-card-line-grid" title="Lignes de pointage" model="com.axelor.apps.timecard.db.TimeCardLine">
+        <field name="project"/>
+        <field name="weekDay"/>
+        <field name="date"/>
+        <field name="startTime"/>
+        <field name="endTime"/>
+        <field name="typeSelect"/>
+    </grid>
+
+    <form name="time-card-line-form" title="Ligne de pointage" model="com.axelor.apps.timecard.db.TimeCardLine" width="large">
+        <panel>
+            <field name="project"/>
+            <field name="product"/>
+            <field name="employee"/>
+            <field name="weekDay"/>
+            <field name="date"/>
+            <field name="startTime"/>
+            <field name="endTime"/>
+            <field name="timeCard"/>
+            <field name="duration"/>
+            <field name="comments"/>
+            <field name="typeSelect"/>
+        </panel>
+    </form>
+
+    <calendar name="time-card-line-calendar" title="Pointage" model="com.axelor.apps.timecard.db.TimeCardLine"
+              eventStart="startDateTime" eventStop="endDateTime" colorBy="project">
+        <field name="employee"/>
+        <field name="project"/>
+    </calendar>
+
+</object-views>
