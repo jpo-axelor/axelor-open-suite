@@ -13,7 +13,7 @@
 
     <form name="time-card-form" title="Pointage" model="com.axelor.apps.timecard.db.TimeCard" width="large">
         <toolbar>
-            <button name="viewCalendar" title="Voir calendrier" icon="fa-calendar" onClick="action-time-card-view-show-calendar"/>
+            <button name="viewCalendar" title="Voir calendrier" icon="fa-calendar" onClick="save,action-time-card-view-show-calendar"/>
         </toolbar>
 
         <panel>
