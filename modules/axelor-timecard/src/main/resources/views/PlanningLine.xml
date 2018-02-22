@@ -13,8 +13,8 @@
 
     <form name="planning-line-form" title="Ligne de planning" model="com.axelor.apps.timecard.db.PlanningLine" width="large">
         <panel>
-            <field name="employee"/>
-            <field name="project"/>
+            <field name="employee" canEdit="false" grid-view="employee-grid" form-view="employee-form"/>
+            <field name="project" canEdit="false" grid-view="project-grid" form-view="project-form"/>
             <field name="startTime" colSpan="3"/>
             <field name="endTime" colSpan="3"/>
             <field name="frequency" canNew="true" canSelect="false" grid-view="frequency-grid" form-view="frequency-form"/>
