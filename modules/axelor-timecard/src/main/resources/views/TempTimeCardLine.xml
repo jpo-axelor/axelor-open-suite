@@ -4,13 +4,13 @@
               xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.0.xsd">
 
     <calendar name="temp-time-card-line-calendar-by-project" title="Pointage" model="com.axelor.apps.timecard.db.TempTimeCardLine"
-              eventStart="startDateTime" eventStop="endDateTime" colorBy="project">
+              eventStart="startDateTime" eventStop="endDateTime" colorBy="project" editable="false">
         <field name="project"/>
         <field name="employee"/>
     </calendar>
 
     <calendar name="temp-time-card-line-calendar-by-employee" title="Pointage" model="com.axelor.apps.timecard.db.TempTimeCardLine"
-              eventStart="startDateTime" eventStop="endDateTime" colorBy="employee">
+              eventStart="startDateTime" eventStop="endDateTime" colorBy="employee" editable="false">
         <field name="employee"/>
         <field name="project"/>
     </calendar>
