@@ -3,7 +3,7 @@
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.0.xsd">
 
-    <menuitem name="timecard-root" title="Pointage" icon="fa-list-ul" icon-background="#E0A936" order="-110"/>
+    <menuitem name="timecard-root" title="Pointage" icon="fa-list-ul" icon-background="#E0A936" order="-109"/>
 
 
     <menuitem name="timecard-timecard" parent="timecard-root" title="Pointages" action="timecard.timecard"/>
@@ -11,6 +11,13 @@
     <action-view name="timecard.timecard" title="Pointages" model="com.axelor.apps.timecard.db.TimeCard">
         <view type="grid" name="time-card-grid"/>
         <view type="form" name="time-card-form"/>
+    </action-view>
+
+
+    <menuitem name="timecard-planning" parent="timecard-root" title="Plannings" action="timecard.planning"/>
+
+    <action-view name="timecard.planning" title="Plannings" model="com.axelor.apps.timecard.db.Planning">
+        <view type="form" name="planning-form"/>
     </action-view>
 
 

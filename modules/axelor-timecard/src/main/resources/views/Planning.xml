@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.0.xsd">
+
+    <form name="planning-form" title="Planning" model="com.axelor.apps.timecard.db.Planning" width="large" canSave="false">
+        <panel>
+            <field name="project" onChange="action-planning-attrs-refresh-dashlet"/>
+            <field name="employee" onChange="action-planning-attrs-refresh-dashlet"/>
+        </panel>
+
+        <panel-dashlet name="planningLinesDashlet" title="Lignes de planning" action="action-planning-view-planning-lines-dashlet-both" hidden="true" showIf="project &amp;&amp; employee"/>
+        <panel-dashlet name="planningLinesDashlet" title="Lignes de planning" action="action-planning-view-planning-lines-dashlet-project" hidden="true" showIf="project &amp;&amp; !employee"/>
+        <panel-dashlet name="planningLinesDashlet" title="Lignes de planning" action="action-planning-view-planning-lines-dashlet-employee" hidden="true" showIf="!project &amp;&amp; employee"/>
+
+        <panel showIf="project || employee">
+            <field name="startDate" colSpan="4"/>
+            <field name="endDate" colSpan="4"/>
+            <button name="previewCalendar" title="Prévisualiser" onClick="action-planning-method-preview" readonlyIf="!(startDate &amp;&amp; endDate)" colSpan="2"/>
+        </panel>
+    </form>
+
+    <action-attrs name="action-planning-attrs-refresh-dashlet">
+        <attribute for="planningLinesDashlet" name="refresh" expr="true"/>
+    </action-attrs>
+
+    <action-view name="action-planning-view-planning-lines-dashlet-both" title="Lignes de planning" model="com.axelor.apps.timecard.db.PlanningLine">
+        <view type="grid" name="planning-line-grid"/>
+        <view type="form" name="planning-line-form"/>
+        <view-param name="popup" value="true"/>
+        <domain>self.employee.id = :_employeeId AND self.project.id = :_projectId</domain>
+        <context name="_employeeId" expr="eval: employee.id"/>
+        <context name="_projectId" expr="eval: project.id"/>
+    </action-view>
+
+    <action-view name="action-planning-view-planning-lines-dashlet-project" title="Lignes de planning" model="com.axelor.apps.timecard.db.PlanningLine">
+        <view type="grid" name="planning-line-grid"/>
+        <view type="form" name="planning-line-form"/>
+        <view-param name="popup" value="true"/>
+        <domain>self.project.id = :_projectId</domain>
+        <context name="_projectId" expr="eval: project.id"/>
+    </action-view>
+
+    <action-view name="action-planning-view-planning-lines-dashlet-employee" title="Lignes de planning" model="com.axelor.apps.timecard.db.PlanningLine">
+        <view type="grid" name="planning-line-grid"/>
+        <view type="form" name="planning-line-form"/>
+        <view-param name="popup" value="true"/>
+        <domain>self.employee.id = :_employeeId</domain>
+        <context name="_employeeId" expr="eval: employee.id"/>
+    </action-view>
+
+    <action-method name="action-planning-method-preview">
+        <call class="com.axelor.apps.timecard.web.PlanningController" method="preview"/>
+    </action-method>
+
+</object-views>
