@@ -53,7 +53,7 @@ public class TempTimeCardLineServiceImpl implements TempTimeCardLineService {
         for (PlanningLine planningLine : planningLines) {
             List<LocalDate> dates = frequencyService.getDates(planningLine.getFrequency());
             for (LocalDate date : dates) {
-                if (date.isAfter(startDate) && date.isBefore(endDate)) {
+                if (date.equals(startDate) || date.equals(endDate) || date.isAfter(startDate) && date.isBefore(endDate)) {
                     TempTimeCardLine tempTimeCardLine = new TempTimeCardLine();
                     tempTimeCardLine.setEmployee(planningLine.getEmployee());
                     tempTimeCardLine.setProject(planningLine.getProject());

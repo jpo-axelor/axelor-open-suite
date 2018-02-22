@@ -33,12 +33,14 @@ public class TimeCardServiceImpl implements TimeCardService {
     @Transactional(rollbackOn = {AxelorException.class, Exception.class})
     public void generateTimeCardLines(TimeCard timeCard) {
         timeCard.clearTimeCardLineList();
+        LocalDate fromDate = timeCard.getFromDate();
+        LocalDate toDate = timeCard.getToDate();
 
         List<PlanningLine> planningLines = planningLineRepo.findByEmployee(timeCard.getEmployee()).fetch();
         for (PlanningLine planningLine : planningLines) {
             List<LocalDate> dates = frequencyService.getDates(planningLine.getFrequency());
             for (LocalDate date : dates) {
-                if (date.isAfter(timeCard.getFromDate()) && date.isBefore(timeCard.getToDate())) {
+                if (date.equals(fromDate) || date.equals(toDate) || date.isAfter(fromDate) && date.isBefore(toDate)) {
                     TimeCardLine timeCardLine = new TimeCardLine();
                     timeCardLine.setEmployee(planningLine.getEmployee());
                     timeCardLine.setProject(planningLine.getProject());
