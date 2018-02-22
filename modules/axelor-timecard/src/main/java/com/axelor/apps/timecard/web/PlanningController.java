@@ -36,7 +36,7 @@ public class PlanningController {
                                    .domain("self.project.id = :_projectId")
                                    .context("_projectId", project.getId());
         } else if (employee != null && project != null) {
-            actionView = ActionView.define("Prévisualisation")
+            actionView = ActionView.define("Prévisualisation" + employee.getName())
                                    .add("calendar", "temp-time-card-line-calendar-by-project")
                                    .domain("self.employee.id = :_employeeId AND self.project.id = :_projectId")
                                    .context("_employeeId", employee.getId())
