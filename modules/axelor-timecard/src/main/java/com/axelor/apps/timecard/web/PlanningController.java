@@ -11,6 +11,8 @@ import com.axelor.meta.schema.actions.ActionView.ActionViewBuilder;
 import com.axelor.rpc.ActionRequest;
 import com.axelor.rpc.ActionResponse;
 
+import java.util.List;
+
 public class PlanningController {
 
     public void preview(ActionRequest request, ActionResponse response) {
@@ -18,8 +20,8 @@ public class PlanningController {
         Project project = planning.getProject();
         Employee employee = planning.getEmployee();
 
-        boolean hasGeneratedLines = Beans.get(TempTimeCardLineService.class).generateTempTimeCardLines(project, employee, planning.getStartDate(), planning.getEndDate());
-        if (!hasGeneratedLines) {
+        List<TempTimeCardLine> tempTimeCardLines = Beans.get(TempTimeCardLineService.class).generateTempTimeCardLines(project, employee, planning.getStartDate(), planning.getEndDate());
+        if (tempTimeCardLines.size() == 0) {
             response.setNotify("Pas d'évènements à afficher.");
             return;
         }
@@ -36,7 +38,7 @@ public class PlanningController {
                                    .domain("self.project.id = :_projectId")
                                    .context("_projectId", project.getId());
         } else if (employee != null && project != null) {
-            actionView = ActionView.define("Prévisualisation" + employee.getName())
+            actionView = ActionView.define("Prévisualisation - " + employee.getName())
                                    .add("calendar", "temp-time-card-line-calendar-by-project")
                                    .domain("self.employee.id = :_employeeId AND self.project.id = :_projectId")
                                    .context("_employeeId", employee.getId())

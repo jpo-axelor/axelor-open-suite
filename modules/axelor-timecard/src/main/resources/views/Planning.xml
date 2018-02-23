@@ -3,15 +3,19 @@
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.0.xsd">
 
-    <form name="planning-form" title="Planning" model="com.axelor.apps.timecard.db.Planning" width="large" canSave="false">
+    <form name="planning-form" title="Planning" model="com.axelor.apps.timecard.db.Planning" width="large" canNew="false" canSave="false">
         <panel>
-            <field name="project" onChange="action-planning-attrs-refresh-dashlet"/>
-            <field name="employee" onChange="action-planning-attrs-refresh-dashlet"/>
+            <field name="project" canEdit="false" onChange="action-planning-attrs-refresh-dashlet" grid-view="project-grid" form-view="project-form"/>
+            <field name="employee" canEdit="false" onChange="action-planning-attrs-refresh-dashlet" grid-view="employee-grid" form-view="employee-form"/>
         </panel>
 
-        <panel-dashlet name="planningLinesDashlet" title="Lignes de planning" action="action-planning-view-planning-lines-dashlet-both" hidden="true" showIf="project &amp;&amp; employee"/>
-        <panel-dashlet name="planningLinesDashlet" title="Lignes de planning" action="action-planning-view-planning-lines-dashlet-project" hidden="true" showIf="project &amp;&amp; !employee"/>
-        <panel-dashlet name="planningLinesDashlet" title="Lignes de planning" action="action-planning-view-planning-lines-dashlet-employee" hidden="true" showIf="!project &amp;&amp; employee"/>
+        <panel itemSpan="12" hidden="true" showIf="project || employee">
+            <panel-dashlet name="planningLinesDashlet" title="Lignes de planning" action="action-planning-view-planning-lines-dashlet-both" hidden="true" showIf="project &amp;&amp; employee"/>
+            <panel-dashlet name="planningLinesDashlet" title="Lignes de planning" action="action-planning-view-planning-lines-dashlet-project" hidden="true" showIf="project &amp;&amp; !employee"/>
+            <panel-dashlet name="planningLinesDashlet" title="Lignes de planning" action="action-planning-view-planning-lines-dashlet-employee" hidden="true" showIf="!project &amp;&amp; employee"/>
+
+            <button name="addPlanningLine" title="Ajouter une ligne de planning" css="btn-custom text-left" icon="fa-plus" onClick="action-planning-view-add-planning-line"/>
+        </panel>
 
         <panel showIf="project || employee">
             <field name="startDate" colSpan="4"/>
@@ -28,6 +32,7 @@
         <view type="grid" name="planning-line-grid"/>
         <view type="form" name="planning-line-form"/>
         <view-param name="popup" value="true"/>
+        <view-param name="show-toolbar" value="true"/>
         <domain>self.employee.id = :_employeeId AND self.project.id = :_projectId</domain>
         <context name="_employeeId" expr="eval: employee.id"/>
         <context name="_projectId" expr="eval: project.id"/>
@@ -37,6 +42,7 @@
         <view type="grid" name="planning-line-grid"/>
         <view type="form" name="planning-line-form"/>
         <view-param name="popup" value="true"/>
+        <view-param name="show-toolbar" value="true"/>
         <domain>self.project.id = :_projectId</domain>
         <context name="_projectId" expr="eval: project.id"/>
     </action-view>
@@ -45,8 +51,16 @@
         <view type="grid" name="planning-line-grid"/>
         <view type="form" name="planning-line-form"/>
         <view-param name="popup" value="true"/>
+        <view-param name="show-toolbar" value="true"/>
         <domain>self.employee.id = :_employeeId</domain>
         <context name="_employeeId" expr="eval: employee.id"/>
+    </action-view>
+
+    <action-view name="action-planning-view-add-planning-line" title="Ligne de planning" model="com.axelor.apps.timecard.db.PlanningLine">
+        <view type="form" name="planning-line-form"/>
+        <view-param name="popup" value="true"/>
+        <context name="_projectId" expr="eval: project?.id"/>
+        <context name="_employeeId" expr="eval: employee?.id"/>
     </action-view>
 
     <action-method name="action-planning-method-preview">
