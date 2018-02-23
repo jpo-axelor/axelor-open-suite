@@ -4,17 +4,17 @@
               xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.0.xsd">
 
     <grid name="planning-line-grid" title="Lignes de planning" model="com.axelor.apps.timecard.db.PlanningLine">
-        <field name="employee"/>
         <field name="project"/>
+        <field name="employee"/>
         <field name="startTime"/>
         <field name="endTime"/>
         <field name="frequency"/>
     </grid>
 
-    <form name="planning-line-form" title="Ligne de planning" model="com.axelor.apps.timecard.db.PlanningLine" width="large">
+    <form name="planning-line-form" title="Ligne de planning" model="com.axelor.apps.timecard.db.PlanningLine" width="large" onNew="action-planning-line-record-set-defaults">
         <panel>
-            <field name="employee" canEdit="false" grid-view="employee-grid" form-view="employee-form"/>
             <field name="project" canEdit="false" grid-view="project-grid" form-view="project-form"/>
+            <field name="employee" canEdit="false" grid-view="employee-grid" form-view="employee-form"/>
             <field name="startTime" colSpan="3"/>
             <field name="endTime" colSpan="3"/>
             <field name="frequency" canNew="true" canSelect="false" grid-view="frequency-grid" form-view="frequency-form"/>
@@ -25,6 +25,11 @@
             <button name="computeMonthlyWage" title="Calculer mensualisation" onClick="save,action-planningline-method-compute-monthly-wage" colSpan="3"/>
         </panel>
     </form>
+
+    <action-record name="action-planning-line-record-set-defaults" model="com.axelor.apps.timecard.db.PlanningLine">
+        <field name="project" expr="eval: __repo__(Project).find(_projectId)" if="_projectId"/>
+        <field name="employee" expr="eval: __repo__(Employee).find(_employeeId)" if="_employeeId"/>
+    </action-record>
 
     <action-method name="action-planningline-method-compute-monthly-wage">
         <call class="com.axelor.apps.timecard.web.PlanningLineController" method="computeMonthlyWage"/>

@@ -4,7 +4,6 @@ import com.axelor.apps.hr.db.Employee;
 import com.axelor.apps.project.db.Project;
 import com.axelor.apps.timecard.db.PlanningLine;
 import com.axelor.apps.timecard.db.TempTimeCardLine;
-import com.axelor.apps.timecard.db.repo.PlanningLineRepository;
 import com.axelor.apps.timecard.db.repo.TempTimeCardLineRepository;
 import com.axelor.exception.AxelorException;
 import com.google.inject.Inject;
@@ -18,13 +17,13 @@ import java.util.List;
 public class TempTimeCardLineServiceImpl implements TempTimeCardLineService {
 
     protected TempTimeCardLineRepository tempTimeCardLineRepo;
-    protected PlanningLineRepository planningLineRepo;
+    protected PlanningLineService planningLineService;
     protected FrequencyService frequencyService;
 
     @Inject
-    public TempTimeCardLineServiceImpl(TempTimeCardLineRepository tempTimeCardLineRepo, PlanningLineRepository planningLineRepo, FrequencyService frequencyService) {
+    public TempTimeCardLineServiceImpl(TempTimeCardLineRepository tempTimeCardLineRepo, PlanningLineService planningLineService, FrequencyService frequencyService) {
         this.tempTimeCardLineRepo = tempTimeCardLineRepo;
-        this.planningLineRepo = planningLineRepo;
+        this.planningLineService = planningLineService;
         this.frequencyService = frequencyService;
     }
 
@@ -36,18 +35,13 @@ public class TempTimeCardLineServiceImpl implements TempTimeCardLineService {
 
     @Override
     @Transactional(rollbackOn = {AxelorException.class, Exception.class})
-    public boolean generateTempTimeCardLines(Project project, Employee employee, LocalDate startDate, LocalDate endDate) {
+    public List<TempTimeCardLine> generateTempTimeCardLines(Project project, Employee employee, LocalDate startDate, LocalDate endDate) {
         invalidateTempTimeCardLines();
 
+        List<TempTimeCardLine> tempTimeCardLines = new ArrayList<TempTimeCardLine>();
+
         // Get planning lines
-        List<PlanningLine> planningLines = new ArrayList<PlanningLine>();
-        if (employee != null && project == null) {
-            planningLines = planningLineRepo.findByEmployee(employee).fetch();
-        } else if (employee == null && project != null) {
-            planningLines = planningLineRepo.findByProject(project).fetch();
-        } else if (employee != null && project != null) {
-            planningLines = planningLineRepo.findByEmployeeAndProject(employee, project).fetch();
-        }
+        List<PlanningLine> planningLines = planningLineService.getPlanningLines(project, employee);
 
         // Generate temp time card lines
         for (PlanningLine planningLine : planningLines) {
@@ -60,12 +54,13 @@ public class TempTimeCardLineServiceImpl implements TempTimeCardLineService {
                     tempTimeCardLine.setStartDateTime(LocalDateTime.of(date, planningLine.getStartTime()));
                     tempTimeCardLine.setEndDateTime(LocalDateTime.of(date, planningLine.getEndTime()));
 
+                    tempTimeCardLines.add(tempTimeCardLine);
                     tempTimeCardLineRepo.save(tempTimeCardLine);
                 }
             }
         }
 
-        return planningLines.size() > 0;
+        return tempTimeCardLines;
     }
 
 }

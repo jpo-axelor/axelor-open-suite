@@ -1,6 +1,8 @@
 package com.axelor.apps.timecard.service;
 
 import com.axelor.apps.base.service.app.AppBaseService;
+import com.axelor.apps.hr.db.Employee;
+import com.axelor.apps.project.db.Project;
 import com.axelor.apps.timecard.db.Frequency;
 import com.axelor.apps.timecard.db.PlanningLine;
 import com.axelor.apps.timecard.db.repo.PlanningLineRepository;
@@ -11,6 +13,7 @@ import com.google.inject.persist.Transactional;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class PlanningLineServiceImpl implements PlanningLineService {
@@ -36,5 +39,20 @@ public class PlanningLineServiceImpl implements PlanningLineService {
         double lineDuration = Duration.between(planningLine.getStartTime(), planningLine.getEndTime()).toMinutes() / 60.0;
         planningLine.setMensualisation(BigDecimal.valueOf((dates.size() * lineDuration / 12)));
         planningLineRepo.save(planningLine);
+    }
+
+    @Override
+    public List<PlanningLine> getPlanningLines(Project project, Employee employee) {
+        List<PlanningLine> planningLines = new ArrayList<PlanningLine>();
+
+        if (employee != null && project == null) {
+            planningLines = planningLineRepo.findByEmployee(employee).fetch();
+        } else if (employee == null && project != null) {
+            planningLines = planningLineRepo.findByProject(project).fetch();
+        } else if (employee != null && project != null) {
+            planningLines = planningLineRepo.findByEmployeeAndProject(employee, project).fetch();
+        }
+
+         return planningLines;
     }
 }

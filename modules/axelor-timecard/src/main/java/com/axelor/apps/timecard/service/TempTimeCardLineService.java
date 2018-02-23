@@ -11,6 +11,6 @@ public interface TempTimeCardLineService {
 
     void invalidateTempTimeCardLines();
 
-    boolean generateTempTimeCardLines(Project project, Employee employee, LocalDate startDate, LocalDate endDate);
+    List<TempTimeCardLine> generateTempTimeCardLines(Project project, Employee employee, LocalDate startDate, LocalDate endDate);
 
 }
