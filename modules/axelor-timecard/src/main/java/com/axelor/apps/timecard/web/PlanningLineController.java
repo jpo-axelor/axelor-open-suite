@@ -9,6 +9,12 @@ import com.axelor.rpc.ActionResponse;
 
 public class PlanningLineController {
 
+    /**
+     * Computes monthly wage of {@code PlanningLine} in context.
+     *
+     * @param request
+     * @param response
+     */
     public void computeMonthlyWage(ActionRequest request, ActionResponse response) {
         PlanningLine planningLine = Beans.get(PlanningLineRepository.class).find(request.getContext().asType(PlanningLine.class).getId());
         Beans.get(PlanningLineService.class).computeMonthlyWage(planningLine);

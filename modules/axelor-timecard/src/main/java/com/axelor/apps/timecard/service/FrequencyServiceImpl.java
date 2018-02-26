@@ -206,14 +206,12 @@ public class FrequencyServiceImpl implements FrequencyService {
     @Override
     public List<LocalDate> getDates(Frequency frequency) {
         int year = appBaseService.getTodayDate().getYear();
-        // LocalDate startDate = LocalDate.of(year, 1, 1);
-        // LocalDate endDate = LocalDate.of(year, 12, 31);
 
         List<Integer> months = getMonths(frequency);
         List<Integer> days = getDays(frequency);
         List<Integer> occurences = getOccurences(frequency);
 
-        List<LocalDate> dates = new ArrayList<>();
+        Set<LocalDate> dates = new HashSet<>();
 
         for (Integer month : months) {
             for (Integer day : days) {
@@ -223,11 +221,18 @@ public class FrequencyServiceImpl implements FrequencyService {
             }
         }
 
-        // dates.removeIf(d -> d.isBefore(startDate) || d.isAfter(endDate));
-
-        return dates;
+        return new ArrayList<>(dates);
     }
 
+    /**
+     * Retrieves a LocalDate instance of given date in arguments.
+     *
+     * @param dayOfWeek
+     * @param dayOfWeekInMonth
+     * @param year
+     * @param month
+     * @return
+     */
     public LocalDate getDay(int dayOfWeek, int dayOfWeekInMonth, int year, int month) {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.DAY_OF_WEEK, dayOfWeek);
@@ -235,21 +240,6 @@ public class FrequencyServiceImpl implements FrequencyService {
         cal.set(Calendar.YEAR, year);
         cal.set(Calendar.MONTH, month - 1);
         return LocalDate.of(year, month, cal.get(Calendar.DATE));
-    }
-
-    @Override
-    public Set<Integer> getYears(LocalDate start, LocalDate end) {
-        Set<Integer> years = new HashSet<Integer>();
-
-        LocalDate startDate = LocalDate.from(start);
-        LocalDate endDate = LocalDate.from(end);
-
-        while(startDate.isBefore(endDate)) {
-            years.add(startDate.getYear());
-            startDate = startDate.plusMonths(1);
-        }
-
-        return years;
     }
 
     @Override

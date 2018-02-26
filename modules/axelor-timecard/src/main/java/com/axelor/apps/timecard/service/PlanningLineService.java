@@ -9,8 +9,20 @@ import java.util.List;
 
 public interface PlanningLineService {
 
+    /**
+     * Computes monthly wage of given {@code PlanningLine}
+     *
+     * @param planningLine PlanningLine to compute monthly wage
+     */
     void computeMonthlyWage(PlanningLine planningLine);
 
+    /**
+     * Retrieves list of PlanningLine for given {@code project} and {@code employee}
+     *
+     * @param project
+     * @param employee
+     * @return List of PlanningLine for given {@code project} and {@code employee}
+     */
     List<PlanningLine> getPlanningLines(@Nullable Project project, @Nullable Employee employee);
 
 }

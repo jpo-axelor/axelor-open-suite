@@ -19,7 +19,7 @@ import java.util.List;
 public class PlanningController {
 
     /**
-     * Computes the total monthly wage of the {@code Planning} in context
+     * Computes the total monthly wage of the {@code Planning} in context.
      *
      * @param request
      * @param response
@@ -46,6 +46,12 @@ public class PlanningController {
         response.setValue("monthlyWage", monthlyWage);
     }
 
+    /**
+     * Opens a calendar view for {@code Planning} in context.
+     *
+     * @param request
+     * @param response
+     */
     public void preview(ActionRequest request, ActionResponse response) {
         Planning planning = request.getContext().asType(Planning.class);
         Project project = planning.getProject();

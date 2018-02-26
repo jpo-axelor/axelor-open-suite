@@ -8,6 +8,12 @@ import com.axelor.rpc.ActionResponse;
 
 public class FrequencyController {
 
+    /**
+     * Computes summary of the {@code Frequency} in context.
+     *
+     * @param request
+     * @param response
+     */
     public void computeSummary(ActionRequest request, ActionResponse response) {
         Frequency frequency = request.getContext().asType(Frequency.class);
         response.setValue("summary", Beans.get(FrequencyService.class).computeSummary(frequency));

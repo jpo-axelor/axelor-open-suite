@@ -9,6 +9,12 @@ import com.axelor.rpc.ActionResponse;
 
 public class TimeCardController {
 
+    /**
+     * Generates {@code TimeCardLine}s for {@code TimeCard} in context.
+     *
+     * @param request
+     * @param response
+     */
     public void generateTimeCardLines(ActionRequest request, ActionResponse response) {
         TimeCard timeCard = Beans.get(TimeCardRepository.class).find(request.getContext().asType(TimeCard.class).getId());
         Beans.get(TimeCardService.class).generateTimeCardLines(timeCard);

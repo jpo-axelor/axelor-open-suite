@@ -31,6 +31,7 @@ public class TempTimeCardLineServiceImpl implements TempTimeCardLineService {
     @Transactional(rollbackOn = {AxelorException.class, Exception.class})
     public void invalidateTempTimeCardLines() {
         tempTimeCardLineRepo.all().delete();
+        tempTimeCardLineRepo.flush();
     }
 
     @Override

@@ -33,6 +33,8 @@ public class TimeCardServiceImpl implements TimeCardService {
     @Transactional(rollbackOn = {AxelorException.class, Exception.class})
     public void generateTimeCardLines(TimeCard timeCard) {
         timeCard.clearTimeCardLineList();
+        timeCardRepo.flush();
+
         LocalDate fromDate = timeCard.getFromDate();
         LocalDate toDate = timeCard.getToDate();
 
