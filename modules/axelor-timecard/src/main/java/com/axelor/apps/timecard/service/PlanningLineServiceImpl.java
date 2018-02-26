@@ -44,7 +44,7 @@ public class PlanningLineServiceImpl implements PlanningLineService {
 
     @Override
     public List<PlanningLine> getPlanningLines(@Nullable Project project, @Nullable Employee employee) {
-        List<PlanningLine> planningLines = new ArrayList<PlanningLine>();
+        List<PlanningLine> planningLines = new ArrayList<>();
 
         if (employee != null && project == null) {
             planningLines = planningLineRepo.findByEmployee(employee).fetch();

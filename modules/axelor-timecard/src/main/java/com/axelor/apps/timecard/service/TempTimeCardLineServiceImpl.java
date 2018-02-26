@@ -38,7 +38,7 @@ public class TempTimeCardLineServiceImpl implements TempTimeCardLineService {
     public List<TempTimeCardLine> generateTempTimeCardLines(Project project, Employee employee, LocalDate startDate, LocalDate endDate) {
         invalidateTempTimeCardLines();
 
-        List<TempTimeCardLine> tempTimeCardLines = new ArrayList<TempTimeCardLine>();
+        List<TempTimeCardLine> tempTimeCardLines = new ArrayList<>();
 
         // Get planning lines
         List<PlanningLine> planningLines = planningLineService.getPlanningLines(project, employee);

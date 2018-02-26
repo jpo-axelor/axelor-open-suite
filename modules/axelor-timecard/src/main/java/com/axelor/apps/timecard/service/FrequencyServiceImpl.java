@@ -213,7 +213,7 @@ public class FrequencyServiceImpl implements FrequencyService {
         List<Integer> days = getDays(frequency);
         List<Integer> occurences = getOccurences(frequency);
 
-        List<LocalDate> dates = new ArrayList<LocalDate>();
+        List<LocalDate> dates = new ArrayList<>();
 
         for (Integer month : months) {
             for (Integer day : days) {
@@ -254,7 +254,7 @@ public class FrequencyServiceImpl implements FrequencyService {
 
     @Override
     public List<Integer> getMonths(Frequency frequency) {
-        List<Integer> months = new ArrayList<Integer>();
+        List<Integer> months = new ArrayList<>();
 
         if (frequency.getJanuary()) { months.add(1); }
         if (frequency.getFebruary()) { months.add(2); }
@@ -274,7 +274,7 @@ public class FrequencyServiceImpl implements FrequencyService {
 
     @Override
     public List<Integer> getDays(Frequency frequency) {
-        List<Integer> days = new ArrayList<Integer>();
+        List<Integer> days = new ArrayList<>();
 
         if (frequency.getSunday()) { days.add(1); }
         if (frequency.getMonday()) { days.add(2); }
@@ -289,7 +289,7 @@ public class FrequencyServiceImpl implements FrequencyService {
 
     @Override
     public List<Integer> getOccurences(Frequency frequency) {
-        List<Integer> occurences = new ArrayList<Integer>();
+        List<Integer> occurences = new ArrayList<>();
 
         // TODO: every N weeks
 
