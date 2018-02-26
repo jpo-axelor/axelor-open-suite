@@ -22,8 +22,8 @@
         </panel>
 
         <panel>
-            <field name="company"/>
-            <field name="employee"/>
+            <field name="company" grid-view="company-grid" form-view="company-form"/>
+            <field name="employee" grid-view="employee-grid" form-view="employee-form"/>
             <field name="fromDate"/>
             <field name="toDate"/>
         </panel>
@@ -43,7 +43,7 @@
         <call class="com.axelor.apps.timecard.web.TimeCardController" method="generateTimeCardLines"/>
     </action-method>
 
-    <action-view name="action-time-card-view-show-calendar" title="Pointage" model="com.axelor.apps.timecard.db.TimeCardLine">
+    <action-view name="action-time-card-view-show-calendar" title="Pointage - ${employee.name}" model="com.axelor.apps.timecard.db.TimeCardLine">
         <view type="calendar" name="time-card-line-calendar"/>
         <domain>self.timeCard.id = :_timeCardId</domain>
         <context name="_timeCardId" expr="eval: __self__.id"/>

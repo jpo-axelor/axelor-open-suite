@@ -3,17 +3,18 @@
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.0.xsd">
 
-    <grid name="time-card-line-grid" title="Lignes de pointage" model="com.axelor.apps.timecard.db.TimeCardLine">
-        <field name="project"/>
-        <field name="weekDay"/>
-        <field name="date"/>
-        <field name="startTime"/>
-        <field name="endTime"/>
-        <field name="typeSelect"/>
+    <grid name="time-card-line-grid" title="Lignes de pointage" model="com.axelor.apps.timecard.db.TimeCardLine" orderBy="startDateTime">
+        <field name="project" readonlyIf="typeSelect == 'contractual'"/>
+        <field name="weekDay" readonlyIf="typeSelect == 'contractual'"/>
+        <field name="date" readonlyIf="typeSelect == 'contractual'"/>
+        <field name="startTime" readonlyIf="typeSelect == 'contractual'"/>
+        <field name="endTime" readonlyIf="typeSelect == 'contractual'"/>
+        <field name="typeSelect" readonlyIf="typeSelect == 'contractual'"/>
+        <field name="startDateTime" hidden="true"/>
     </grid>
 
     <form name="time-card-line-form" title="Ligne de pointage" model="com.axelor.apps.timecard.db.TimeCardLine" width="large">
-        <panel>
+        <panel readonlyIf="typeSelect == 'contractual'">
             <field name="project"/>
             <field name="product"/>
             <field name="employee"/>
@@ -23,15 +24,15 @@
             <field name="endTime"/>
             <field name="timeCard"/>
             <field name="duration"/>
+            <field name="typeSelect" selection-in="['extra', 'absence']"/>
             <field name="comments"/>
-            <field name="typeSelect"/>
         </panel>
     </form>
 
     <calendar name="time-card-line-calendar" title="Pointage" model="com.axelor.apps.timecard.db.TimeCardLine"
-              eventStart="startDateTime" eventStop="endDateTime" colorBy="project">
-        <field name="employee"/>
+              eventStart="startDateTime" eventStop="endDateTime" colorBy="typeSelect" editable="true">
         <field name="project"/>
+        <field name="typeSelect"/>
     </calendar>
 
 </object-views>
