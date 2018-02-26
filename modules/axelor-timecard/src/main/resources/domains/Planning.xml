@@ -11,6 +11,7 @@
         <many-to-one name="employee" title="Employé" ref="com.axelor.apps.hr.db.Employee"/>
         <date name="startDate" title="Date de début"/>
         <date name="endDate" title="Date de fin"/>
+        <decimal name="monthlyWage" title="Mensualisation (heures)" readonly="true"/>
 
     </entity>
 

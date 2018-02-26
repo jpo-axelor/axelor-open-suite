@@ -5,8 +5,9 @@
 
     <form name="planning-form" title="Planning" model="com.axelor.apps.timecard.db.Planning" width="large" canNew="false" canSave="false">
         <panel>
-            <field name="project" canEdit="false" onChange="action-planning-attrs-refresh-dashlet" grid-view="project-grid" form-view="project-form"/>
-            <field name="employee" canEdit="false" onChange="action-planning-attrs-refresh-dashlet" grid-view="employee-grid" form-view="employee-form"/>
+            <field name="project" canEdit="false" onChange="action-planning-attrs-refresh-dashlet,action-planning-method-compute-monthly-wage" colSpan="4" grid-view="project-grid" form-view="project-form"/>
+            <field name="employee" canEdit="false" onChange="action-planning-attrs-refresh-dashlet,action-planning-method-compute-monthly-wage" colSpan="4" grid-view="employee-grid" form-view="employee-form"/>
+            <field name="monthlyWage" colSpan="4"/>
         </panel>
 
         <panel itemSpan="12" hidden="true" showIf="project || employee">
@@ -27,6 +28,10 @@
     <action-attrs name="action-planning-attrs-refresh-dashlet">
         <attribute for="planningLinesDashlet" name="refresh" expr="true"/>
     </action-attrs>
+
+    <action-method name="action-planning-method-compute-monthly-wage">
+        <call class="com.axelor.apps.timecard.web.PlanningController" method="computeMonthlyWage"/>
+    </action-method>
 
     <action-view name="action-planning-view-planning-lines-dashlet-both" title="Lignes de planning" model="com.axelor.apps.timecard.db.PlanningLine">
         <view type="grid" name="planning-line-grid"/>

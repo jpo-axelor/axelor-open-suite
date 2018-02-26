@@ -10,6 +10,7 @@ import com.axelor.exception.AxelorException;
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 
+import javax.annotation.Nullable;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDate;
@@ -42,7 +43,7 @@ public class PlanningLineServiceImpl implements PlanningLineService {
     }
 
     @Override
-    public List<PlanningLine> getPlanningLines(Project project, Employee employee) {
+    public List<PlanningLine> getPlanningLines(@Nullable Project project, @Nullable Employee employee) {
         List<PlanningLine> planningLines = new ArrayList<PlanningLine>();
 
         if (employee != null && project == null) {
