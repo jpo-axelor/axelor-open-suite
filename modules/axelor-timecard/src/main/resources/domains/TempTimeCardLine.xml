@@ -9,8 +9,8 @@
 
         <many-to-one name="project" title="Projet" ref="com.axelor.apps.project.db.Project"/>
         <many-to-one name="employee" title="Employé" ref="com.axelor.apps.hr.db.Employee" readonly="true"/>
-        <datetime name="startDateTime" title="Date et heure de début" hidden="true"/>
-        <datetime name="endDateTime" title="Date et heure de fin" hidden="true"/>
+        <datetime name="startDateTime" title="Date et heure de début"/>
+        <datetime name="endDateTime" title="Date et heure de fin"/>
 
     </entity>
 

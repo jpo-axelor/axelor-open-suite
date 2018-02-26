@@ -3,6 +3,15 @@
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.0.xsd">
 
+    <form name="temp-time-card-line-form" title="Ligne de pointage" model="com.axelor.apps.timecard.db.TempTimeCardLine">
+        <panel>
+            <field name="project"/>
+            <field name="employee"/>
+            <field name="startDateTime"/>
+            <field name="endDateTime"/>
+        </panel>
+    </form>
+
     <calendar name="temp-time-card-line-calendar-by-project" title="Pointage" model="com.axelor.apps.timecard.db.TempTimeCardLine"
               eventStart="startDateTime" eventStop="endDateTime" colorBy="project" editable="false">
         <field name="project"/>
