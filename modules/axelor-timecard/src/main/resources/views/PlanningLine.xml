@@ -21,7 +21,7 @@
         </panel>
 
         <panel>
-            <field name="mensualisation"/>
+            <field name="monthlyWage"/>
             <button name="computeMonthlyWage" title="Calculer mensualisation" onClick="save,action-planningline-method-compute-monthly-wage" colSpan="3"/>
         </panel>
     </form>

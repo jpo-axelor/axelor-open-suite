@@ -37,7 +37,7 @@ public class PlanningLineServiceImpl implements PlanningLineService {
         List<LocalDate> dates = frequencyService.getDates(frequency);
 
         double lineDuration = Duration.between(planningLine.getStartTime(), planningLine.getEndTime()).toMinutes() / 60.0;
-        planningLine.setMensualisation(BigDecimal.valueOf((dates.size() * lineDuration / 12)));
+        planningLine.setMonthlyWage(BigDecimal.valueOf((dates.size() * lineDuration / 12)));
         planningLineRepo.save(planningLine);
     }
 
