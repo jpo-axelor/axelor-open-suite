@@ -19,6 +19,7 @@
         <many-to-one name="timeCard" ref="com.axelor.apps.timecard.db.TimeCard" title="Pointage" readonly="true"/>
         <decimal name="duration" title="Durée (heures)"/>
         <string name="comments" title="Commentaires" large="true"/>
+        <many-to-one name="leaveLine" ref="com.axelor.apps.hr.db.LeaveLine" title="Motif"/>
         <string name="typeSelect" title="Type de ligne" selection="timecardline.timecard.type.select"/>
 
         <extra-code>

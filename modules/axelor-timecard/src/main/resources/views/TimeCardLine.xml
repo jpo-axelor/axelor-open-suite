@@ -10,22 +10,25 @@
         <field name="startTime" readonlyIf="typeSelect == 'contractual'"/>
         <field name="endTime" readonlyIf="typeSelect == 'contractual'"/>
         <field name="typeSelect" readonlyIf="typeSelect == 'contractual'"/>
+
+        <!-- used for sorting -->
         <field name="startDateTime" hidden="true"/>
     </grid>
 
     <form name="time-card-line-form" title="Ligne de pointage" model="com.axelor.apps.timecard.db.TimeCardLine" width="large">
         <panel readonlyIf="typeSelect == 'contractual'">
+            <field name="typeSelect" selection-in="['extra', 'absence']" colSpan="12"/>
             <field name="project"/>
-            <field name="product"/>
             <field name="employee"/>
-            <field name="weekDay"/>
-            <field name="date"/>
-            <field name="startTime"/>
-            <field name="endTime"/>
-            <field name="timeCard"/>
+            <field name="product"/>
+            <spacer/>
+            <field name="weekDay" colSpan="3"/>
+            <field name="date" colSpan="3"/>
+            <field name="startTime" colSpan="3"/>
+            <field name="endTime" colSpan="3"/>
             <field name="duration"/>
-            <field name="typeSelect" selection-in="['extra', 'absence']"/>
-            <field name="comments"/>
+            <field name="leaveLine" hidden="true" showIf="leaveLine &amp;&amp; typeSelect == 'absence'" readonly="true"/>
+            <field name="comments" colSpan="12"/>
         </panel>
     </form>
 
