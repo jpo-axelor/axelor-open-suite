@@ -2,6 +2,7 @@ package com.axelor.apps.timecard.service;
 
 import com.axelor.apps.timecard.db.Frequency;
 
+import javax.annotation.Nullable;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -16,14 +17,14 @@ public interface FrequencyService {
     String computeSummary(Frequency frequency);
 
     /**
-     * Retrieves all possible dates for given {@code Frequency} of current year.
-     * If fourth and last day of week are checked in given {@code Frequency} and
-     * it is the same date, it will only appear once in return list.
+     * Retrieves all possible dates for given {@code Frequency} and {@code year} (or current year if null).
+     * If fourth and last day of week are checked in given {@code Frequency} and it is the same date,
+     * it will only appear once in return list.
      *
      * @param frequency
      * @return
      */
-    List<LocalDate> getDates(Frequency frequency);
+    List<LocalDate> getDates(Frequency frequency, @Nullable Integer year);
 
     /**
      * Retrieves months checked in given {@code Frequency}.

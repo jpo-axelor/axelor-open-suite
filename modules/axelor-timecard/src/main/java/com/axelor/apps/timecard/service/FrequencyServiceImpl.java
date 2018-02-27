@@ -5,6 +5,7 @@ import com.axelor.apps.timecard.db.Frequency;
 import com.axelor.apps.timecard.db.repo.FrequencyRepository;
 import com.google.inject.Inject;
 
+import javax.annotation.Nullable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -119,7 +120,7 @@ public class FrequencyServiceImpl implements FrequencyService {
 
         // Months
         if (frequency.getJanuary() && frequency.getFebruary() && frequency.getMarch() && frequency.getApril() && frequency.getMay() && frequency.getJune() &&
-            frequency.getJuly() && frequency.getAugust() && frequency.getSeptember() && frequency.getOctober() && frequency.getNovember() && frequency.getDecember()) {
+                frequency.getJuly() && frequency.getAugust() && frequency.getSeptember() && frequency.getOctober() && frequency.getNovember() && frequency.getDecember()) {
             summary.append("chaque mois");
         } else {
             if (frequency.getJanuary()) {
@@ -163,35 +164,35 @@ public class FrequencyServiceImpl implements FrequencyService {
             }
             if (frequency.getAugust()) {
                 if (frequency.getJanuary() || frequency.getFebruary() || frequency.getMarch() || frequency.getApril() || frequency.getMay() || frequency.getJune() ||
-                    frequency.getJuly()) {
+                        frequency.getJuly()) {
                     summary.append(", ");
                 }
                 summary.append("août");
             }
             if (frequency.getSeptember()) {
                 if (frequency.getJanuary() || frequency.getFebruary() || frequency.getMarch() || frequency.getApril() || frequency.getMay() || frequency.getJune() ||
-                    frequency.getJuly() || frequency.getAugust()) {
+                        frequency.getJuly() || frequency.getAugust()) {
                     summary.append(", ");
                 }
                 summary.append("septembre");
             }
             if (frequency.getOctober()) {
                 if (frequency.getJanuary() || frequency.getFebruary() || frequency.getMarch() || frequency.getApril() || frequency.getMay() || frequency.getJune() ||
-                    frequency.getJuly() || frequency.getAugust() || frequency.getSeptember()) {
+                        frequency.getJuly() || frequency.getAugust() || frequency.getSeptember()) {
                     summary.append(", ");
                 }
                 summary.append("octobre");
             }
             if (frequency.getNovember()) {
                 if (frequency.getJanuary() || frequency.getFebruary() || frequency.getMarch() || frequency.getApril() || frequency.getMay() || frequency.getJune() ||
-                    frequency.getJuly() || frequency.getAugust() || frequency.getSeptember() || frequency.getOctober()) {
+                        frequency.getJuly() || frequency.getAugust() || frequency.getSeptember() || frequency.getOctober()) {
                     summary.append(", ");
                 }
                 summary.append("novembre");
             }
             if (frequency.getDecember()) {
                 if (frequency.getJanuary() || frequency.getFebruary() || frequency.getMarch() || frequency.getApril() || frequency.getMay() || frequency.getJune() ||
-                    frequency.getJuly() || frequency.getAugust() || frequency.getSeptember() || frequency.getOctober() || frequency.getNovember()) {
+                        frequency.getJuly() || frequency.getAugust() || frequency.getSeptember() || frequency.getOctober() || frequency.getNovember()) {
                     summary.append(", ");
                 }
                 summary.append("décembre");
@@ -204,20 +205,39 @@ public class FrequencyServiceImpl implements FrequencyService {
     }
 
     @Override
-    public List<LocalDate> getDates(Frequency frequency) {
-        int year = appBaseService.getTodayDate().getYear();
-
-        List<Integer> months = getMonths(frequency);
-        List<Integer> days = getDays(frequency);
-        List<Integer> occurences = getOccurences(frequency);
+    public List<LocalDate> getDates(Frequency frequency, @Nullable Integer year) {
+        Integer yearM = year == null ? appBaseService.getTodayDate().getYear() : year;
 
         Set<LocalDate> dates = new HashSet<>();
 
-        for (Integer month : months) {
-            for (Integer day : days) {
-                for (Integer occurence : occurences) {
-                    dates.add(getDay(day, occurence, year, month));
+        List<Integer> months = getMonths(frequency);
+        List<Integer> days = getDays(frequency);
+
+        if (frequency.getFrequencyTypeSelect().equals(FrequencyRepository.TYPE_MONTH_DAYS)) {
+            List<Integer> occurences = getOccurences(frequency);
+
+            for (Integer month : months) {
+                for (Integer day : days) {
+                    for (Integer occurence : occurences) {
+                        dates.add(getDay(day, occurence, yearM, month));
+                    }
                 }
+            }
+        } else {
+            Integer leap = frequency.getEveryNWeeks();
+
+            for (Integer day : days) {
+                Calendar cal = Calendar.getInstance();
+                cal.set(Calendar.YEAR, yearM);
+                cal.set(Calendar.MONTH, Calendar.JANUARY);
+                cal.set(Calendar.DAY_OF_WEEK, day);
+                cal.set(Calendar.DAY_OF_WEEK_IN_MONTH, 1);
+                do {
+                    if (months.contains(cal.get(Calendar.MONTH) + 1)) {
+                        dates.add(LocalDate.of(yearM, cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DATE)));
+                    }
+                    cal.add(Calendar.DATE, leap * 7);
+                } while (cal.get(Calendar.YEAR) == yearM);
             }
         }
 
@@ -238,7 +258,7 @@ public class FrequencyServiceImpl implements FrequencyService {
         cal.set(Calendar.DAY_OF_WEEK, dayOfWeek);
         cal.set(Calendar.DAY_OF_WEEK_IN_MONTH, dayOfWeekInMonth);
         cal.set(Calendar.YEAR, year);
-        cal.set(Calendar.MONTH, month - 1);
+        cal.set(Calendar.MONTH, month - 1); // here, months are counted from 0: so January is 0, February is 1, etc.
         return LocalDate.of(year, month, cal.get(Calendar.DATE));
     }
 
@@ -246,18 +266,42 @@ public class FrequencyServiceImpl implements FrequencyService {
     public List<Integer> getMonths(Frequency frequency) {
         List<Integer> months = new ArrayList<>();
 
-        if (frequency.getJanuary()) { months.add(1); }
-        if (frequency.getFebruary()) { months.add(2); }
-        if (frequency.getMarch()) { months.add(3); }
-        if (frequency.getApril()) { months.add(4); }
-        if (frequency.getMay()) { months.add(5); }
-        if (frequency.getJune()) { months.add(6); }
-        if (frequency.getJuly()) { months.add(7); }
-        if (frequency.getAugust()) { months.add(8); }
-        if (frequency.getSeptember()) { months.add(9); }
-        if (frequency.getOctober()) { months.add(10); }
-        if (frequency.getNovember()) { months.add(11); }
-        if (frequency.getDecember()) { months.add(12); }
+        if (frequency.getJanuary()) {
+            months.add(1);
+        }
+        if (frequency.getFebruary()) {
+            months.add(2);
+        }
+        if (frequency.getMarch()) {
+            months.add(3);
+        }
+        if (frequency.getApril()) {
+            months.add(4);
+        }
+        if (frequency.getMay()) {
+            months.add(5);
+        }
+        if (frequency.getJune()) {
+            months.add(6);
+        }
+        if (frequency.getJuly()) {
+            months.add(7);
+        }
+        if (frequency.getAugust()) {
+            months.add(8);
+        }
+        if (frequency.getSeptember()) {
+            months.add(9);
+        }
+        if (frequency.getOctober()) {
+            months.add(10);
+        }
+        if (frequency.getNovember()) {
+            months.add(11);
+        }
+        if (frequency.getDecember()) {
+            months.add(12);
+        }
 
         return months;
     }
@@ -266,13 +310,27 @@ public class FrequencyServiceImpl implements FrequencyService {
     public List<Integer> getDays(Frequency frequency) {
         List<Integer> days = new ArrayList<>();
 
-        if (frequency.getSunday()) { days.add(1); }
-        if (frequency.getMonday()) { days.add(2); }
-        if (frequency.getTuesday()) { days.add(3); }
-        if (frequency.getWednesday()) { days.add(4); }
-        if (frequency.getThursday()) { days.add(5); }
-        if (frequency.getFriday()) { days.add(6); }
-        if (frequency.getSaturday()) { days.add(7); }
+        if (frequency.getSunday()) {
+            days.add(1);
+        }
+        if (frequency.getMonday()) {
+            days.add(2);
+        }
+        if (frequency.getTuesday()) {
+            days.add(3);
+        }
+        if (frequency.getWednesday()) {
+            days.add(4);
+        }
+        if (frequency.getThursday()) {
+            days.add(5);
+        }
+        if (frequency.getFriday()) {
+            days.add(6);
+        }
+        if (frequency.getSaturday()) {
+            days.add(7);
+        }
 
         return days;
     }
@@ -281,13 +339,21 @@ public class FrequencyServiceImpl implements FrequencyService {
     public List<Integer> getOccurences(Frequency frequency) {
         List<Integer> occurences = new ArrayList<>();
 
-        // TODO: every N weeks
-
-        if (frequency.getFirst()) { occurences.add(1); }
-        if (frequency.getSecond()) { occurences.add(2); }
-        if (frequency.getThird()) { occurences.add(3); }
-        if (frequency.getFourth()) { occurences.add(4); }
-        if (frequency.getLast()) { occurences.add(-1); }
+        if (frequency.getFirst()) {
+            occurences.add(1);
+        }
+        if (frequency.getSecond()) {
+            occurences.add(2);
+        }
+        if (frequency.getThird()) {
+            occurences.add(3);
+        }
+        if (frequency.getFourth()) {
+            occurences.add(4);
+        }
+        if (frequency.getLast()) {
+            occurences.add(-1);
+        }
 
         return occurences;
     }

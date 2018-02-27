@@ -53,7 +53,7 @@ public class TimeCardServiceImpl implements TimeCardService {
             Employee employee = planningLine.getEmployee();
             Project project = planningLine.getProject();
 
-            List<LocalDate> dates = frequencyService.getDates(planningLine.getFrequency());
+            List<LocalDate> dates = frequencyService.getDates(planningLine.getFrequency(), timeCard.getFromDate().getYear());
             for (LocalDate date : dates) {
                 if (date.equals(fromDate) || date.isAfter(fromDate) && date.isBefore(toDate) || date.equals(toDate)) {
                     TimeCardLine timeCardLine = generateTimeCardLine(employee, project, date, planningLine.getStartTime(), planningLine.getEndTime(), TimeCardLineRepository.TYPE_CONTRACTUAL);

@@ -46,7 +46,7 @@ public class TempTimeCardLineServiceImpl implements TempTimeCardLineService {
 
         // Generate temp time card lines
         for (PlanningLine planningLine : planningLines) {
-            List<LocalDate> dates = frequencyService.getDates(planningLine.getFrequency());
+            List<LocalDate> dates = frequencyService.getDates(planningLine.getFrequency(), null);
             for (LocalDate date : dates) {
                 if (date.equals(startDate) || date.equals(endDate) || date.isAfter(startDate) && date.isBefore(endDate)) {
                     TempTimeCardLine tempTimeCardLine = new TempTimeCardLine();

@@ -35,7 +35,7 @@ public class PlanningLineServiceImpl implements PlanningLineService {
     public void computeMonthlyWage(PlanningLine planningLine) {
         Frequency frequency = planningLine.getFrequency();
 
-        List<LocalDate> dates = frequencyService.getDates(frequency);
+        List<LocalDate> dates = frequencyService.getDates(frequency, null);
 
         double lineDuration = Duration.between(planningLine.getStartTime(), planningLine.getEndTime()).toMinutes() / 60.0;
         planningLine.setMonthlyWage(BigDecimal.valueOf((dates.size() * lineDuration / 12)));
