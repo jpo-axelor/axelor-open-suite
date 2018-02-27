@@ -12,13 +12,15 @@
     </grid>
 
     <form name="time-card-form" title="Pointage" model="com.axelor.apps.timecard.db.TimeCard" width="large">
-        <toolbar>
-            <button name="viewCalendar" title="Voir calendrier" icon="fa-calendar" onClick="save,action-time-card-view-show-calendar"/>
-        </toolbar>
+        <menubar>
+            <menu title="Outils" icon="fa-wrench">
+                <item title="Générer les lignes de pointage" action="save,action-time-card-method-generate-time-card-lines"/>
+                <item title="Voir calendrier" action="save,action-time-card-view-show-calendar"/>
+            </menu>
+        </menubar>
 
         <panel>
             <field name="statusSelect" widget="NavSelect" showTitle="false"/>
-            <button name="generateTimeCardLines" title="Générer les lignes de pointage" onClick="save,action-time-card-method-generate-time-card-lines" colSpan="3"/>
         </panel>
 
         <panel>
