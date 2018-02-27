@@ -46,7 +46,7 @@ public class TimeCardServiceImpl implements TimeCardService {
         LocalDate fromDate = timeCard.getFromDate();
         LocalDate toDate = timeCard.getToDate();
 
-        List<LeaveRequest> leaveRequests = leaveRequestRepo.all().filter("self.user.id = ?1 AND ((?2 BETWEEN self.fromDate AND self.toDate) OR (?3 BETWEEN self.fromDate AND self.toDate)) AND self.statusSelect = ?4", timeCard.getEmployee().getUser().getId(), fromDate, toDate, LeaveRequestRepository.STATUS_VALIDATED).fetch();
+        List<LeaveRequest> leaveRequests = leaveRequestRepo.all().filter("self.user.id = ?1 AND self.statusSelect = ?2 AND ((?3 BETWEEN self.fromDate AND self.toDate) OR (?4 BETWEEN self.fromDate AND self.toDate)) OR ((self.fromDate BETWEEN ?3 AND ?4) OR (self.toDate BETWEEN ?3 AND ?4))", timeCard.getEmployee().getUser().getId(), LeaveRequestRepository.STATUS_VALIDATED, fromDate, toDate).fetch();
 
         List<PlanningLine> planningLines = planningLineRepo.findByEmployee(timeCard.getEmployee()).fetch();
         for (PlanningLine planningLine : planningLines) {
