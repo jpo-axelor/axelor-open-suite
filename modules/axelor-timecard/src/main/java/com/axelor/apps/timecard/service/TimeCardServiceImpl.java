@@ -14,8 +14,6 @@ import com.axelor.exception.AxelorException;
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 
-import java.math.BigDecimal;
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -24,14 +22,16 @@ import java.util.List;
 public class TimeCardServiceImpl implements TimeCardService {
 
     protected TimeCardRepository timeCardRepo;
+    protected TimeCardLineRepository timeCardLineRepo;
     protected LeaveRequestRepository leaveRequestRepo;
     protected PlanningLineRepository planningLineRepo;
     protected FrequencyService frequencyService;
 
     @Inject
-    public TimeCardServiceImpl(TimeCardRepository timeCardRepo, LeaveRequestRepository leaveRequestRepo,
+    public TimeCardServiceImpl(TimeCardRepository timeCardRepo, TimeCardLineRepository timeCardLineRepo, LeaveRequestRepository leaveRequestRepo,
                                PlanningLineRepository planningLineRepo, FrequencyService frequencyService) {
         this.timeCardRepo = timeCardRepo;
+        this.timeCardLineRepo = timeCardLineRepo;
         this.leaveRequestRepo = leaveRequestRepo;
         this.planningLineRepo = planningLineRepo;
         this.frequencyService = frequencyService;
@@ -40,8 +40,8 @@ public class TimeCardServiceImpl implements TimeCardService {
     @Override
     @Transactional(rollbackOn = {AxelorException.class, Exception.class})
     public void generateTimeCardLines(TimeCard timeCard) {
-        timeCard.clearTimeCardLineList();
-        timeCardRepo.flush();
+        timeCardLineRepo.all().filter("self.timeCard.id = ? AND self.isDeletable = true", timeCard.getId()).delete();
+        timeCardLineRepo.flush();
 
         LocalDate fromDate = timeCard.getFromDate();
         LocalDate toDate = timeCard.getToDate();
@@ -101,6 +101,7 @@ public class TimeCardServiceImpl implements TimeCardService {
 
                         if (tcl != null) {
                             tcl.setLeaveLine(leaveRequest.getLeaveLine());
+                            tcl.setLeaveRequest(leaveRequest);
                             timeCard.addTimeCardLineListItem(tcl);
                         }
                     }
@@ -113,21 +114,16 @@ public class TimeCardServiceImpl implements TimeCardService {
 
     public TimeCardLine generateTimeCardLine(Employee employee, Project project, LocalDate date, LocalTime startTime, LocalTime endTime, String lineType) {
         TimeCardLine timeCardLine = new TimeCardLine();
+        timeCardLine.setIsDeletable(true);
 
         timeCardLine.setEmployee(employee);
         timeCardLine.setProject(project);
         timeCardLine.setWeekDay(date.getDayOfWeek().getValue());
 
-
         timeCardLine.setDate(date);
         timeCardLine.setStartTime(startTime);
         timeCardLine.setEndTime(endTime);
 
-        timeCardLine.setStartDateTime(LocalDateTime.of(date, startTime));
-        timeCardLine.setEndDateTime(LocalDateTime.of(date, endTime));
-
-
-        timeCardLine.setDuration(BigDecimal.valueOf(Duration.between(startTime, endTime).toMinutes() / 60.0));
         timeCardLine.setTypeSelect(lineType);
 
         return timeCardLine;

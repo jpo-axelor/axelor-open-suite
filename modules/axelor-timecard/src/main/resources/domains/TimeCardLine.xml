@@ -9,7 +9,7 @@
 
         <many-to-one name="project" title="Projet" ref="com.axelor.apps.project.db.Project"/>
         <many-to-one name="product" title="Activité" ref="com.axelor.apps.base.db.Product"/>
-        <many-to-one name="employee" title="Employé" ref="com.axelor.apps.hr.db.Employee" readonly="true"/>
+        <many-to-one name="employee" title="Employé" ref="com.axelor.apps.hr.db.Employee"/>
         <integer name="weekDay" title="Jour" selection="timecardline.timecard.week.day.select"/>
         <date name="date" title="Date" column="date_val"/>
         <time name="startTime" title="Heure de début"/>
@@ -20,7 +20,10 @@
         <decimal name="duration" title="Durée (heures)"/>
         <string name="comments" title="Commentaires" large="true"/>
         <many-to-one name="leaveLine" ref="com.axelor.apps.hr.db.LeaveLine" title="Motif"/>
+        <many-to-one name="leaveRequest" ref="com.axelor.apps.hr.db.LeaveRequest" title="Demande de congés" readonly="true"/>
         <string name="typeSelect" title="Type de ligne" selection="timecardline.timecard.type.select"/>
+
+        <boolean name="isDeletable" hidden="true" default="false"/>
 
         <extra-code>
             <![CDATA[
