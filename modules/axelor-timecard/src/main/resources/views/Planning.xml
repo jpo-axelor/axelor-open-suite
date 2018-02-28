@@ -3,7 +3,8 @@
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.0.xsd">
 
-    <form name="planning-form" title="Planning" model="com.axelor.apps.timecard.db.Planning" width="large" canNew="false" canSave="false">
+    <form name="planning-form" title="Planning" model="com.axelor.apps.timecard.db.Planning" width="large" canNew="false" canSave="false"
+          onLoad="action-planning-attrs-refresh-dashlet,action-planning-method-compute-monthly-wage">
         <panel>
             <field name="project" canEdit="false" onChange="action-planning-attrs-refresh-dashlet,action-planning-method-compute-monthly-wage" colSpan="4" grid-view="project-grid" form-view="project-form"/>
             <field name="employee" canEdit="false" onChange="action-planning-attrs-refresh-dashlet,action-planning-method-compute-monthly-wage" colSpan="4" grid-view="employee-grid" form-view="employee-form"/>
@@ -15,7 +16,7 @@
             <panel-dashlet name="planningLinesDashlet" title="Lignes de planning" action="action-planning-view-planning-lines-dashlet-project" hidden="true" showIf="project &amp;&amp; !employee"/>
             <panel-dashlet name="planningLinesDashlet" title="Lignes de planning" action="action-planning-view-planning-lines-dashlet-employee" hidden="true" showIf="!project &amp;&amp; employee"/>
 
-            <button name="addPlanningLine" title="Ajouter une ligne de planning" css="btn-custom text-left" icon="fa-plus" onClick="action-planning-view-add-planning-line"/>
+            <button name="addPlanningLine" title="Ajouter une ligne de planning" css="btn-custom text-left" icon="fa-plus" onClick="save,action-planning-view-add-planning-line"/>
         </panel>
 
         <panel showIf="project || employee">
@@ -36,7 +37,7 @@
     <action-view name="action-planning-view-planning-lines-dashlet-both" title="Lignes de planning" model="com.axelor.apps.timecard.db.PlanningLine">
         <view type="grid" name="planning-line-grid"/>
         <view type="form" name="planning-line-form"/>
-        <view-param name="popup" value="true"/>
+        <view-param name="popup" value="reload"/>
         <view-param name="show-toolbar" value="true"/>
         <domain>self.employee.id = :_employeeId AND self.project.id = :_projectId</domain>
         <context name="_employeeId" expr="eval: employee.id"/>
@@ -46,7 +47,7 @@
     <action-view name="action-planning-view-planning-lines-dashlet-project" title="Lignes de planning" model="com.axelor.apps.timecard.db.PlanningLine">
         <view type="grid" name="planning-line-grid"/>
         <view type="form" name="planning-line-form"/>
-        <view-param name="popup" value="true"/>
+        <view-param name="popup" value="reload"/>
         <view-param name="show-toolbar" value="true"/>
         <domain>self.project.id = :_projectId</domain>
         <context name="_projectId" expr="eval: project.id"/>
@@ -55,7 +56,7 @@
     <action-view name="action-planning-view-planning-lines-dashlet-employee" title="Lignes de planning" model="com.axelor.apps.timecard.db.PlanningLine">
         <view type="grid" name="planning-line-grid"/>
         <view type="form" name="planning-line-form"/>
-        <view-param name="popup" value="true"/>
+        <view-param name="popup" value="reload"/>
         <view-param name="show-toolbar" value="true"/>
         <domain>self.employee.id = :_employeeId</domain>
         <context name="_employeeId" expr="eval: employee.id"/>
@@ -63,7 +64,7 @@
 
     <action-view name="action-planning-view-add-planning-line" title="Ligne de planning" model="com.axelor.apps.timecard.db.PlanningLine">
         <view type="form" name="planning-line-form"/>
-        <view-param name="popup" value="true"/>
+        <view-param name="popup" value="reload"/>
         <context name="_projectId" expr="eval: project?.id"/>
         <context name="_employeeId" expr="eval: employee?.id"/>
     </action-view>

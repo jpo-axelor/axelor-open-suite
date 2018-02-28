@@ -5,7 +5,7 @@
 
     <module name="timecard" package="com.axelor.apps.timecard.db"/>
 
-    <entity name="Planning" persistable="false">
+    <entity name="Planning">
 
         <many-to-one name="project" title="Projet" ref="com.axelor.apps.project.db.Project"/>
         <many-to-one name="employee" title="Employé" ref="com.axelor.apps.hr.db.Employee"/>
