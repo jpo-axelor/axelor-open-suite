@@ -17,7 +17,47 @@
             <field name="employee" canEdit="false" grid-view="employee-grid" form-view="employee-form"/>
             <field name="startTime" colSpan="3"/>
             <field name="endTime" colSpan="3"/>
-            <field name="frequency" canNew="true" canSelect="false" grid-view="frequency-grid" form-view="frequency-form"/>
+            <field name="frequency" showIf="$readonly()" hidden="true" grid-view="frequency-grid" form-view="frequency-form"/>
+            <field name="frequency" canNew="true" canSelect="false" showTitle="false" showIf="!$readonly()" hidden="true" colSpan="12">
+                <editor>
+                    <panel title="Type de fréquence" colSpan="12">
+                        <field name="frequencyTypeSelect"/>
+                        <panel>
+                            <field name="everyNWeeks" showIf="frequencyTypeSelect == 'everyNWeeks'" hidden="true" colSpan="12"/>
+                            <field name="first" showIf="frequencyTypeSelect == 'monthDays'" hidden="true" colSpan="2"/>
+                            <field name="second" showIf="frequencyTypeSelect == 'monthDays'" hidden="true" colSpan="2"/>
+                            <field name="third" showIf="frequencyTypeSelect == 'monthDays'" hidden="true" colSpan="2"/>
+                            <field name="fourth" showIf="frequencyTypeSelect == 'monthDays'" hidden="true" colSpan="2"/>
+                            <field name="last" showIf="frequencyTypeSelect == 'monthDays'" hidden="true" colSpan="2"/>
+                        </panel>
+                    </panel>
+
+                    <panel title="Jours" colSpan="12" itemSpan="1">
+                        <field name="monday"/>
+                        <field name="tuesday"/>
+                        <field name="wednesday"/>
+                        <field name="thursday"/>
+                        <field name="friday"/>
+                        <field name="saturday"/>
+                        <field name="sunday"/>
+                    </panel>
+
+                    <panel title="Mois" colSpan="12" itemSpan="1">
+                        <field name="january"/>
+                        <field name="february"/>
+                        <field name="march"/>
+                        <field name="april"/>
+                        <field name="may"/>
+                        <field name="june"/>
+                        <field name="july"/>
+                        <field name="august"/>
+                        <field name="september"/>
+                        <field name="october"/>
+                        <field name="november"/>
+                        <field name="december"/>
+                    </panel>
+                </editor>
+            </field>
         </panel>
 
         <panel>

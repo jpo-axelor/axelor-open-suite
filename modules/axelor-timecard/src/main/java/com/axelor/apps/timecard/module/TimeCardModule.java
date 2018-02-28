@@ -1,6 +1,8 @@
 package com.axelor.apps.timecard.module;
 
 import com.axelor.app.AxelorModule;
+import com.axelor.apps.timecard.db.repo.PlanningLineRepository;
+import com.axelor.apps.timecard.db.repo.PlanningLineTimeCardRepository;
 import com.axelor.apps.timecard.service.FrequencyService;
 import com.axelor.apps.timecard.service.FrequencyServiceImpl;
 import com.axelor.apps.timecard.service.PlanningLineService;
@@ -14,6 +16,7 @@ public class TimeCardModule extends AxelorModule {
 
     @Override
     protected void configure() {
+        bind(PlanningLineRepository.class).to(PlanningLineTimeCardRepository.class);
         bind(FrequencyService.class).to(FrequencyServiceImpl.class);
         bind(PlanningLineService.class).to(PlanningLineServiceImpl.class);
         bind(TimeCardService.class).to(TimeCardServiceImpl.class);
