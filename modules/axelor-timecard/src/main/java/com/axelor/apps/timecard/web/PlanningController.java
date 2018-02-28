@@ -1,5 +1,6 @@
 package com.axelor.apps.timecard.web;
 
+import com.axelor.apps.base.service.app.AppBaseService;
 import com.axelor.apps.hr.db.Employee;
 import com.axelor.apps.project.db.Project;
 import com.axelor.apps.timecard.db.Planning;
@@ -14,9 +15,31 @@ import com.axelor.rpc.ActionRequest;
 import com.axelor.rpc.ActionResponse;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.Calendar;
 import java.util.List;
 
 public class PlanningController {
+
+    /**
+     * Sets defaults values for {@code Planning} in context.
+     *
+     * @param request
+     * @param response
+     */
+    public void setDefaults(ActionRequest request, ActionResponse response) {
+        LocalDate today = Beans.get(AppBaseService.class).getTodayDate();
+
+        Calendar cal = Calendar.getInstance();
+        cal.set(today.getYear(), today.getMonthValue() - 1, today.getDayOfMonth());
+        cal.add(Calendar.MONTH, 1);
+
+        cal.set(Calendar.DATE, cal.getActualMinimum(Calendar.DAY_OF_MONTH));
+        response.setValue("startDate", LocalDate.of(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH)));
+
+        cal.set(Calendar.DATE, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+        response.setValue("endDate", LocalDate.of(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH)));
+    }
 
     /**
      * Computes the total monthly wage of the {@code Planning} in context.
