@@ -11,14 +11,15 @@
         <field name="frequency"/>
     </grid>
 
-    <form name="planning-line-form" title="Ligne de planning" model="com.axelor.apps.timecard.db.PlanningLine" width="large" onNew="action-planning-line-record-set-defaults">
+    <form name="planning-line-form" title="Ligne de planning" model="com.axelor.apps.timecard.db.PlanningLine" width="large"
+          onNew="action-planning-line-record-set-defaults,action-planning-line-record-default-frequency">
         <panel>
             <field name="project" canEdit="false" grid-view="project-grid" form-view="project-form"/>
             <field name="employee" canEdit="false" grid-view="employee-grid" form-view="employee-form"/>
             <field name="startTime" colSpan="3"/>
             <field name="endTime" colSpan="3"/>
             <field name="frequency" showIf="$readonly()" hidden="true" grid-view="frequency-grid" form-view="frequency-form"/>
-            <field name="frequency" canNew="true" canSelect="false" showTitle="false" showIf="!$readonly()" hidden="true" colSpan="12">
+            <field name="frequency" canEdit="false" canRemove="false" canSelect="false" canView="false" showTitle="false" showIf="!$readonly()" hidden="true" colSpan="12">
                 <editor>
                     <panel title="Type de fréquence" colSpan="12">
                         <field name="frequencyTypeSelect"/>
@@ -69,6 +70,10 @@
     <action-record name="action-planning-line-record-set-defaults" model="com.axelor.apps.timecard.db.PlanningLine">
         <field name="project" expr="eval: __repo__(Project).find(_projectId)" if="_projectId"/>
         <field name="employee" expr="eval: __repo__(Employee).find(_employeeId)" if="_employeeId"/>
+    </action-record>
+
+    <action-record name="action-planning-line-record-default-frequency" model="com.axelor.apps.timecard.db.PlanningLine">
+        <field name="frequency" expr="eval: new com.axelor.apps.timecard.db.Frequency()"/>
     </action-record>
 
     <action-method name="action-planningline-method-compute-monthly-wage">
