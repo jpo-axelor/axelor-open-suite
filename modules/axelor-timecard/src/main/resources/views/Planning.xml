@@ -22,6 +22,11 @@
             <button name="addPlanningLine" title="Ajouter une ligne de planning" css="btn-custom text-left" icon="fa-plus" onClick="save,action-planning-view-add-planning-line"/>
         </panel>
 
+        <panel itemSpan="12" hidden="true" showIf="(project || employee) &amp;&amp; startDate &amp;&amp; endDate">
+            <panel-dashlet name="leaveRequestsDashlet" title="Demandes de congés" action="action-planning-view-leave-requests-dashlet-employee" hidden="true" showIf="(!project &amp;&amp; employee) || (project &amp;&amp; employee)"/>
+            <panel-dashlet name="leaveRequestsDashlet" title="Demandes de congés" action="action-planning-view-leave-requests-dashlet-project" hidden="true" showIf="project &amp;&amp; !employee"/>
+        </panel>
+
         <panel showIf="project || employee">
             <button name="previewCalendar" title="Prévisualiser" onClick="action-planning-method-preview" readonlyIf="!(startDate &amp;&amp; endDate)" colSpan="2"/>
         </panel>
@@ -72,6 +77,28 @@
         <view-param name="popup" value="reload"/>
         <context name="_projectId" expr="eval: project?.id"/>
         <context name="_employeeId" expr="eval: employee?.id"/>
+    </action-view>
+
+    <action-view name="action-planning-view-leave-requests-dashlet-employee" title="Demandes de congés" model="com.axelor.apps.hr.db.LeaveRequest">
+        <view type="grid" name="leave-request-grid"/>
+        <view type="form" name="leave-request-form"/>
+        <view-param name="popup" value="true"/>
+        <domain>self.user.employee.id = :_employeeId AND self.statusSelect = :_statusSelect AND (((:_startDate BETWEEN self.fromDate AND self.toDate) OR (:_endDate BETWEEN self.fromDate AND self.toDate)) OR ((self.fromDate BETWEEN :_startDate AND :_endDate) OR (self.toDate BETWEEN :_startDate AND :_endDate)))</domain>
+        <context name="_employeeId" expr="eval: employee.id"/>
+        <context name="_statusSelect" expr="eval: com.axelor.apps.hr.db.repo.LeaveRequestRepository.STATUS_VALIDATED"/>
+        <context name="_startDate" expr="eval: startDate"/>
+        <context name="_endDate" expr="eval: endDate"/>
+    </action-view>
+
+    <action-view name="action-planning-view-leave-requests-dashlet-project" title="Demandes de congés" model="com.axelor.apps.hr.db.LeaveRequest">
+        <view type="grid" name="leave-request-grid"/>
+        <view type="form" name="leave-request-form"/>
+        <view-param name="popup" value="true"/>
+        <domain>self.user.employee.id IN (:_employeeIds) AND self.statusSelect = :_statusSelect AND (((:_startDate BETWEEN self.fromDate AND self.toDate) OR (:_endDate BETWEEN self.fromDate AND self.toDate)) OR ((self.fromDate BETWEEN :_startDate AND :_endDate) OR (self.toDate BETWEEN :_startDate AND :_endDate)))</domain>
+        <context name="_employeeIds" expr="eval: project.membersUserSet.collect([0], { it.employee.id })"/>
+        <context name="_statusSelect" expr="eval: com.axelor.apps.hr.db.repo.LeaveRequestRepository.STATUS_VALIDATED"/>
+        <context name="_startDate" expr="eval: startDate"/>
+        <context name="_endDate" expr="eval: endDate"/>
     </action-view>
 
     <action-method name="action-planning-method-preview">
