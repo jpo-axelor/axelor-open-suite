@@ -21,14 +21,16 @@ public class TimeCardLineController {
         LocalDateTime startDateTime = (LocalDateTime)request.getContext().get("startDateTime");
         LocalDateTime endDateTime = (LocalDateTime)request.getContext().get("endDateTime");
 
-        response.setValue("weekDay", startDateTime.getDayOfWeek().getValue());
-        response.setValue("date", startDateTime.toLocalDate());
-        response.setValue("startTime", startDateTime.toLocalTime());
+        if (startDateTime != null && endDateTime != null) {
+            response.setValue("weekDay", startDateTime.getDayOfWeek().getValue());
+            response.setValue("date", startDateTime.toLocalDate());
+            response.setValue("startTime", startDateTime.toLocalTime());
 
-        if (endDateTime.toLocalDate().compareTo(startDateTime.toLocalDate()) > 0) {
-            response.setValue("endTime", LocalTime.MIDNIGHT.minusSeconds(1));
-        } else {
-            response.setValue("endTime", endDateTime.toLocalTime());
+            if (endDateTime.toLocalDate().compareTo(startDateTime.toLocalDate()) > 0) {
+                response.setValue("endTime", LocalTime.MIDNIGHT.minusSeconds(1));
+            } else {
+                response.setValue("endTime", endDateTime.toLocalTime());
+            }
         }
 
         Integer projectId = (Integer)request.getContext().get("_projectId");
