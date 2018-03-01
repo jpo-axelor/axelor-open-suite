@@ -5,23 +5,24 @@
 
     <form name="temp-time-card-line-form" title="Ligne de pointage" model="com.axelor.apps.timecard.db.TempTimeCardLine">
         <panel>
-            <field name="project"/>
-            <field name="employee"/>
-            <field name="startDateTime"/>
-            <field name="endDateTime"/>
+            <field name="project" grid-view="project-grid" form-view="project-form"/>
+            <field name="employee" grid-view="employee-grid" form-view="employee-form"/>
+            <field name="startDateTime" colSpan="3"/>
+            <field name="endDateTime" colSpan="3"/>
+            <field name="typeSelect"/>
         </panel>
     </form>
 
     <calendar name="temp-time-card-line-calendar-by-project" title="Pointage" model="com.axelor.apps.timecard.db.TempTimeCardLine"
               eventStart="startDateTime" eventStop="endDateTime" colorBy="project" editable="false">
+        <field name="fullName"/>
         <field name="project"/>
-        <field name="employee"/>
     </calendar>
 
     <calendar name="temp-time-card-line-calendar-by-employee" title="Pointage" model="com.axelor.apps.timecard.db.TempTimeCardLine"
               eventStart="startDateTime" eventStop="endDateTime" colorBy="employee" editable="false">
+        <field name="fullName"/>
         <field name="employee"/>
-        <field name="project"/>
     </calendar>
 
 </object-views>

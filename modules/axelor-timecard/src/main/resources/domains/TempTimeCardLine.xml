@@ -7,10 +7,22 @@
 
     <entity name="TempTimeCardLine">
 
+        <string name="fullName" title="Nom complet"/>
+
         <many-to-one name="project" title="Projet" ref="com.axelor.apps.project.db.Project"/>
         <many-to-one name="employee" title="Employé" ref="com.axelor.apps.hr.db.Employee" readonly="true"/>
         <datetime name="startDateTime" title="Date et heure de début"/>
         <datetime name="endDateTime" title="Date et heure de fin"/>
+        <string name="typeSelect" title="Type de ligne" selection="timecardline.timecard.type.select"/>
+
+        <extra-code>
+            <![CDATA[
+                // Type Select
+                public static final String TYPE_CONTRACTUAL = "contractual";
+                public static final String TYPE_EXTRA = "extra";
+                public static final String TYPE_ABSENCE = "absence";
+            ]]>
+        </extra-code>
 
     </entity>
 

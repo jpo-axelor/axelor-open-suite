@@ -8,15 +8,15 @@
           onLoad="action-planning-attrs-refresh-dashlets,action-planning-method-compute-monthly-wage">
         <menubar>
             <menu title="Outils" icon="fa-wrench">
-                <item title="Prévisualiser" action="action-planning-method-preview" readonlyIf="!project || !employee || !startDate || !endDate"/>
+                <item title="Prévisualiser" action="action-planning-method-preview" readonlyIf="(!project &amp;&amp; !employee) || !startDate || !endDate"/>
             </menu>
         </menubar>
 
         <panel>
             <field name="project" canEdit="false" onChange="action-planning-attrs-refresh-dashlets,action-planning-method-compute-monthly-wage" grid-view="project-grid" form-view="project-form"/>
             <field name="employee" canEdit="false" onChange="action-planning-attrs-refresh-dashlets,action-planning-method-compute-monthly-wage" grid-view="employee-grid" form-view="employee-form"/>
-            <field name="startDate" validIf="startDate &lt; endDate" colSpan="4"/>
-            <field name="endDate" validIf="endDate &gt; startDate" colSpan="4"/>
+            <field name="startDate" validIf="startDate &lt; endDate" onChange="action-planning-attrs-refresh-dashlets,action-planning-method-compute-monthly-wage" colSpan="4"/>
+            <field name="endDate" validIf="endDate &gt; startDate" onChange="action-planning-attrs-refresh-dashlets,action-planning-method-compute-monthly-wage" colSpan="4"/>
             <field name="monthlyWage" colSpan="4"/>
         </panel>
 
@@ -91,32 +91,38 @@
         <context name="_employeeId" expr="eval: employee?.id"/>
     </action-view>
 
-    <action-view name="action-planning-view-time-card-lines-dashlet-both" title="Lignes de pointage" model="com.axelor.apps.timecard.db.TimeCardLine">
+    <action-view name="action-planning-view-time-card-lines-dashlet-both" title="Lignes de pointage prévisionnelles" model="com.axelor.apps.timecard.db.TimeCardLine">
         <view type="grid" name="time-card-line-grid"/>
         <view type="form" name="time-card-line-form"/>
         <view-param name="popup" value="reload"/>
         <view-param name="show-toolbar" value="true"/>
-        <domain>self.employee.id = :_employeeId AND self.project.id = :_projectId AND self.isDeletable = false</domain>
+        <domain>self.employee.id = :_employeeId AND self.project.id = :_projectId AND self.isDeletable = false AND (self.date BETWEEN :_startDate AND :_endDate)</domain>
         <context name="_employeeId" expr="eval: employee.id"/>
         <context name="_projectId" expr="eval: project.id"/>
+        <context name="_startDate" expr="eval: startDate"/>
+        <context name="_endDate" expr="eval: endDate"/>
     </action-view>
 
-    <action-view name="action-planning-view-time-card-lines-dashlet-project" title="Lignes de pointage" model="com.axelor.apps.timecard.db.TimeCardLine">
+    <action-view name="action-planning-view-time-card-lines-dashlet-project" title="Lignes de pointage prévisionnelles" model="com.axelor.apps.timecard.db.TimeCardLine">
         <view type="grid" name="time-card-line-grid"/>
         <view type="form" name="time-card-line-form"/>
         <view-param name="popup" value="reload"/>
         <view-param name="show-toolbar" value="true"/>
-        <domain>self.project.id = :_projectId AND self.isDeletable = false</domain>
+        <domain>self.project.id = :_projectId AND self.isDeletable = false AND (self.date BETWEEN :_startDate AND :_endDate)</domain>
         <context name="_projectId" expr="eval: project.id"/>
+        <context name="_startDate" expr="eval: startDate"/>
+        <context name="_endDate" expr="eval: endDate"/>
     </action-view>
 
-    <action-view name="action-planning-view-time-card-lines-dashlet-employee" title="Lignes de pointage" model="com.axelor.apps.timecard.db.TimeCardLine">
+    <action-view name="action-planning-view-time-card-lines-dashlet-employee" title="Lignes de pointage prévisionnelles" model="com.axelor.apps.timecard.db.TimeCardLine">
         <view type="grid" name="time-card-line-grid"/>
         <view type="form" name="time-card-line-form"/>
         <view-param name="popup" value="reload"/>
         <view-param name="show-toolbar" value="true"/>
-        <domain>self.employee.id = :_employeeId AND self.isDeletable = false</domain>
+        <domain>self.employee.id = :_employeeId AND self.isDeletable = false AND (self.date BETWEEN :_startDate AND :_endDate)</domain>
         <context name="_employeeId" expr="eval: employee.id"/>
+        <context name="_startDate" expr="eval: startDate"/>
+        <context name="_endDate" expr="eval: endDate"/>
     </action-view>
 
     <action-view name="action-planning-view-add-time-card-line" title="Ligne de pointage" model="com.axelor.apps.timecard.db.TimeCardLine">

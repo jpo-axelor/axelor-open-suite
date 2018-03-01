@@ -25,6 +25,10 @@
 
         <boolean name="isDeletable" hidden="true" default="false"/>
 
+        <finder-method name="findByEmployee" using="employee" all="true"/>
+        <finder-method name="findByProject" using="project" all="true"/>
+        <finder-method name="findByEmployeeAndProject" using="employee,project" all="true"/>
+
         <extra-code>
             <![CDATA[
                 // Week Day Select
