@@ -32,6 +32,9 @@
             <field name="leaveLine" onSelect="action-time-card-line-attrs-leaveline-domain" hidden="true" showIf="typeSelect == 'absence'" grid-view="leave-line-grid" form-view="leave-line-form"/>
             <field name="leaveRequest" showIf="leaveRequest &amp;&amp; typeSelect == 'absence'" grid-view="leave-request-grid" form-view="leave-request-form"/>
             <field name="comments" colSpan="12"/>
+            <spacer/>
+            <field name="absenceTimeCardLine" grid-view="time-card-line-grid" form-view="time-card-line-form"/>
+            <panel-related field="substitutionTimeCardLineList" grid-view="time-card-line-grid" form-view="time-card-line-form"/>
         </panel>
     </form>
 

@@ -7,6 +7,8 @@ import com.axelor.apps.timecard.db.repo.TimeCardLineRepository;
 import com.google.inject.Inject;
 
 import javax.annotation.Nullable;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +19,24 @@ public class TimeCardLineServiceImpl implements TimeCardLineService {
     @Inject
     public TimeCardLineServiceImpl(TimeCardLineRepository timeCardLineRepo) {
         this.timeCardLineRepo = timeCardLineRepo;
+    }
+
+    @Override
+    public TimeCardLine generateTimeCardLine(Employee employee, Project project, LocalDate date, LocalTime startTime, LocalTime endTime, String lineType, boolean isDeletable) {
+        TimeCardLine timeCardLine = new TimeCardLine();
+        timeCardLine.setIsDeletable(isDeletable);
+
+        timeCardLine.setEmployee(employee);
+        timeCardLine.setProject(project);
+        timeCardLine.setWeekDay(date.getDayOfWeek().getValue());
+
+        timeCardLine.setDate(date);
+        timeCardLine.setStartTime(startTime);
+        timeCardLine.setEndTime(endTime);
+
+        timeCardLine.setTypeSelect(lineType);
+
+        return timeCardLine;
     }
 
     @Override
@@ -33,6 +53,6 @@ public class TimeCardLineServiceImpl implements TimeCardLineService {
 
         timeCardLines.removeIf(tcl -> tcl.getIsDeletable() || tcl.getTimeCard() != null);
 
-         return timeCardLines;
+        return timeCardLines;
     }
 }

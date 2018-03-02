@@ -11,4 +11,11 @@ public interface TimeCardService {
      */
     void generateTimeCardLines(TimeCard timeCard);
 
+    /**
+     * Attaches previously (orphan) generated {@code TimeCardLine}s to given {@code TimeCard}
+     *
+     * @param timeCard
+     */
+    void attachScheduledTimeCardLines(TimeCard timeCard);
+
 }

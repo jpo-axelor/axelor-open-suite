@@ -18,6 +18,7 @@ public class TimeCardController {
     public void generateTimeCardLines(ActionRequest request, ActionResponse response) {
         TimeCard timeCard = Beans.get(TimeCardRepository.class).find(request.getContext().asType(TimeCard.class).getId());
         Beans.get(TimeCardService.class).generateTimeCardLines(timeCard);
+        Beans.get(TimeCardService.class).attachScheduledTimeCardLines(timeCard);
         response.setReload(true);
     }
 

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.0.xsd">
+
+    <form name="leave-request-form" id="timecard-leave-request-form" title="Leave Request" model="com.axelor.apps.hr.db.LeaveRequest"
+          onNew="action-leave-request-record-default,action-leave-request-attrs-buttons,action-leave-request-record-to-justify,action-leave-request-method-leave-reason-to-justify"
+          onLoad="action-leave-request-group-on-form-load"
+          onSave="action-leave-request-validate-dates-on-save" canCopy="false">
+
+        <panel sidebar="true" name="actions" title="Actions" stacked="true">
+            <button name="sendLeave" onClick="action-leave-request-group-send" colSpan="4" title="Send" hideIf="statusSelect &gt; 1"/>
+            <button name="validateButton" onClick="action-leave-request-group-validate" title="Validate"/>
+            <button name="refuseButton" onClick="action-leave-request-group-refuse" title="Refuse"/>
+            <button name="cancelButton" onClick="action-leave-request-group-cancel" hideIf="statusSelect == 5" title="Cancel" icon="fa-close"/>
+            <button name="draftButton" onClick="action-leave-request-record-draft,save,action-leave-request-attrs-buttons,action-leave-request-attrs-draft-cancel" title="Return to draft status" showIf="statusSelect &gt; 3 "/>
+        </panel>
+
+        <panel title="Status">
+            <field name="statusSelect" colSpan="12" widget="NavSelect" showTitle="false"/>
+        </panel>
+
+        <panel hidden="true" showIf="leaveLine != null &amp;&amp; leaveLine.leaveReason != null &amp;&amp; leaveLine.leaveReason.instruction != null">
+            <field name="leaveLine.leaveReason.instruction" widget="html" colSpan="12" showTitle="false"/>
+        </panel>
+
+        <panel name="information">
+            <spacer/>
+            <field name="company" canEdit="false" onChange="action-hr-record-empty-user,action-leave-request-method-leave-reason-to-justify" form-view="company-form" grid-view="company-grid"/>
+            <field name="user" form-view="user-form" grid-view="user-grid" onSelect="action-hr-attrs-set-user-domain" onChange="action-leave-request-validate-dates,action-leave-request-methode-compute-duration, action-leave-request-method-leave-reason-to-justify" canNew="false" canEdit="false" canView="false"/>
+            <field name="requestDate" colSpan="12" width="50%"/>
+            <field name="leaveLine" onSelect="action-leave-request-attrs-line-domain" title="Reason" canEdit="false" canNew="false" widget="SuggestBox" required="true" onChange="action-leave-request-attrs-select,action-leave-request-attrs-inject-change" form-view="leave-line-form" grid-view="leave-line-grid"/>
+            <field name="leaveLine.quantity" title="Available quantity (acquired)"/>
+            <field name="injectConsumeSelect" hidden="true" onChange="action-leave-request-attrs-inject-change"/>
+            <spacer/>
+            <field name="fromDate" onChange="action-leave-request-validate-dates,action-leave-request-methode-compute-duration" default="__date__"/>
+            <field name="startOnSelect" onChange="action-leave-request-validate-dates,action-leave-request-methode-compute-duration"/>
+            <field name="toDate" onChange="action-leave-request-validate-dates,action-leave-request-methode-compute-duration"/>
+            <field name="endOnSelect" onChange="action-leave-request-validate-dates,action-leave-request-methode-compute-duration"/>
+            <field name="duration" readonly="true" onChange="action-leave-request-methode-duration"/>
+
+            <field name="comments" colSpan="12"/>
+        </panel>
+
+        <panel-related field="timeCardLineList" showIf="timeCardLineList.length > 0" readonly="true" grid-view="time-card-line-grid" form-view="time-card-line-form"/>
+
+        <panel>
+            <field name="validatedBy" canEdit="false" form-view="user-form" grid-view="user-grid"/>
+            <field name="refusedBy" canEdit="false" form-view="user-form" grid-view="user-grid"/>
+            <field name="validationDate"/>
+            <field name="refusalDate"/>
+            <field name="groundForRefusal" showIf="statusSelect == 4" colSpan="12"/>
+            <field name="toJustifyLeaveReason" hidden="true"/>
+        </panel>
+
+        <panel>
+            <field name="attrs" colSpan="12"/>
+        </panel>
+
+        <panel-mail>
+            <mail-messages limit="4"/>
+            <mail-followers/>
+        </panel-mail>
+    </form>
+
+</object-views>
