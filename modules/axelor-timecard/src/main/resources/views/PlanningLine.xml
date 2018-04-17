@@ -33,17 +33,25 @@
                         </panel>
                     </panel>
 
-                    <panel title="Jours" colSpan="12" itemSpan="1">
-                        <field name="monday"/>
-                        <field name="tuesday"/>
-                        <field name="wednesday"/>
-                        <field name="thursday"/>
-                        <field name="friday"/>
-                        <field name="saturday"/>
-                        <field name="sunday"/>
+                    <panel title="Jours" colSpan="12">
+                        <panel colSpan="3">
+                            <field name="monday"/>
+                            <field name="tuesday"/>
+                        </panel>
+                        <panel colSpan="3">
+                            <field name="wednesday"/>
+                            <field name="thursday"/>
+                        </panel>
+                        <panel colSpan="3">
+                            <field name="friday"/>
+                            <field name="saturday"/>
+                        </panel>
+                        <panel colSpan="3">
+                            <field name="sunday"/>
+                        </panel>
                     </panel>
 
-                    <panel title="Mois" colSpan="12" itemSpan="1">
+                    <panel title="Mois" colSpan="12" itemSpan="2">
                         <field name="january"/>
                         <field name="february"/>
                         <field name="march"/>
