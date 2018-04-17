@@ -13,7 +13,7 @@
         </menubar>
 
         <panel>
-            <field name="project" canEdit="false" onChange="action-planning-attrs-refresh-dashlets,action-planning-method-compute-monthly-wage" grid-view="project-grid" form-view="project-form"/>
+            <field name="project" canEdit="false" domain="self.statusSelect = 2" onChange="action-planning-attrs-refresh-dashlets,action-planning-method-compute-monthly-wage" grid-view="project-grid" form-view="project-form"/>
             <field name="employee" canEdit="false" onChange="action-planning-attrs-refresh-dashlets,action-planning-method-compute-monthly-wage" grid-view="employee-grid" form-view="employee-form"/>
             <field name="startDate" validIf="startDate &lt; endDate" onChange="action-planning-attrs-refresh-dashlets,action-planning-method-compute-monthly-wage" colSpan="4"/>
             <field name="endDate" validIf="endDate &gt; startDate" onChange="action-planning-attrs-refresh-dashlets,action-planning-method-compute-monthly-wage" colSpan="4"/>
