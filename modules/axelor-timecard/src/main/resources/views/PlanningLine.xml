@@ -12,7 +12,8 @@
     </grid>
 
     <form name="planning-line-form" title="Ligne de planning" model="com.axelor.apps.timecard.db.PlanningLine" width="large"
-          onNew="action-planning-line-record-set-defaults,action-planning-line-record-default-frequency">
+          onNew="action-planning-line-record-set-defaults,action-planning-line-record-default-frequency"
+          onSave="save,action-planningline-method-compute-monthly-wage">
         <panel>
             <field name="project" canEdit="false" grid-view="project-grid" form-view="project-form"/>
             <field name="employee" canEdit="false" grid-view="employee-grid" form-view="employee-form"/>
@@ -69,9 +70,8 @@
             </field>
         </panel>
 
-        <panel>
+        <panel showIf="$readonly()">
             <field name="monthlyWage"/>
-            <button name="computeMonthlyWage" title="Calculer mensualisation" onClick="save,action-planningline-method-compute-monthly-wage" colSpan="3"/>
         </panel>
     </form>
 
