@@ -17,8 +17,8 @@
         <panel>
             <field name="project" canEdit="false" grid-view="project-grid" form-view="project-form"/>
             <field name="employee" canEdit="false" grid-view="employee-grid" form-view="employee-form"/>
-            <field name="startTime" colSpan="3"/>
-            <field name="endTime" colSpan="3"/>
+            <field name="startTime" colSpan="3" validIf="startTime &lt; endTime"/>
+            <field name="endTime" colSpan="3" validIf="startTime &lt; endTime"/>
             <field name="frequency" showIf="$readonly()" hidden="true" grid-view="frequency-grid" form-view="frequency-form"/>
             <field name="frequency" canEdit="false" canRemove="false" canSelect="false" canView="false" showTitle="false" showIf="!$readonly()" hidden="true" colSpan="12">
                 <editor>
