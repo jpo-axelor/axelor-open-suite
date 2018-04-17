@@ -28,12 +28,4 @@
         <view type="form" name="planning-line-form"/>
     </action-view>
 
-
-    <menuitem name="timecard-frequency" parent="timecard-root" title="Fréquences" action="timecard.frequency"/>
-
-    <action-view name="timecard.frequency" title="Fréquences" model="com.axelor.apps.timecard.db.Frequency">
-        <view type="grid" name="frequency-grid"/>
-        <view type="form" name="frequency-form"/>
-    </action-view>
-
 </object-views>
