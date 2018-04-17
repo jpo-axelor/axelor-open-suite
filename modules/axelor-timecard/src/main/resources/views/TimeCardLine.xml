@@ -23,15 +23,15 @@
             <field name="employee"/>
             <field name="product"/>
             <spacer/>
-            <field name="weekDay" colSpan="3"/>
-            <field name="date" colSpan="3"/>
-            <field name="startTime" colSpan="3"/>
-            <field name="endTime" colSpan="3"/>
-            <field name="duration"/>
+            <field name="weekDay" colSpan="2"/>
+            <field name="date" onChange="action-time-card-line-record-get-week-day" colSpan="2"/>
+            <field name="startTime" colSpan="2" onChange="action-time-card-line-record-compute-duration" validIf="startTime &lt; endTime"/>
+            <field name="endTime" colSpan="2" onChange="action-time-card-line-record-compute-duration" validIf="startTime &lt; endTime"/>
+            <field name="duration" colSpan="2"/>
             <spacer/>
             <field name="leaveLine" onSelect="action-time-card-line-attrs-leaveline-domain" hidden="true" showIf="typeSelect == 'absence'" grid-view="leave-line-grid" form-view="leave-line-form"/>
             <field name="leaveRequest" showIf="leaveRequest &amp;&amp; typeSelect == 'absence'" grid-view="leave-request-grid" form-view="leave-request-form"/>
-            <field name="comments" colSpan="12"/>
+            <field name="comments" colSpan="12" widget="html"/>
             <spacer/>
             <field name="absenceTimeCardLine" grid-view="time-card-line-grid" form-view="time-card-line-form"/>
             <panel-related field="substitutionTimeCardLineList" grid-view="time-card-line-grid" form-view="time-card-line-form"/>
@@ -51,5 +51,13 @@
     <action-attrs name="action-time-card-line-attrs-leaveline-domain">
         <attribute for="leaveLine" name="domain" expr="eval: &quot; self.employee.id = ${__this__.employee?.id} &quot;"/>
     </action-attrs>
+
+    <action-record name="action-time-card-line-record-compute-duration" model="com.axelor.apps.timecard.db.TimeCardLine">
+        <field name="duration" expr="eval: java.time.Duration.between(startTime, endTime).toMinutes() / 60"/>
+    </action-record>
+
+    <action-record name="action-time-card-line-record-get-week-day" model="com.axelor.apps.timecard.db.TimeCardLine">
+        <field name="weekDay" expr="eval: date.getDayOfWeek().getValue()"/>
+    </action-record>
 
 </object-views>

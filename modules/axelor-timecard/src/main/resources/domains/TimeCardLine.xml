@@ -10,14 +10,14 @@
         <many-to-one name="project" title="Projet" ref="com.axelor.apps.project.db.Project"/>
         <many-to-one name="product" title="Activité" ref="com.axelor.apps.base.db.Product"/>
         <many-to-one name="employee" title="Employé" ref="com.axelor.apps.hr.db.Employee"/>
-        <integer name="weekDay" title="Jour" selection="timecardline.timecard.week.day.select"/>
+        <integer name="weekDay" title="Jour" selection="timecardline.timecard.week.day.select" readonly="true"/>
         <date name="date" title="Date" column="date_val"/>
         <time name="startTime" title="Heure de début"/>
         <time name="endTime" title="Heure de fin"/>
         <datetime name="startDateTime" title="Date et heure de début" hidden="true"/>
         <datetime name="endDateTime" title="Date et heure de fin" hidden="true"/>
         <many-to-one name="timeCard" ref="com.axelor.apps.timecard.db.TimeCard" title="Pointage" readonly="true"/>
-        <decimal name="duration" title="Durée (heures)"/>
+        <decimal name="duration" title="Durée (heures)" readonly="true"/>
         <string name="comments" title="Commentaires" large="true"/>
         <many-to-one name="leaveLine" ref="com.axelor.apps.hr.db.LeaveLine" title="Motif"/>
         <many-to-one name="leaveRequest" ref="com.axelor.apps.hr.db.LeaveRequest" title="Demande de congés" readonly="true"/>
