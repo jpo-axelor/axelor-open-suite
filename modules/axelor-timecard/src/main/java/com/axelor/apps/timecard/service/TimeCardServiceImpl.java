@@ -52,6 +52,7 @@ public class TimeCardServiceImpl implements TimeCardService {
             for (LocalDate date : dates) {
                 if (date.equals(fromDate) || date.isAfter(fromDate) && date.isBefore(toDate) || date.equals(toDate)) {
                     TimeCardLine timeCardLine = timeCardLineService.generateTimeCardLine(employee, project, date, planningLine.getStartTime(), planningLine.getEndTime(), TimeCardLineRepository.TYPE_CONTRACTUAL, true);
+                    timeCardLineRepo.save(timeCardLine);
                     timeCard.addTimeCardLineListItem(timeCardLine);
                 }
             }
