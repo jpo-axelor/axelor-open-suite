@@ -47,8 +47,8 @@
 
     <action-view name="action-time-card-view-show-calendar" title="Pointage - ${employee.name}" model="com.axelor.apps.timecard.db.TimeCardLine">
         <view type="calendar" name="time-card-line-calendar"/>
-        <domain>self.timeCard.id = :_timeCardId</domain>
-        <context name="_timeCardId" expr="eval: __self__.id"/>
+        <domain>self.timeCard.id = :_id</domain>
+        <context name="calendarDate" expr="eval: timeCardLineList.sort{ it.date }[0]?.getDate()"/>
         <context name="_projectId" expr="eval: project?.id"/>
         <context name="_employeeId" expr="eval: employee?.id"/>
     </action-view>
