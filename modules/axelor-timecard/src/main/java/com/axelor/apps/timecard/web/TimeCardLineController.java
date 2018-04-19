@@ -155,7 +155,8 @@ public class TimeCardLineController {
                                                               employeeRepo.find(Long.valueOf(((Integer) ((Map) context.get("employeeReplacing")).get("id")))),
                                                               projects,
                                                               LocalDate.parse((String) context.get("startDate")),
-                                                              LocalDate.parse((String) context.get("endDate")));
+                                                              LocalDate.parse((String) context.get("endDate")),
+                                                              (Boolean) context.get("isContractual"));
 
         response.setCanClose(true);
     }

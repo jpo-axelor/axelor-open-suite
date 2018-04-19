@@ -18,7 +18,8 @@
     <form name="time-card-line-form" title="Ligne de pointage" model="com.axelor.apps.timecard.db.TimeCardLine" width="large"
           onNew="action-time-card-line-method-set-defaults,action-time-card-line-record-compute-duration">
         <panel readonlyIf="typeSelect == 'contractual'">
-            <field name="typeSelect" selection-in="['extra', 'absence']" colSpan="12"/>
+            <field name="typeSelect" selection-in="['extra', 'absence']"/>
+            <field name="isContractual" showIf="typeSelect == 'extra' &amp;&amp; isSubstitution"/>
             <field name="project"/>
             <field name="employee"/>
             <field name="product"/>
@@ -46,8 +47,9 @@
     <form name="time-card-line-substitution-wizard-form" title="Assistant remplacements" model="com.axelor.apps.base.db.Wizard"
           onNew="action-time-card-line-method-set-wizard-defaults">
         <panel>
-            <field name="$startDate" title="Date de début" widget="Date"/>
-            <field name="$endDate" title="Date de fin" widget="Date"/>
+            <field name="$startDate" title="Date de début" widget="Date" colSpan="4"/>
+            <field name="$endDate" title="Date de fin" widget="Date" colSpan="4"/>
+            <field name="$isContractual" title="Contractuelle" widget="Boolean" colSpan="4"/>
             <field name="$employeeToReplace" title="Employé à remplacer" widget="ManyToOne" target="com.axelor.apps.hr.db.Employee" readonly="true"/>
             <field name="$employeeReplacing" title="Employé remplaçant" widget="ManyToOne" target="com.axelor.apps.hr.db.Employee"/>
             <field name="$projects" title="Chantiers" widget="TagSelect" target="com.axelor.apps.project.db.Project" canNew="false" colSpan="12"/>

@@ -60,7 +60,7 @@ public class TimeCardLineServiceImpl implements TimeCardLineService {
 
     @Override
     @Transactional(rollbackOn = {AxelorException.class, Exception.class})
-    public void generateExtraTCL(Employee oldEmployee, Employee newEmployee, List<Project> projects, LocalDate startDate, LocalDate endDate) {
+    public void generateExtraTCL(Employee oldEmployee, Employee newEmployee, List<Project> projects, LocalDate startDate, LocalDate endDate, boolean isContractual) {
         List<TimeCardLine> timeCardLines = timeCardLineRepo.all().filter("employee = ? AND date >= ? AND date <= ? AND typeSelect = ?", oldEmployee, startDate, endDate, TimeCardLineRepository.TYPE_ABSENCE).fetch();
         for (TimeCardLine timeCardLine : timeCardLines) {
             TimeCardLine tcl = generateTimeCardLine(newEmployee,
@@ -72,6 +72,7 @@ public class TimeCardLineServiceImpl implements TimeCardLineService {
                                                     false);
 
             tcl.setIsSubstitution(true);
+            tcl.setIsContractual(isContractual);
 
             timeCardLine.addSubstitutionTimeCardLineListItem(tcl);
             timeCardLineRepo.save(tcl);

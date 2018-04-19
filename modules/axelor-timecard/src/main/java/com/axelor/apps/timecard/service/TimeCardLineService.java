@@ -42,7 +42,8 @@ public interface TimeCardLineService {
      * @param projects
      * @param startDate
      * @param endDate
+     * @param isContractual
      */
-    void generateExtraTCL(Employee oldEmployee, Employee newEmployee, List<Project> projects, LocalDate startDate, LocalDate endDate);
+    void generateExtraTCL(Employee oldEmployee, Employee newEmployee, List<Project> projects, LocalDate startDate, LocalDate endDate, boolean isContractual);
 
 }
