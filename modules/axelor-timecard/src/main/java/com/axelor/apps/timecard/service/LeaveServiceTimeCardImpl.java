@@ -115,6 +115,7 @@ public class LeaveServiceTimeCardImpl extends LeaveServiceImpl {
                     TimeCardLine tcl = timeCardLineService.generateTimeCardLine(employee, project, date, startTime, endTime, TimeCardLineRepository.TYPE_ABSENCE, false);
                     if (tcl != null) {
                         tcl.setLeaveLine(leaveRequest.getLeaveLine());
+                        timeCardLineRepo.save(tcl);
                         leaveRequest.addTimeCardLineListItem(tcl);
                     }
                 }

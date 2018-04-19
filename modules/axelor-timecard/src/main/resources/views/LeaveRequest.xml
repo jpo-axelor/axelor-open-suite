@@ -42,7 +42,7 @@
             <field name="comments" colSpan="12"/>
         </panel>
 
-        <panel-related field="timeCardLineList" showIf="timeCardLineList.length > 0" readonly="true" grid-view="time-card-line-grid" form-view="time-card-line-form"/>
+        <panel-related field="timeCardLineList" showIf="timeCardLineList.length > 0" canRemove="false" canNew="false" grid-view="time-card-line-grid" form-view="time-card-line-form"/>
 
         <panel>
             <field name="validatedBy" canEdit="false" form-view="user-form" grid-view="user-grid"/>

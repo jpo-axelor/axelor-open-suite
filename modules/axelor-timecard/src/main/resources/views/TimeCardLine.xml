@@ -16,7 +16,7 @@
     </grid>
 
     <form name="time-card-line-form" title="Ligne de pointage" model="com.axelor.apps.timecard.db.TimeCardLine" width="large"
-          onNew="action-time-card-line-method-set-defaults">
+          onNew="action-time-card-line-method-set-defaults,action-time-card-line-record-compute-duration">
         <panel readonlyIf="typeSelect == 'contractual'">
             <field name="typeSelect" selection-in="['extra', 'absence']" colSpan="12"/>
             <field name="project"/>
@@ -33,8 +33,11 @@
             <field name="leaveRequest" showIf="leaveRequest &amp;&amp; typeSelect == 'absence'" grid-view="leave-request-grid" form-view="leave-request-form"/>
             <field name="comments" colSpan="12" widget="html"/>
             <spacer/>
-            <field name="absenceTimeCardLine" showIf="typeSelect == 'extra' &amp;&amp; isSubstitution" grid-view="time-card-line-grid" form-view="time-card-line-form"/>
-            <panel-related field="substitutionTimeCardLineList" showIf="typeSelect == 'absence'" colSpan="12" grid-view="time-card-line-grid" form-view="time-card-line-form"/>
+            <panel title="Remplacements" showIf="typeSelect == 'extra' &amp;&amp; isSubstitution || typeSelect == 'absence'" colSpan="12">
+                <field name="absenceTimeCardLine" showIf="typeSelect == 'extra' &amp;&amp; isSubstitution" grid-view="time-card-line-grid" form-view="time-card-line-form"/>
+                <panel-related field="substitutionTimeCardLineList" readonly="true" showIf="typeSelect == 'absence'" canNew="false" colSpan="12" grid-view="time-card-line-grid" form-view="time-card-line-form"/>
+                <button name="addSubstitution" title="Ajouter un remplacement" css="btn-custom text-left" icon="fa-plus" onClick="save,action-time-card-line-view-add-substitution" showIf="typeSelect == 'absence'"/>
+            </panel>
         </panel>
     </form>
 
@@ -59,5 +62,12 @@
     <action-record name="action-time-card-line-record-get-week-day" model="com.axelor.apps.timecard.db.TimeCardLine">
         <field name="weekDay" expr="eval: date.getDayOfWeek().getValue()"/>
     </action-record>
+
+    <action-view name="action-time-card-line-view-add-substitution" title="Ligne de remplacement" model="com.axelor.apps.timecard.db.TimeCardLine">
+        <view type="form" name="time-card-line-form"/>
+        <view-param name="popup" value="reload"/>
+        <context name="_projectId" expr="eval: project?.id"/>
+        <context name="_isSubstitution" expr="eval: true"/>
+    </action-view>
 
 </object-views>
