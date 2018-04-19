@@ -6,7 +6,9 @@ import com.axelor.apps.hr.db.repo.EmployeeRepository;
 import com.axelor.apps.hr.db.repo.LeaveRequestRepository;
 import com.axelor.apps.project.db.Project;
 import com.axelor.apps.project.db.repo.ProjectRepository;
+import com.axelor.apps.timecard.db.Planning;
 import com.axelor.apps.timecard.db.TimeCardLine;
+import com.axelor.apps.timecard.db.repo.PlanningRepository;
 import com.axelor.apps.timecard.db.repo.TimeCardLineRepository;
 import com.axelor.apps.timecard.service.TimeCardLineService;
 import com.axelor.inject.Beans;
@@ -104,6 +106,19 @@ public class TimeCardLineController {
                 projectsIds.add(timeCardLine.getProject().getId().toString());
             }
             response.setAttr("$projects", "domain", "self.id IN (" + String.join(",", projectsIds) + ")");
+        }
+
+        Integer planningId = (Integer) request.getContext().get("_planningId");
+        if (planningId != null) {
+            Planning planning = Beans.get(PlanningRepository.class).find(Long.valueOf(planningId));
+
+            Employee employee = planning.getEmployee();
+            if (employee != null) {
+                response.setValue("$employeeToReplace", employee);
+                response.setAttr("$employeeReplacing", "domain", "self.id <> " + employee.getId());
+            } else {
+                response.setAttr("$employeeToReplace", "readonly", false);
+            }
         }
     }
 

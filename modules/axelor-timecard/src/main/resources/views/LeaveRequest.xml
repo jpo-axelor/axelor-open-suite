@@ -10,7 +10,7 @@
 
         <menubar>
             <menu title="Outils" icon="fa-wrench">
-                <item title="Générer les lignes de remplacements" action="save,action-time-card-view-open-substitution-wizard" readonlyIf="!id"/>
+                <item title="Générer les lignes de remplacements" action="save,action-leave-request-view-open-substitution-wizard" readonlyIf="!id"/>
             </menu>
         </menubar>
 
@@ -69,9 +69,10 @@
         </panel-mail>
     </form>
 
-    <action-view name="action-time-card-view-open-substitution-wizard" title="Assistant remplacements" model="com.axelor.apps.base.db.Wizard">
+    <action-view name="action-leave-request-view-open-substitution-wizard" title="Assistant remplacements" model="com.axelor.apps.base.db.Wizard">
         <view type="form" name="time-card-line-substitution-wizard-form"/>
         <view-param name="popup" value="reload"/>
+        <view-param name="popup-save" value="false"/>
         <view-param name="show-toolbar" value="false"/>
         <context name="_leaveRequestId" expr="eval: __self__.id"/>
     </action-view>

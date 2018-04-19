@@ -9,6 +9,7 @@
         <menubar>
             <menu title="Outils" icon="fa-wrench">
                 <item title="Prévisualiser" action="action-planning-method-preview" readonlyIf="(!project &amp;&amp; !employee) || !startDate || !endDate"/>
+                <item title="Générer les lignes de remplacements" action="save,action-planning-view-open-substitution-wizard"/>
             </menu>
         </menubar>
 
@@ -157,5 +158,13 @@
     <action-method name="action-planning-method-preview">
         <call class="com.axelor.apps.timecard.web.PlanningController" method="preview"/>
     </action-method>
+
+    <action-view name="action-planning-view-open-substitution-wizard" title="Assistant remplacements" model="com.axelor.apps.base.db.Wizard">
+        <view type="form" name="time-card-line-substitution-wizard-form"/>
+        <view-param name="popup" value="reload"/>
+        <view-param name="popup-save" value="false"/>
+        <view-param name="show-toolbar" value="false"/>
+        <context name="_planningId" expr="eval: __self__.id"/>
+    </action-view>
 
 </object-views>
