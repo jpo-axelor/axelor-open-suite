@@ -45,10 +45,12 @@ public class TimeCardLineController {
 
         // From action-view
         Integer timeCardLineId = (Integer) request.getContext().get("_id");
-        TimeCardLine timeCardLineParent = Beans.get(TimeCardLineRepository.class).find(Long.valueOf(timeCardLineId));
-        if (startDateTime == null || endDateTime == null) {
-            startDateTime = timeCardLineParent.getStartDateTime();
-            endDateTime = timeCardLineParent.getEndDateTime();
+        if (timeCardLineId != null) {
+            TimeCardLine timeCardLineParent = Beans.get(TimeCardLineRepository.class).find(Long.valueOf(timeCardLineId));
+            if (startDateTime == null || endDateTime == null) {
+                startDateTime = timeCardLineParent.getStartDateTime();
+                endDateTime = timeCardLineParent.getEndDateTime();
+            }
         }
 
         response.setValue("weekDay", startDateTime.getDayOfWeek().getValue());
