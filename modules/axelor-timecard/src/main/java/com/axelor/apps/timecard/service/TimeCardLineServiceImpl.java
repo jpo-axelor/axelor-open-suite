@@ -4,7 +4,9 @@ import com.axelor.apps.hr.db.Employee;
 import com.axelor.apps.project.db.Project;
 import com.axelor.apps.timecard.db.TimeCardLine;
 import com.axelor.apps.timecard.db.repo.TimeCardLineRepository;
+import com.axelor.exception.AxelorException;
 import com.google.inject.Inject;
+import com.google.inject.persist.Transactional;
 
 import javax.annotation.Nullable;
 import java.time.LocalDate;
@@ -54,5 +56,26 @@ public class TimeCardLineServiceImpl implements TimeCardLineService {
         timeCardLines.removeIf(tcl -> tcl.getIsDeletable() || tcl.getTimeCard() != null);
 
         return timeCardLines;
+    }
+
+    @Override
+    @Transactional(rollbackOn = {AxelorException.class, Exception.class})
+    public void generateExtraTCL(Employee oldEmployee, Employee newEmployee, List<Project> projects, LocalDate startDate, LocalDate endDate) {
+        List<TimeCardLine> timeCardLines = timeCardLineRepo.all().filter("employee = ? AND date >= ? AND date <= ? AND typeSelect = ?", oldEmployee, startDate, endDate, TimeCardLineRepository.TYPE_ABSENCE).fetch();
+        for (TimeCardLine timeCardLine : timeCardLines) {
+            TimeCardLine tcl = generateTimeCardLine(newEmployee,
+                                                    timeCardLine.getProject(),
+                                                    timeCardLine.getDate(),
+                                                    timeCardLine.getStartTime(),
+                                                    timeCardLine.getEndTime(),
+                                                    TimeCardLineRepository.TYPE_EXTRA,
+                                                    false);
+
+            tcl.setIsSubstitution(true);
+
+            timeCardLine.addSubstitutionTimeCardLineListItem(tcl);
+            timeCardLineRepo.save(tcl);
+            timeCardLineRepo.save(timeCardLine);
+        }
     }
 }

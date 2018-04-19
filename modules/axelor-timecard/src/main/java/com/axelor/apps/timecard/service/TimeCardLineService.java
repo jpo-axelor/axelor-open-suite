@@ -34,4 +34,15 @@ public interface TimeCardLineService {
      */
     List<TimeCardLine> getScheduledTimeCardLine(@Nullable Project project, @Nullable Employee employee);
 
+    /**
+     * Generates 'extra' {@code TimeCardLine}s with given arguments.
+     *
+     * @param oldEmployee
+     * @param newEmployee
+     * @param projects
+     * @param startDate
+     * @param endDate
+     */
+    void generateExtraTCL(Employee oldEmployee, Employee newEmployee, List<Project> projects, LocalDate startDate, LocalDate endDate);
+
 }

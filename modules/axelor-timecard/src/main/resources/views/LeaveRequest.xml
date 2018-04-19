@@ -8,6 +8,12 @@
           onLoad="action-leave-request-group-on-form-load"
           onSave="action-leave-request-validate-dates-on-save" canCopy="false">
 
+        <menubar>
+            <menu title="Outils" icon="fa-wrench">
+                <item title="Générer les lignes de remplacements" action="save,action-time-card-view-open-substitution-wizard" readonlyIf="!id"/>
+            </menu>
+        </menubar>
+
         <panel sidebar="true" stacked="true">
             <button name="sendLeave" onClick="action-leave-request-group-send" title="Send" hideIf="statusSelect &gt; 1"/>
             <button name="validateButton" hidden="true" onClick="action-leave-request-group-validate" title="Validate"/>
@@ -62,5 +68,12 @@
             <mail-followers/>
         </panel-mail>
     </form>
+
+    <action-view name="action-time-card-view-open-substitution-wizard" title="Assistant remplacements" model="com.axelor.apps.base.db.Wizard">
+        <view type="form" name="time-card-line-substitution-wizard-form"/>
+        <view-param name="popup" value="reload"/>
+        <view-param name="show-toolbar" value="false"/>
+        <context name="_leaveRequestId" expr="eval: __self__.id"/>
+    </action-view>
 
 </object-views>
