@@ -7,9 +7,11 @@ import com.axelor.apps.hr.db.repo.LeaveRequestRepository;
 import com.axelor.apps.project.db.Project;
 import com.axelor.apps.project.db.repo.ProjectRepository;
 import com.axelor.apps.timecard.db.Planning;
+import com.axelor.apps.timecard.db.TimeCard;
 import com.axelor.apps.timecard.db.TimeCardLine;
 import com.axelor.apps.timecard.db.repo.PlanningRepository;
 import com.axelor.apps.timecard.db.repo.TimeCardLineRepository;
+import com.axelor.apps.timecard.db.repo.TimeCardRepository;
 import com.axelor.apps.timecard.service.TimeCardLineService;
 import com.axelor.inject.Beans;
 import com.axelor.rpc.ActionRequest;
@@ -119,6 +121,15 @@ public class TimeCardLineController {
             } else {
                 response.setAttr("$employeeToReplace", "readonly", false);
             }
+        }
+
+        Integer timeCardId = (Integer) request.getContext().get("_timeCardId");
+        if (timeCardId != null) {
+            TimeCard timeCard = Beans.get(TimeCardRepository.class).find(Long.valueOf(timeCardId));
+
+            Employee employee = timeCard.getEmployee();
+            response.setValue("$employeeToReplace", employee);
+            response.setAttr("$employeeReplacing", "domain", "self.id <> " + employee.getId());
         }
     }
 

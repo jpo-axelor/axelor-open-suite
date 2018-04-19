@@ -14,6 +14,7 @@
     <form name="time-card-form" title="Pointage" model="com.axelor.apps.timecard.db.TimeCard" width="large">
         <menubar>
             <menu title="Outils" icon="fa-wrench">
+                <item title="Générer les lignes de remplacements" action="save,action-time-card-view-open-substitution-wizard" readonlyIf="!id"/>
                 <item title="Générer les lignes de pointage" action="save,action-time-card-method-generate-time-card-lines"/>
                 <item title="Voir calendrier" action="save,action-time-card-view-show-calendar"/>
             </menu>
@@ -51,6 +52,14 @@
         <context name="calendarDate" expr="eval: timeCardLineList.sort{ it.date }[0]?.getDate()"/>
         <context name="_projectId" expr="eval: project?.id"/>
         <context name="_employeeId" expr="eval: employee?.id"/>
+    </action-view>
+
+    <action-view name="action-time-card-view-open-substitution-wizard" title="Assistant remplacements" model="com.axelor.apps.base.db.Wizard">
+        <view type="form" name="time-card-line-substitution-wizard-form"/>
+        <view-param name="popup" value="reload"/>
+        <view-param name="popup-save" value="false"/>
+        <view-param name="show-toolbar" value="false"/>
+        <context name="_timeCardId" expr="eval: __self__.id"/>
     </action-view>
 
 </object-views>
