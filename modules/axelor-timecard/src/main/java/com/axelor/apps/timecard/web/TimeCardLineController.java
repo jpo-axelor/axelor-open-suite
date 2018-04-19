@@ -134,6 +134,8 @@ public class TimeCardLineController {
             response.setValue("$employeeToReplace", employee);
             response.setAttr("$employeeReplacing", "domain", "self.id <> " + employee.getId());
         }
+
+        response.setValue("isContractual", false);
     }
 
     /**

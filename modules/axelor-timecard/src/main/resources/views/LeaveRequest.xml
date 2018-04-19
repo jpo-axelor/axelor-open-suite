@@ -3,6 +3,21 @@
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.0.xsd">
 
+    <grid name="leave-request-grid" id="time-card-leave-request-grid" title="Leave Requests" model="com.axelor.apps.hr.db.LeaveRequest" orderBy="fromDate,startOnSelect">
+        <hilite color="danger" if="statusSelect == 4"/>
+        <hilite color="success" if="statusSelect == 3"/>
+        <hilite color="warning" if="statusSelect == 2"/>
+        <field name="company" form-view="company-form" grid-view="company-grid"/>
+        <field name="user" form-view="user-form" grid-view="user-grid"/>
+        <field name="requestDate"/>
+        <field name="fromDate"/>
+        <field name="startOnSelect"/>
+        <field name="toDate"/>
+        <field name="endOnSelect"/>
+        <field name="totalAbsenceHours" title="Durée d'absence"/>
+        <field name="totalSubstitutionHours" title="Durée des remplacements"/>
+    </grid>
+
     <form name="leave-request-form" id="timecard-leave-request-form" title="Leave Request" model="com.axelor.apps.hr.db.LeaveRequest"
           onNew="action-leave-request-record-default,action-leave-request-attrs-buttons,action-leave-request-record-to-justify,action-leave-request-method-leave-reason-to-justify"
           onLoad="action-leave-request-group-on-form-load"
@@ -48,7 +63,13 @@
             <field name="comments" colSpan="12"/>
         </panel>
 
-        <panel-related field="timeCardLineList" showIf="timeCardLineList.length > 0" canRemove="false" canNew="false" grid-view="time-card-line-grid" form-view="time-card-line-form"/>
+        <panel title="Pointage">
+            <field name="totalAbsenceHours"/>
+            <field name="totalSubstitutionHours">
+                <hilite if="$number(totalSubstitutionHours) &lt; $number(totalAbsenceHours)" color="danger"/>
+            </field>
+            <panel-related field="timeCardLineList" showIf="timeCardLineList.length > 0" canRemove="false" canNew="false" colSpan="12" grid-view="time-card-line-grid" form-view="time-card-line-form"/>
+        </panel>
 
         <panel>
             <field name="validatedBy" canEdit="false" form-view="user-form" grid-view="user-grid"/>

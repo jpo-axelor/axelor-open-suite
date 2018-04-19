@@ -26,6 +26,7 @@
         <boolean name="isDeletable" hidden="true" default="false"/>
 
         <!-- Remplacements -->
+        <decimal name="totalSubstitutionHours" title="Durée des remplacements (heures)" readonly="true"/>
         <one-to-many name="substitutionTimeCardLineList" title="Lignes de remplacements" ref="com.axelor.apps.timecard.db.TimeCardLine" mappedBy="absenceTimeCardLine"/>
         <many-to-one name="absenceTimeCardLine" title="Remplace" ref="com.axelor.apps.timecard.db.TimeCardLine" readonly="true"/>
         <boolean name="isSubstitution" hidden="true" default="false"/>

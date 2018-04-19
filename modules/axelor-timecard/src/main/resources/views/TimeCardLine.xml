@@ -4,6 +4,8 @@
               xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.0.xsd">
 
     <grid name="time-card-line-grid" title="Lignes de pointage" model="com.axelor.apps.timecard.db.TimeCardLine" orderBy="startDateTime">
+        <hilite if="$number(totalSubstitutionHours) &lt; $number(duration) &amp;&amp; typeSelect == 'absence'" color="danger"/>
+        <hilite if="$number(totalSubstitutionHours) &gt;= $number(duration) &amp;&amp; typeSelect == 'absence'" color="warning"/>
         <field name="project" readonlyIf="typeSelect == 'contractual'"/>
         <field name="weekDay" readonlyIf="typeSelect == 'contractual'"/>
         <field name="date" readonlyIf="typeSelect == 'contractual'"/>
@@ -13,6 +15,9 @@
 
         <!-- used for sorting -->
         <field name="startDateTime" hidden="true"/>
+        <!-- used for hilite -->
+        <field name="totalSubstitutionHours" hidden="true"/>
+        <field name="duration" hidden="true"/>
     </grid>
 
     <form name="time-card-line-form" title="Ligne de pointage" model="com.axelor.apps.timecard.db.TimeCardLine" width="large"
@@ -36,6 +41,8 @@
             <spacer/>
             <panel title="Remplacements" showIf="(typeSelect == 'extra' &amp;&amp; isSubstitution) || typeSelect == 'absence'" colSpan="12">
                 <field name="absenceTimeCardLine" showIf="typeSelect == 'extra' &amp;&amp; isSubstitution" grid-view="time-card-line-grid" form-view="time-card-line-form"/>
+                <spacer/>
+                <field name="totalSubstitutionHours" showIf="typeSelect == 'absence'"/>
                 <panel-related field="substitutionTimeCardLineList" readonly="true" showIf="typeSelect == 'absence'" canNew="false" colSpan="12" grid-view="time-card-line-grid" form-view="time-card-line-form"/>
                 <button name="addSubstitution" title="Ajouter un remplacement" css="btn-custom text-left" icon="fa-plus" onClick="save,action-time-card-line-view-add-substitution" showIf="typeSelect == 'absence'"/>
 
