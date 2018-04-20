@@ -93,6 +93,8 @@ public class TimeCardLineController {
      * @param response
      */
     public void setWizardDefaults(ActionRequest request, ActionResponse response) {
+        response.setAttr("$projects", "domain", "self.statusSelect = 2");
+
         Integer leaveRequestId = (Integer) request.getContext().get("_leaveRequestId");
         if (leaveRequestId != null) {
             LeaveRequest leaveRequest = Beans.get(LeaveRequestRepository.class).find(Long.valueOf(leaveRequestId));
@@ -110,7 +112,7 @@ public class TimeCardLineController {
             for (TimeCardLine timeCardLine : timeCardLines) {
                 projectsIds.add(timeCardLine.getProject().getId().toString());
             }
-            response.setAttr("$projects", "domain", "self.id IN (" + String.join(",", projectsIds) + ")");
+            response.setAttr("$projects", "domain", "self.statusSelect = 2 AND self.id IN (" + String.join(",", projectsIds) + ")");
         }
 
         Integer planningId = (Integer) request.getContext().get("_planningId");

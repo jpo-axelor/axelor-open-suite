@@ -25,7 +25,7 @@
         <panel readonlyIf="typeSelect == 'contractual'">
             <field name="typeSelect" selection-in="['extra', 'absence']"/>
             <field name="isContractual" showIf="typeSelect == 'extra' &amp;&amp; isSubstitution"/>
-            <field name="project"/>
+            <field name="project" domain="self.statusSelect = 2" canEdit="false"/>
             <field name="employee"/>
             <field name="product"/>
             <spacer/>
@@ -59,7 +59,7 @@
             <field name="$isContractual" title="Contractuelle" widget="Boolean" colSpan="4"/>
             <field name="$employeeToReplace" title="Employé à remplacer" widget="ManyToOne" target="com.axelor.apps.hr.db.Employee" readonly="true"/>
             <field name="$employeeReplacing" title="Employé remplaçant" widget="ManyToOne" target="com.axelor.apps.hr.db.Employee"/>
-            <field name="$projects" title="Chantiers" widget="TagSelect" target="com.axelor.apps.project.db.Project" canNew="false" colSpan="12"/>
+            <field name="$projects" title="Chantiers" widget="TagSelect" target="com.axelor.apps.project.db.Project" canEdit="false" canNew="false" colSpan="12"/>
             <button name="validate" title="Valider" onClick="action-time-card-line-method-generate-extra-tcl" colOffset="3"/>
         </panel>
     </form>
