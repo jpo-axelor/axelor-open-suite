@@ -16,6 +16,8 @@
         <field name="endOnSelect"/>
         <field name="totalAbsenceHours" title="Durée d'absence"/>
         <field name="totalSubstitutionHours" title="Durée des remplacements"/>
+
+        <field name="statusSelect" hidden="true"/>
     </grid>
 
     <form name="leave-request-form" id="timecard-leave-request-form" title="Leave Request" model="com.axelor.apps.hr.db.LeaveRequest"
@@ -26,6 +28,7 @@
         <menubar>
             <menu title="Outils" icon="fa-wrench">
                 <item title="Générer les lignes de remplacements" action="save,action-leave-request-view-open-substitution-wizard" readonlyIf="!id"/>
+                <item title="Voir calendrier" action="save,action-leave-request-method-show-calendar" showIf="statusSelect == 3"/>
             </menu>
         </menubar>
 
@@ -97,5 +100,9 @@
         <view-param name="show-toolbar" value="false"/>
         <context name="_leaveRequestId" expr="eval: __self__.id"/>
     </action-view>
+
+    <action-method name="action-leave-request-method-show-calendar">
+        <call class="com.axelor.apps.timecard.web.LeaveRequestTimeCardController" method="showCalendar"/>
+    </action-method>
 
 </object-views>

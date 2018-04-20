@@ -70,6 +70,12 @@
         <field name="typeSelect"/>
     </calendar>
 
+    <calendar name="time-card-line-leave-request-calendar" title="Demande de congés" model="com.axelor.apps.timecard.db.TimeCardLine"
+              eventStart="startDateTime" eventStop="endDateTime" colorBy="typeSelect" editable="false">
+        <field name="project"/>
+        <field name="typeSelect"/>
+    </calendar>
+
     <action-method name="action-time-card-line-method-set-defaults">
         <call class="com.axelor.apps.timecard.web.TimeCardLineController" method="setDefaults"/>
     </action-method>
