@@ -18,6 +18,7 @@
         <datetime name="endDateTime" title="Date et heure de fin" hidden="true"/>
         <many-to-one name="timeCard" ref="com.axelor.apps.timecard.db.TimeCard" title="Pointage" readonly="true"/>
         <decimal name="duration" title="Durée (heures)" readonly="true"/>
+        <decimal name="durationNight" title="Durée de nuit (heures)" readonly="true"/>
         <string name="comments" title="Commentaires" large="true"/>
         <many-to-one name="leaveLine" ref="com.axelor.apps.hr.db.LeaveLine" title="Motif"/>
         <many-to-one name="leaveRequest" ref="com.axelor.apps.hr.db.LeaveRequest" title="Demande de congés" readonly="true"/>

@@ -146,9 +146,19 @@ public class TimeCardServiceImpl implements TimeCardService {
         BigDecimal complementaryHours = this.computeComplementaryHours(timeCard, sumSupplementaryHours, complementOfHours);
 
 
+        /* * *
+         * 5) For the period of the TimeCard,
+         *      compute night hours
+         *
+         * NB : night hours range is found in the HR config of the company of the employee's main employment contract.
+         * * */
+        BigDecimal nightHours = this.computeNightHours(timeCard);
+
+
         timeCard.setSupplementaryHours(sumSupplementaryHours);
         timeCard.setComplementOfHours(complementOfHours);
         timeCard.setComplementaryHours(complementaryHours);
+        timeCard.setNightHours(nightHours);
 
         timeCardRepo.save(timeCard);
     }
@@ -218,6 +228,16 @@ public class TimeCardServiceImpl implements TimeCardService {
         BigDecimal totalNotPaidLeaves = timeCardLineService.getTotalNotPaidLeavesHours(timeCard.getEmployee(), timeCard.getFromDate(), timeCard.getToDate());
 
         return totalExtra.subtract(totalNotPaidLeaves).subtract(suppHours).subtract(complHours);
+    }
+
+    protected BigDecimal computeNightHours(TimeCard timeCard) {
+        BigDecimal total = BigDecimal.ZERO;
+
+        for (TimeCardLine timeCardLine : timeCard.getTimeCardLineList()) {
+            total = total.add(timeCardLine.getDurationNight());
+        }
+
+        return total;
     }
 
 }

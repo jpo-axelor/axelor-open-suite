@@ -22,6 +22,7 @@
         <decimal name="complementaryHours" title="Heures complémentaires" readonly="true"/>
         <decimal name="complementOfHours" title="Complément d'heures" readonly="true"/>
         <decimal name="supplementaryHours" title="Heures supplémentaires" readonly="true"/>
+        <decimal name="nightHours" title="Heures de nuit" readonly="true"/>
 
     </entity>
 

@@ -1,6 +1,8 @@
 package com.axelor.apps.timecard.service;
 
+import com.axelor.apps.base.db.Company;
 import com.axelor.apps.hr.db.Employee;
+import com.axelor.apps.hr.db.HRConfig;
 import com.axelor.apps.project.db.Project;
 import com.axelor.apps.timecard.db.TimeCardLine;
 import com.axelor.apps.timecard.db.repo.TimeCardLineRepository;
@@ -10,6 +12,7 @@ import com.google.inject.persist.Transactional;
 
 import javax.annotation.Nullable;
 import java.math.BigDecimal;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -57,6 +60,39 @@ public class TimeCardLineServiceImpl implements TimeCardLineService {
         timeCardLines.removeIf(tcl -> tcl.getIsDeletable() || tcl.getTimeCard() != null);
 
         return timeCardLines;
+    }
+
+    @Override
+    public BigDecimal getDurationNight(LocalTime startTime, LocalTime endTime, Company payCompany) {
+        HRConfig hrConfig = payCompany.getHrConfig();
+        LocalTime startNight = hrConfig.getStartNightHours();
+        LocalTime endNight = hrConfig.getEndNightHours();
+
+        LocalTime start = LocalTime.now();
+        LocalTime end = LocalTime.now();
+        if (startTime.isBefore(endNight) && (endTime.isBefore(endNight) || endTime.equals(endNight))) {
+            start = startTime;
+            end = endTime;
+        } else if (startTime.isBefore(endNight) && endTime.isAfter(endNight)) {
+            start = startTime;
+            end = endNight;
+        } else if (startTime.isAfter(endTime) && endTime.isBefore(startNight)) {
+            start = null;
+            end = null;
+        } else if (startTime.isBefore(startNight) && endTime.isAfter(startNight)) {
+            start = startNight;
+            end = endTime;
+        } else if ((startTime.equals(startNight) || startTime.isAfter(startNight)) && endTime.isAfter(startNight)) {
+            start = startTime;
+            end = endTime;
+        }
+
+        BigDecimal durationNight = BigDecimal.ZERO;
+        if (start != null && end != null) {
+            durationNight = BigDecimal.valueOf(Duration.between(start, end).toMinutes() / 60.0);
+        }
+
+        return durationNight;
     }
 
     @Override

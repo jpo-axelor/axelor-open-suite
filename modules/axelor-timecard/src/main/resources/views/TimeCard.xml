@@ -34,9 +34,10 @@
         <panel>
             <button name="computeHours" title="Calculer les heures" onClick="save,action-time-card-method-compute-hours"/>
             <spacer/>
-            <field name="complementaryHours" colSpan="4"/>
-            <field name="complementOfHours" colSpan="4"/>
-            <field name="supplementaryHours" colSpan="4"/>
+            <field name="complementaryHours" colSpan="3"/>
+            <field name="complementOfHours" colSpan="3"/>
+            <field name="supplementaryHours" colSpan="3"/>
+            <field name="nightHours" colSpan="3"/>
         </panel>
 
         <panel-related field="timeCardLineList" grid-view="time-card-line-grid" form-view="time-card-line-form"/>

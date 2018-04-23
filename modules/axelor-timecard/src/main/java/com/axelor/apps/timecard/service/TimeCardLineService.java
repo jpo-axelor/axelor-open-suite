@@ -1,5 +1,6 @@
 package com.axelor.apps.timecard.service;
 
+import com.axelor.apps.base.db.Company;
 import com.axelor.apps.hr.db.Employee;
 import com.axelor.apps.project.db.Project;
 import com.axelor.apps.timecard.db.TimeCardLine;
@@ -34,6 +35,16 @@ public interface TimeCardLineService {
      * @return List of scheduled TimeCardLine for given {@code project} and {@code employee}
      */
     List<TimeCardLine> getScheduledTimeCardLine(@Nullable Project project, @Nullable Employee employee);
+
+    /**
+     * Returns total duration between night hours range.
+     *
+     * @param startTime
+     * @param endTime
+     * @param payCompany
+     * @return
+     */
+    BigDecimal getDurationNight(LocalTime startTime, LocalTime endTime, Company payCompany);
 
     /**
      * Generates 'extra' {@code TimeCardLine}s with given arguments.

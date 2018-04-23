@@ -168,4 +168,18 @@ public class TimeCardLineController {
         response.setCanClose(true);
     }
 
+    /**
+     * Sets night duration in {@code TimeCardLine} in context.
+     *
+     * @param request
+     * @param response
+     */
+    public void computeNightHours(ActionRequest request, ActionResponse response) {
+        Context context = request.getContext();
+
+        Employee employee = Beans.get(EmployeeRepository.class).find(((Employee) context.get("employee")).getId());
+
+        response.setValue("durationNight", Beans.get(TimeCardLineService.class).getDurationNight((LocalTime) context.get("startTime"), (LocalTime) context.get("endTime"), employee.getMainEmploymentContract().getPayCompany()));
+    }
+
 }

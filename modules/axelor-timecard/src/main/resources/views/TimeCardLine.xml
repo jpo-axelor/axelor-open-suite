@@ -31,9 +31,10 @@
             <spacer/>
             <field name="weekDay" colSpan="2"/>
             <field name="date" onChange="action-time-card-line-record-get-week-day" colSpan="2"/>
-            <field name="startTime" colSpan="2" onChange="action-time-card-line-record-compute-duration" validIf="startTime &lt; endTime"/>
-            <field name="endTime" colSpan="2" onChange="action-time-card-line-record-compute-duration" validIf="startTime &lt; endTime"/>
+            <field name="startTime" colSpan="2" onChange="action-time-card-line-record-compute-duration,action-time-card-line-method-compute-night-hours" validIf="startTime &lt; endTime"/>
+            <field name="endTime" colSpan="2" onChange="action-time-card-line-record-compute-duration,action-time-card-line-method-compute-night-hours" validIf="startTime &lt; endTime"/>
             <field name="duration" colSpan="2"/>
+            <field name="durationNight" colSpan="2"/>
             <spacer/>
             <field name="leaveLine" onSelect="action-time-card-line-attrs-leaveline-domain" hidden="true" showIf="typeSelect == 'absence'" grid-view="leave-line-grid" form-view="leave-line-form"/>
             <field name="leaveRequest" showIf="leaveRequest &amp;&amp; typeSelect == 'absence'" grid-view="leave-request-grid" form-view="leave-request-form"/>
@@ -95,6 +96,10 @@
     <action-record name="action-time-card-line-record-compute-duration" model="com.axelor.apps.timecard.db.TimeCardLine">
         <field name="duration" expr="eval: java.time.Duration.between(startTime, endTime).toMinutes() / 60"/>
     </action-record>
+
+    <action-method name="action-time-card-line-method-compute-night-hours">
+        <call class="com.axelor.apps.timecard.web.TimeCardLineController" method="computeNightHours"/>
+    </action-method>
 
     <action-record name="action-time-card-line-record-get-week-day" model="com.axelor.apps.timecard.db.TimeCardLine">
         <field name="weekDay" expr="eval: date.getDayOfWeek().getValue()"/>
