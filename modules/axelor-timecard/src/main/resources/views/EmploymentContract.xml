@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.0.xsd">
+
+    <form name="employment-contract-form" id="time-card-employment-contract-form" title="Employment contract" model="com.axelor.apps.hr.db.EmploymentContract"
+          onNew="action-employment-contract-record-on-new">
+
+        <toolbar>
+            <button name="createAmendment" title="Create amendment" onClick="save,action-employment-contract-method-addAmendment" hidden="true"/>
+            <button name="editContractWordML" title="Print contract" onClick="save,action-employment-contract-validate-printing-settings,action-employment-contract-export-word"/>
+            <button name="generatePayrollPreparation" title="Generate payroll prepa." onClick="save,action-employment-contract-generate-payroll-prepa" if="__config__.app.getApp('employee').getPayrollPreparation()"/>
+        </toolbar>
+
+        <panel>
+            <field name="status" colSpan="12" widget="NavSelect" canEdit="true" showTitle="false"/>
+        </panel>
+
+        <panel-stack>
+            <panel>
+                <field name="employee" canSuggest="false" canNew="false" canEdit="false" canView="false" hideIf="$popup()" requiredIf="!$popup()"/>
+                <field name="payCompany" canEdit="false" canSuggest="false" onChange="action-employment-contract-paycompany-onchange"/>
+                <field name="companyDepartment" onSelect="action-employment-contract-attrs-department-domain"/>
+                <field name="employmentContractVersion" canSuggest="false"/>
+                <field name="employmentContractTemplate" readonlyIf="!payCompany" widget="SuggestBox" domain=":payCompany MEMBER OF self.companySet"/>
+            </panel>
+
+            <panel colSpan="12" showIf="employmentContractVersion > 0">
+                <field name="amendmentTypeSelect" colSpan="4"/>
+                <field name="amendmentDate" colSpan="4"/>
+            </panel>
+        </panel-stack>
+
+        <panel name="main">
+            <field name="signatureDate" colSpan="4"/>
+            <field name="contractType" canNew="true" onChange="action-employment-contract-record-contract-type-on-change" grid-view="employment-contract-type-grid" form-view="employment-contract-type-form" colSpan="4"/>
+            <field name="executiveStatusSelect" colSpan="4"/>
+            <field name="employment" colSpan="4"/>
+
+            <panel name="organization" title="Organization" colSpan="12">
+                <field name="startDate" colSpan="3"/>
+                <field name="trialPeriodDuration" colSpan="3"/>
+                <field name="endDate" colSpan="3"/>
+                <field name="weeklyDuration" colSpan="3"/>
+                <field name="startTime" colSpan="3"/>
+                <field name="duration" colSpan="3"/>
+                <field name="hoursDistribution" colSpan="12" height="5"/>
+            </panel>
+
+            <panel name="positionSalary" title="Position / Salary" colSpan="12">
+                <field name="position" colSpan="4"/>
+                <field name="coefficient" colSpan="4"/>
+                <field name="hourlyGrossSalary" colSpan="4"/>
+                <field name="minMonthlyRemuneration" colSpan="4"/>
+                <field name="annualGrossSalary" colSpan="4"/>
+                <field name="monthlyGlobalCost" colSpan="4"/>
+                <field name="monthlyWage"/>
+                <panel-related field="otherCostsEmployeeSet" colSpan="12"/>
+            </panel>
+        </panel>
+
+        <panel name="endOfContract" title="End of contract">
+            <field name="endOfContractReason" canNew="true"/>
+            <field name="endContractDetails"/>
+        </panel>
+    </form>
+
+</object-views>

@@ -31,6 +31,14 @@
             <field name="toDate"/>
         </panel>
 
+        <panel>
+            <button name="computeHours" title="Calculer les heures" onClick="save,action-time-card-method-compute-hours"/>
+            <spacer/>
+            <field name="complementaryHours" colSpan="4"/>
+            <field name="complementOfHours" colSpan="4"/>
+            <field name="supplementaryHours" colSpan="4"/>
+        </panel>
+
         <panel-related field="timeCardLineList" grid-view="time-card-line-grid" form-view="time-card-line-form"/>
 
         <panel>
@@ -44,6 +52,10 @@
 
     <action-method name="action-time-card-method-generate-time-card-lines">
         <call class="com.axelor.apps.timecard.web.TimeCardController" method="generateTimeCardLines"/>
+    </action-method>
+
+    <action-method name="action-time-card-method-compute-hours">
+        <call class="com.axelor.apps.timecard.web.TimeCardController" method="computeHours"/>
     </action-method>
 
     <action-view name="action-time-card-view-show-calendar" title="Pointage - ${employee.name}" model="com.axelor.apps.timecard.db.TimeCardLine">

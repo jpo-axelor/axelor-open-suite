@@ -19,6 +19,10 @@
         <date name="refusalDate" title="Date de refus" readonly="true"/>
         <string name="groundForRefusal" title="Motif de refus" large="true"/>
 
+        <decimal name="complementaryHours" title="Heures complémentaires" readonly="true"/>
+        <decimal name="complementOfHours" title="Complément d'heures" readonly="true"/>
+        <decimal name="supplementaryHours" title="Heures supplémentaires" readonly="true"/>
+
     </entity>
 
 </domain-models>

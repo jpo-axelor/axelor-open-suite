@@ -9,6 +9,7 @@ import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 
 import javax.annotation.Nullable;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -78,5 +79,40 @@ public class TimeCardLineServiceImpl implements TimeCardLineService {
             timeCardLineRepo.save(tcl);
             timeCardLineRepo.save(timeCardLine);
         }
+    }
+
+    @Override
+    public BigDecimal getTotalContractualHours(Employee employee, LocalDate startDate, LocalDate endDate) {
+        return getTotalHours(employee.getId(), startDate, endDate, TimeCardLineRepository.TYPE_CONTRACTUAL);
+    }
+
+    @Override
+    public BigDecimal getTotalExtraHours(Employee employee, LocalDate startDate, LocalDate endDate) {
+        return getTotalHours(employee.getId(), startDate, endDate, TimeCardLineRepository.TYPE_EXTRA);
+    }
+
+    @Override
+    public BigDecimal getTotalNotPaidLeavesHours(Employee employee, LocalDate startDate, LocalDate endDate) {
+        List<TimeCardLine> timeCardLines = timeCardLineRepo.all().filter("self.typeSelect = ? AND self.employee.id = ? AND self.date >= ? AND self.date <= ?", TimeCardLineRepository.TYPE_ABSENCE, employee.getId(), startDate, endDate).fetch();
+
+        BigDecimal total = BigDecimal.ZERO;
+        for (TimeCardLine timeCardLine : timeCardLines) {
+            if (!timeCardLine.getLeaveLine().getLeaveReason().getPaidLeave()) {
+                total = total.add(timeCardLine.getDuration());
+            }
+        }
+
+        return total;
+    }
+
+    protected BigDecimal getTotalHours(Long employeeId, LocalDate startDate, LocalDate endDate, String typeLine) {
+        List<TimeCardLine> timeCardLines = timeCardLineRepo.all().filter("self.typeSelect = ? AND self.employee.id = ? AND self.date >= ? AND self.date <= ?", typeLine, employeeId, startDate, endDate).fetch();
+
+        BigDecimal total = BigDecimal.ZERO;
+        for (TimeCardLine timeCardLine : timeCardLines) {
+            total = total.add(timeCardLine.getDuration());
+        }
+
+        return total;
     }
 }

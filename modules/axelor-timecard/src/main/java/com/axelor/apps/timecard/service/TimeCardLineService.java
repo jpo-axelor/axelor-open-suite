@@ -5,6 +5,7 @@ import com.axelor.apps.project.db.Project;
 import com.axelor.apps.timecard.db.TimeCardLine;
 
 import javax.annotation.Nullable;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -45,5 +46,35 @@ public interface TimeCardLineService {
      * @param isContractual
      */
     void generateExtraTCL(Employee oldEmployee, Employee newEmployee, List<Project> projects, LocalDate startDate, LocalDate endDate, boolean isContractual);
+
+    /**
+     * Computes and returns total contractual hours for given employee within given range.
+     *
+     * @param employee
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    BigDecimal getTotalContractualHours(Employee employee, LocalDate startDate, LocalDate endDate);
+
+    /**
+     * Computes and returns total extra hours for given employee within given range.
+     *
+     * @param employee
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    BigDecimal getTotalExtraHours(Employee employee, LocalDate startDate, LocalDate endDate);
+
+    /**
+     * Computes and returns total 'not paid leaves' hours for given employee within given range.
+     *
+     * @param employee
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    BigDecimal getTotalNotPaidLeavesHours(Employee employee, LocalDate startDate, LocalDate endDate);
 
 }
