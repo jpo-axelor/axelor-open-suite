@@ -7,6 +7,8 @@
 
     <entity name="TimeCardLine">
 
+        <string name="fullName" namecolumn="true"/>
+
         <many-to-one name="project" title="Projet" ref="com.axelor.apps.project.db.Project"/>
         <many-to-one name="product" title="Activité" ref="com.axelor.apps.base.db.Product"/>
         <many-to-one name="employee" title="Employé" ref="com.axelor.apps.hr.db.Employee"/>
