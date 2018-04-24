@@ -3,9 +3,18 @@
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.0.xsd">
 
-    <form name="project-form" id="time-card-project-form" title="Project" model="com.axelor.apps.project.db.Project" width="large"
+    <grid name="chantier-grid" title="Chantiers" model="com.axelor.apps.project.db.Project">
+        <field name="code"/>
+        <field name="name"/>
+        <field name="customer"/>
+        <field name="assignedTo"/>
+        <field name="fromDate"/>
+        <field name="toDate"/>
+    </grid>
+
+    <form name="chantier-form" title="Chantier" model="com.axelor.apps.project.db.Project" width="large"
           onLoad="action-project-on-load-group"
-          onNew="action-project-group-on-new-project">
+          onNew="action-project-group-on-new-project,action-project-record-set-is-chantier">
 
         <menubar>
             <menu title="Tools" icon="fa-wrench" showTitle="true">
@@ -61,43 +70,25 @@
 
         <panel>
             <panel colSpan="12">
-                <field name="company" form-view="company-form" grid-view="company-grid"/>
+                <field name="company" canEdit="false" form-view="company-form" grid-view="company-grid"/>
                 <field name="assignedTo" canNew="false" canEdit="false" canView="false" title="Person In Charge" onChange="action-attrs-project-add-member" form-view="user-form" grid-view="user-grid"/>
-                <field name="address" grid-view="address-grid" form-view="address-form"/>
+                <field name="customer" domain="self.isCustomer = true" onChange="action-project-attrs-set-address-domain" grid-view="partner-grid" form-view="partner-form"/>
+                <field name="address" readonlyIf="!customer" grid-view="partner-address-grid" form-view="partner-address-form"/>
                 <field name="sector" grid-view="sector-grid" form-view="sector-form"/>
             </panel>
 
             <panel title="Dates" colSpan="12">
-                <field name="fromDate" colSpan="4"/>
-                <field name="toDate" colSpan="4"/>
-                <field name="timeSpent" title="Time Spent" readonly="true" colSpan="4"/>
+                <field name="fromDate" colSpan="3"/>
+                <field name="toDate" colSpan="3"/>
             </panel>
-
-            <panel title=" " if="__config__.app.isApp('employee')" if-module="axelor-human-resource" colSpan="12">
-                <field name="imputable" widget="boolean-switch"/>
-            </panel>
-        </panel>
-
-        <panel title="Members">
-            <field name="membersUserSet" showTitle="false" colSpan="12" widget="TagSelect" canNew="false" form-view="user-form" grid-view="user-grid"/>
         </panel>
 
         <panel-tabs>
-            <panel title="Task Tree" showIf="isProject">
-                <button name="addTask" title="New" css="btn-custom text-left" icon="fa-plus" colSpan="2" onClick="save,action-project-add-task"/>
-                <button name="allTask" title="All tasks" css="btn-custom text-left" icon="fa-tasks" colSpan="2" onClick="action-project-view-show-related-tasks"/>
-                <panel-dashlet title="Task Tree" colSpan="12" action="action-view-show-project-task-tree"/>
-            </panel>
-
             <panel title="Phases" showIf="isProject &amp;&amp; childProjectList.length > 0">
                 <button name="addPhase" title="New" css="btn-custom text-left" icon="fa-plus" colSpan="2" onClick="save,action-project-view-phase-new"/>
                 <button name="allPhases" title="All phases" css="btn-custom text-left" icon="fa-tasks" colSpan="2" onClick="save,action-project-view-phase-all"/>
                 <button name="allPhaseTasks" title="All phase tasks" css="btn-custom text-left" icon="fa-tasks" colSpan="2" onClick="save,action-project-phase-view-show-phase-task"/>
                 <panel-dashlet title="Phases" colSpan="12" action="tree:project-phase-tree"/>
-            </panel>
-
-            <panel if="__config__.app.isApp('timesheet')" if-module="axelor-human-resource" name="logTimes" title="Log Times">
-                <panel-related colSpan="12" field="timesheetLineList" form-view="timesheet-line-project-form" grid-view="timesheet-line-project-grid"/>
             </panel>
 
             <panel name="description" title="Description">
@@ -122,5 +113,14 @@
             <mail-followers/>
         </panel-mail>
     </form>
+
+    <action-attrs name="action-project-attrs-set-address-domain">
+        <attribute name="value" for="address" expr="eval: null"/>
+        <attribute for="address" name="domain" expr="eval: &quot;self.partner.id = ${customer.id}&quot;" if="customer"/>
+    </action-attrs>
+
+    <action-record name="action-project-record-set-is-chantier" model="com.axelor.apps.project.db.Project">
+        <field name="isChantier" expr="eval: _isChantier"/>
+    </action-record>
 
 </object-views>
