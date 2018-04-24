@@ -18,13 +18,13 @@
 package com.axelor.apps.timecard.db.repo;
 
 import com.axelor.apps.hr.db.Employee;
+import com.axelor.apps.project.db.Project;
 import com.axelor.apps.timecard.db.TimeCardLine;
 import com.axelor.apps.timecard.service.TimeCardLineService;
 import com.axelor.inject.Beans;
 
 import java.math.BigDecimal;
 import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
@@ -59,13 +59,10 @@ public class TimeCardLineTimeCardRepository extends TimeCardLineRepository {
             fullName.append(" ");
         }
 
-        LocalDate date = timeCardLine.getDate();
-        if (date != null) {
-            fullName.append(date.getDayOfMonth());
-            fullName.append("/");
-            fullName.append(date.getMonthValue());
-            fullName.append("/");
-            fullName.append(date.getYear());
+        Project project = timeCardLine.getProject();
+        if (project != null) {
+            fullName.append("- ");
+            fullName.append(project.getName());
         }
 
         timeCardLine.setFullName(fullName.toString());

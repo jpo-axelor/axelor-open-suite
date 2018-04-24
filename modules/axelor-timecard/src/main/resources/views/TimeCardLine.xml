@@ -72,9 +72,9 @@
     </calendar>
 
     <calendar name="time-card-line-leave-request-calendar" title="Demande de congés" model="com.axelor.apps.timecard.db.TimeCardLine"
-              eventStart="startDateTime" eventStop="endDateTime" colorBy="project" editable="false">
+              eventStart="startDateTime" eventStop="endDateTime" colorBy="typeSelect" editable="false">
         <field name="fullName"/>
-        <field name="project"/>
+        <field name="typeSelect"/>
     </calendar>
 
     <action-method name="action-time-card-line-method-set-defaults">
