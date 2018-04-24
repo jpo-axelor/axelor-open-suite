@@ -1,15 +1,15 @@
 apply plugin: "com.axelor.app-module"
 
 apply {
-	version = "5.0.0"
+    version = "5.0.0"
 }
 
 axelor {
-	title "Axelor :: TimeCard"
-	description "TimeCard Module"
+    title "Axelor :: TimeCard"
+    description "TimeCard Module"
 }
 
 dependencies {
-	compile project(":modules:axelor-human-resource")
+    compile project(":modules:axelor-human-resource")
 }
 
