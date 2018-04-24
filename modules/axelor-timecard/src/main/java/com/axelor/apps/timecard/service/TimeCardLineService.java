@@ -73,7 +73,7 @@ public interface TimeCardLineService {
      * @param endDate
      * @param isContractual
      */
-    void generateExtraTCL(Employee oldEmployee, Employee newEmployee, List<Project> projects, LocalDate startDate, LocalDate endDate, boolean isContractual);
+    int generateExtraTCL(Employee oldEmployee, Employee newEmployee, List<Project> projects, LocalDate startDate, LocalDate endDate, boolean isContractual);
 
     /**
      * Computes and returns total contractual hours for given employee within given range.

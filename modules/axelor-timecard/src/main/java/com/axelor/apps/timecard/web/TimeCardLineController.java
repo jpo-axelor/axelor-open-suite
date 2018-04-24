@@ -30,6 +30,7 @@ import com.axelor.apps.timecard.db.repo.PlanningRepository;
 import com.axelor.apps.timecard.db.repo.TimeCardLineRepository;
 import com.axelor.apps.timecard.db.repo.TimeCardRepository;
 import com.axelor.apps.timecard.service.TimeCardLineService;
+import com.axelor.i18n.I18n;
 import com.axelor.inject.Beans;
 import com.axelor.rpc.ActionRequest;
 import com.axelor.rpc.ActionResponse;
@@ -175,14 +176,15 @@ public class TimeCardLineController {
             projects.add(projectRepo.find(Long.valueOf((Integer) p.get("id"))));
         }
 
-        Beans.get(TimeCardLineService.class).generateExtraTCL(employeeRepo.find(Long.valueOf(((Integer) ((Map) context.get("employeeToReplace")).get("id")))),
-                                                              employeeRepo.find(Long.valueOf(((Integer) ((Map) context.get("employeeReplacing")).get("id")))),
-                                                              projects,
-                                                              LocalDate.parse((String) context.get("startDate")),
-                                                              LocalDate.parse((String) context.get("endDate")),
-                                                              (Boolean) context.get("isContractual"));
+        int total = Beans.get(TimeCardLineService.class).generateExtraTCL(employeeRepo.find(Long.valueOf(((Integer) ((Map) context.get("employeeToReplace")).get("id")))),
+                                                                          employeeRepo.find(Long.valueOf(((Integer) ((Map) context.get("employeeReplacing")).get("id")))),
+                                                                          projects,
+                                                                          LocalDate.parse((String) context.get("startDate")),
+                                                                          LocalDate.parse((String) context.get("endDate")),
+                                                                          (Boolean) context.get("isContractual"));
 
         response.setCanClose(true);
+        response.setNotify(I18n.get("{0} ligne de remplacement a été générée.", "{0} lignes de remplacement ont été générées.", total));
     }
 
     /**
