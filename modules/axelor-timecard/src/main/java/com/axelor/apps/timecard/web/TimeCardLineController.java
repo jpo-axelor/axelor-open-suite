@@ -36,6 +36,7 @@ import com.axelor.rpc.ActionRequest;
 import com.axelor.rpc.ActionResponse;
 import com.axelor.rpc.Context;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -199,6 +200,18 @@ public class TimeCardLineController {
         Employee employee = Beans.get(EmployeeRepository.class).find(((Employee) context.get("employee")).getId());
 
         response.setValue("durationNight", Beans.get(TimeCardLineService.class).getDurationNight((LocalTime) context.get("startTime"), (LocalTime) context.get("endTime"), employee.getMainEmploymentContract().getPayCompany()));
+    }
+
+    /**
+     * Sets total substitution hours in {@code TimeCardLine} in context.
+     *
+     * @param request
+     * @param response
+     */
+    public void computeSubstitutionsDuration(ActionRequest request, ActionResponse response) {
+        TimeCardLine timeCardLine = Beans.get(TimeCardLineRepository.class).find(request.getContext().asType(TimeCardLine.class).getId());
+        BigDecimal total = Beans.get(TimeCardLineService.class).getSubstitutionsDuration(timeCardLine);
+        response.setValue("totalSubstitutionHours", total);
     }
 
 }

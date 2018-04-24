@@ -105,4 +105,11 @@ public interface TimeCardLineService {
      */
     BigDecimal getTotalNotPaidLeavesHours(Employee employee, LocalDate startDate, LocalDate endDate);
 
+    /**
+     * Returns total substitution hours in given {@code TimeCardLine}.
+     *
+     * @param timeCardLine
+     */
+    BigDecimal getSubstitutionsDuration(TimeCardLine timeCardLine);
+
 }

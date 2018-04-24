@@ -174,4 +174,18 @@ public class TimeCardLineServiceImpl implements TimeCardLineService {
 
         return total;
     }
+
+    @Override
+    public BigDecimal getSubstitutionsDuration(TimeCardLine timeCardLine) {
+        List<TimeCardLine> tcls = timeCardLine.getSubstitutionTimeCardLineList();
+
+        BigDecimal totalSubstitution = BigDecimal.ZERO;
+        if (tcls != null) {
+            for (TimeCardLine tcl : tcls) {
+                totalSubstitution = totalSubstitution.add(tcl.getDuration());
+            }
+        }
+
+        return totalSubstitution;
+    }
 }

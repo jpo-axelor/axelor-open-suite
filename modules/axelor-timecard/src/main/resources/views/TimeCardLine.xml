@@ -21,7 +21,8 @@
     </grid>
 
     <form name="time-card-line-form" title="Ligne de pointage" model="com.axelor.apps.timecard.db.TimeCardLine" width="large"
-          onNew="action-time-card-line-method-set-defaults,action-time-card-line-record-compute-duration">
+          onNew="action-time-card-line-method-set-defaults,action-time-card-line-record-compute-duration"
+          onLoad="action-time-card-line-method-get-substitutions-duration">
         <panel readonlyIf="typeSelect == 'contractual'">
             <field name="typeSelect" selection-in="['extra', 'absence']"/>
             <field name="isContractual" showIf="typeSelect == 'extra' &amp;&amp; isSubstitution"/>
@@ -99,6 +100,10 @@
 
     <action-method name="action-time-card-line-method-compute-night-hours">
         <call class="com.axelor.apps.timecard.web.TimeCardLineController" method="computeNightHours"/>
+    </action-method>
+
+    <action-method name="action-time-card-line-method-get-substitutions-duration">
+        <call class="com.axelor.apps.timecard.web.TimeCardLineController" method="computeSubstitutionsDuration"/>
     </action-method>
 
     <action-record name="action-time-card-line-record-get-week-day" model="com.axelor.apps.timecard.db.TimeCardLine">
