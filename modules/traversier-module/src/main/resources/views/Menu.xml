@@ -23,4 +23,11 @@
         <context name="_xProjectTypeSelect" expr="eval: __repo__(Project).TYPE_PROJECT"/>
     </action-view>
 
+    <menuitem name="hr-conf-sectors" parent="hr-root-emp-mgt-conf" title="Secteurs" action="conf.sectors"/>
+
+    <action-view name="conf.sectors" title="Secteurs" model="com.axelor.apps.timecard.db.Sector">
+        <view type="grid" name="sector-grid"/>
+        <view type="form" name="sector-form"/>
+    </action-view>
+
 </object-views>
