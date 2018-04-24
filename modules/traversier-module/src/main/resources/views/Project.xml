@@ -116,7 +116,7 @@
 
     <action-attrs name="action-project-attrs-set-address-domain">
         <attribute name="value" for="address" expr="eval: null"/>
-        <attribute for="address" name="domain" expr="eval: &quot;self.partner.id = ${customer.id}&quot;" if="customer"/>
+        <attribute for="address" name="domain" expr="eval: &quot;self.id IN (${(customer?.partnerAddressList?.collect([0], { it.address.id })).join(',')})&quot;" if="customer"/>
     </action-attrs>
 
     <action-record name="action-project-record-set-is-chantier" model="com.axelor.apps.project.db.Project">
