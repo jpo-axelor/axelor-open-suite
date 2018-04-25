@@ -44,4 +44,11 @@ public interface TimeCardService {
      */
     void computeHours(TimeCard timeCard) throws AxelorException;
 
+    /**
+     * Computes weekly hours for given {@code TimeCard}.
+     *
+     * @param timeCard
+     */
+    void computeWeeklyHours(TimeCard timeCard);
+
 }

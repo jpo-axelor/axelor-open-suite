@@ -96,6 +96,16 @@ public interface TimeCardLineService {
     BigDecimal getTotalExtraHours(Employee employee, LocalDate startDate, LocalDate endDate);
 
     /**
+     * Computes and returns total absence hours for given employee within given range.
+     *
+     * @param employee
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    BigDecimal getTotalAbsenceHours(Employee employee, LocalDate startDate, LocalDate endDate);
+
+    /**
      * Computes and returns total 'not paid leaves' hours for given employee within given range.
      *
      * @param employee

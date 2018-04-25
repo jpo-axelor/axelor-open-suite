@@ -52,8 +52,9 @@ public class TimeCardController {
 
         try {
             Beans.get(TimeCardService.class).computeHours(timeCard);
+            Beans.get(TimeCardService.class).computeWeeklyHours(timeCard);
         } catch (AxelorException e) {
-            TraceBackService.trace(e, "TimeCard, compute hours");
+            TraceBackService.trace(e, "TimeCard");
             response.setError(e.getMessage());
         }
 

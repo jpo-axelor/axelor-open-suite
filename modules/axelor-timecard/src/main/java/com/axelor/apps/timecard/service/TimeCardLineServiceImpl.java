@@ -151,6 +151,11 @@ public class TimeCardLineServiceImpl implements TimeCardLineService {
     }
 
     @Override
+    public BigDecimal getTotalAbsenceHours(Employee employee, LocalDate startDate, LocalDate endDate) {
+        return getTotalHours(employee.getId(), startDate, endDate, TimeCardLineRepository.TYPE_ABSENCE);
+    }
+
+    @Override
     public BigDecimal getTotalNotPaidLeavesHours(Employee employee, LocalDate startDate, LocalDate endDate) {
         List<TimeCardLine> timeCardLines = timeCardLineRepo.all().filter("self.typeSelect = ? AND self.employee.id = ? AND self.date >= ? AND self.date <= ?", TimeCardLineRepository.TYPE_ABSENCE, employee.getId(), startDate, endDate).fetch();
 

@@ -24,6 +24,8 @@
         <decimal name="supplementaryHours" title="Heures supplémentaires" readonly="true"/>
         <decimal name="nightHours" title="Heures de nuit" readonly="true"/>
 
+        <one-to-many name="weeklyHoursList" ref="com.axelor.apps.timecard.db.WeeklyHours" title="Heures hebdomadaires"/>
+
         <track>
             <field name="timeCardLineList"/>
             <field name="statusSelect"/>

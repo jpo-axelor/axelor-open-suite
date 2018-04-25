@@ -12,6 +12,10 @@
     </grid>
 
     <form name="time-card-form" title="Pointage" model="com.axelor.apps.timecard.db.TimeCard" width="large">
+        <toolbar>
+            <button name="computeHours" title="Calculer les heures" onClick="save,action-time-card-method-compute-hours"/>
+        </toolbar>
+
         <menubar>
             <menu title="Outils" icon="fa-wrench">
                 <item title="Générer les lignes de remplacements" action="save,action-time-card-view-open-substitution-wizard" readonlyIf="!id"/>
@@ -33,13 +37,14 @@
         </panel>
 
         <panel>
-            <button name="computeHours" title="Calculer les heures" onClick="save,action-time-card-method-compute-hours"/>
-            <spacer/>
             <field name="complementaryHours" colSpan="3"/>
             <field name="complementOfHours" colSpan="3"/>
             <field name="supplementaryHours" colSpan="3"/>
             <field name="nightHours" colSpan="3"/>
+
+            <panel-related field="weeklyHoursList" colSpan="12" readonly="true" grid-view="weekly-hours-grid" form-view="weekly-hours-form"/>
         </panel>
+
 
         <panel-related field="timeCardLineList" grid-view="time-card-line-grid" form-view="time-card-line-form"/>
 

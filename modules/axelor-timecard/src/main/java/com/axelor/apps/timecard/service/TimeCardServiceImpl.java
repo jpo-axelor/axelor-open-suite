@@ -23,6 +23,7 @@ import com.axelor.apps.project.db.Project;
 import com.axelor.apps.timecard.db.PlanningLine;
 import com.axelor.apps.timecard.db.TimeCard;
 import com.axelor.apps.timecard.db.TimeCardLine;
+import com.axelor.apps.timecard.db.WeeklyHours;
 import com.axelor.apps.timecard.db.repo.PlanningLineRepository;
 import com.axelor.apps.timecard.db.repo.TimeCardLineRepository;
 import com.axelor.apps.timecard.db.repo.TimeCardRepository;
@@ -180,6 +181,36 @@ public class TimeCardServiceImpl implements TimeCardService {
         timeCardRepo.save(timeCard);
     }
 
+    @Override
+    @Transactional(rollbackOn = {AxelorException.class, Exception.class})
+    public void computeWeeklyHours(TimeCard timeCard) {
+        timeCard.clearWeeklyHoursList();
+        timeCardRepo.flush();
+
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, timeCard.getToDate().getYear());
+
+        List<Integer> weeks = this.getWeeks(timeCard.getFromDate(), timeCard.getToDate());
+
+        for (Integer week : weeks) {
+            WeeklyHours wh = new WeeklyHours();
+            cal.set(Calendar.WEEK_OF_YEAR, week);
+
+            cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+            wh.setStartDate(new Date(cal.getTime().getTime()).toLocalDate());
+            cal.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+            wh.setEndDate(new Date(cal.getTime().getTime()).toLocalDate());
+
+            wh.setContractualHours(this.computeContractualHours(timeCard, wh.getStartDate(), wh.getEndDate()));
+            wh.setAbsenceHours(this.computeAbsenceHours(timeCard, wh.getStartDate(), wh.getEndDate()));
+            wh.setSupplementaryHours(this.computeSupplementaryHours(timeCard, week));
+
+            timeCard.addWeeklyHoursListItem(wh);
+        }
+
+        timeCardRepo.save(timeCard);
+    }
+
     protected List<Integer> getWeeks(LocalDate startDate, LocalDate endDate) {
         LocalDate currentSunday = startDate;
         if (startDate.getDayOfWeek() != DayOfWeek.SUNDAY) {
@@ -255,6 +286,14 @@ public class TimeCardServiceImpl implements TimeCardService {
         }
 
         return total;
+    }
+
+    protected BigDecimal computeContractualHours(TimeCard timeCard, LocalDate startDate, LocalDate endDate) {
+        return timeCardLineService.getTotalContractualHours(timeCard.getEmployee(), startDate, endDate);
+    }
+
+    protected BigDecimal computeAbsenceHours(TimeCard timeCard, LocalDate startDate, LocalDate endDate) {
+        return timeCardLineService.getTotalAbsenceHours(timeCard.getEmployee(), startDate, endDate);
     }
 
 }
