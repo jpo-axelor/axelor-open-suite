@@ -9,7 +9,7 @@
 
         <many-to-one name="customer" ref="com.axelor.apps.base.db.Partner" title="Client"/>
         <many-to-one name="address" ref="com.axelor.apps.base.db.Address" title="Adresse"/>
-        <many-to-one name="sector" ref="com.axelor.apps.timecard.db.Sector" title="Secteur"/>
+        <many-to-one name="sector" ref="com.axelor.apps.tn.db.Sector" title="Secteur"/>
 
         <boolean name="isChantier" default="false"/>
 
