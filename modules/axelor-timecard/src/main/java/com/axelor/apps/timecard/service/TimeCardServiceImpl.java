@@ -90,7 +90,7 @@ public class TimeCardServiceImpl implements TimeCardService {
     @Override
     @Transactional(rollbackOn = {AxelorException.class, Exception.class})
     public void attachScheduledTimeCardLines(TimeCard timeCard) {
-        List<TimeCardLine> orphanTimeCardLines = timeCardLineRepo.all().filter("self.timeCard IS NULL AND self.isDeletable = false").fetch();
+        List<TimeCardLine> orphanTimeCardLines = timeCardLineRepo.all().filter("self.timeCard IS NULL AND self.isDeletable = false AND self.employee.id = ?", timeCard.getEmployee().getId()).fetch();
 
         LocalDate startDate = timeCard.getFromDate();
         LocalDate endDate = timeCard.getToDate();

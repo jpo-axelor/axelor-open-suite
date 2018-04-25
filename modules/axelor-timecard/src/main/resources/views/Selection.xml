@@ -32,4 +32,8 @@
         <option value="absence">Absence</option>
     </selection>
 
+    <selection name="ihr.batch.action.select" id="timecard.ihr.batch.action.select">
+        <option value="6">Génération des pointages</option>
+    </selection>
+
 </object-views>
