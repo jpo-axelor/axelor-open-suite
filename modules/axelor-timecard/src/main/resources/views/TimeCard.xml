@@ -26,7 +26,8 @@
 
         <panel>
             <field name="company" grid-view="company-grid" form-view="company-form"/>
-            <field name="employee" grid-view="employee-grid" form-view="employee-form"/>
+            <field name="employee" grid-view="employee-grid" form-view="employee-form" colSpan="4"/>
+            <field name="employee.mainEmploymentContract.monthlyWage" colSpan="2" readonly="true"/>
             <field name="fromDate"/>
             <field name="toDate"/>
         </panel>
