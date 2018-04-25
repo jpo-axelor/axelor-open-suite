@@ -49,6 +49,10 @@
             <field name="refusalDate"/>
             <field name="groundForRefusal"/>
         </panel>
+
+        <panel-mail>
+            <mail-messages limit="4"/>
+        </panel-mail>
     </form>
 
     <action-method name="action-time-card-method-generate-time-card-lines">

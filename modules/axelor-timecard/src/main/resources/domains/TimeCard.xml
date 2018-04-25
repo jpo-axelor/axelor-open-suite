@@ -24,6 +24,11 @@
         <decimal name="supplementaryHours" title="Heures supplémentaires" readonly="true"/>
         <decimal name="nightHours" title="Heures de nuit" readonly="true"/>
 
+        <track>
+            <field name="timeCardLineList"/>
+            <field name="statusSelect"/>
+        </track>
+
     </entity>
 
 </domain-models>
