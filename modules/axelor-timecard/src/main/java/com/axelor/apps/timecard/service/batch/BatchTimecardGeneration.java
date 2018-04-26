@@ -1,6 +1,7 @@
 package com.axelor.apps.timecard.service.batch;
 
 import com.axelor.apps.base.db.Company;
+import com.axelor.apps.base.db.repo.CompanyRepository;
 import com.axelor.apps.hr.db.Employee;
 import com.axelor.apps.hr.db.HrBatch;
 import com.axelor.apps.hr.service.batch.BatchStrategy;
@@ -21,17 +22,19 @@ import java.util.stream.Collectors;
 public class BatchTimecardGeneration extends BatchStrategy {
 
     protected Set<Long> employeeIds;
-    protected Company company;
+    protected Long companyId;
     protected LocalDate startPeriod;
     protected LocalDate endPeriod;
 
     protected TimeCardRepository timeCardRepo;
     protected TimeCardService timeCardService;
+    protected CompanyRepository companyRepo;
 
     @Inject
-    public BatchTimecardGeneration(TimeCardRepository timeCardRepo, TimeCardService timeCardService) {
+    public BatchTimecardGeneration(TimeCardRepository timeCardRepo, TimeCardService timeCardService, CompanyRepository companyRepo) {
         this.timeCardRepo = timeCardRepo;
         this.timeCardService = timeCardService;
+        this.companyRepo = companyRepo;
     }
 
     @Override
@@ -42,10 +45,11 @@ public class BatchTimecardGeneration extends BatchStrategy {
 
         employeeIds = hrBatch.getEmployeeSet().stream().map(Employee::getId).collect(Collectors.toSet());
 
-        company = hrBatch.getCompany();
+        Company company = hrBatch.getCompany();
         if (company == null) {
             throw new AxelorException(batch, IException.MISSING_FIELD, "Le champ 'Société' est manquant.");
         }
+        companyId = company.getId();
 
         startPeriod = hrBatch.getPeriod().getFromDate();
         endPeriod = hrBatch.getPeriod().getToDate();
@@ -55,14 +59,16 @@ public class BatchTimecardGeneration extends BatchStrategy {
     protected void process() {
         for (Long id : employeeIds) {
             Employee employee = employeeRepository.find(id);
+            Company company = companyRepo.find(companyId);
             try {
-                generateTimeCard(employee);
+                generateTimeCard(employee, company);
                 updateEmployee(employee);
             } catch (Exception e) {
                 TraceBackService.trace(e, "Batch Timecard Generation", batch.getId()); // TODO
                 incrementAnomaly();
+            } finally {
+                JPA.clear();
             }
-            JPA.clear();
         }
     }
 
@@ -83,9 +89,10 @@ public class BatchTimecardGeneration extends BatchStrategy {
      * Generates (or updates) timecard for given {@code Employee}.
      *
      * @param employee
+     * @param company
      */
     @Transactional(rollbackOn = {AxelorException.class, Exception.class})
-    protected void generateTimeCard(Employee employee) {
+    protected void generateTimeCard(Employee employee, Company company) {
         TimeCard timeCard = timeCardRepo.all().filter("self.employee.id = ? AND self.fromDate = ? AND self.toDate = ?", employee.getId(), startPeriod, endPeriod).fetchOne();
         if (timeCard == null) {
             timeCard = new TimeCard();
