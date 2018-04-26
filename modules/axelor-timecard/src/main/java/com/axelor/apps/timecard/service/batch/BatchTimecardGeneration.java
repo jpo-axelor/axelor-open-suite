@@ -7,18 +7,20 @@ import com.axelor.apps.hr.service.batch.BatchStrategy;
 import com.axelor.apps.timecard.db.TimeCard;
 import com.axelor.apps.timecard.db.repo.TimeCardRepository;
 import com.axelor.apps.timecard.service.TimeCardService;
+import com.axelor.db.JPA;
 import com.axelor.exception.AxelorException;
 import com.axelor.exception.db.IException;
 import com.axelor.exception.service.TraceBackService;
-import com.axelor.inject.Beans;
+import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 
 import java.time.LocalDate;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class BatchTimecardGeneration extends BatchStrategy {
 
-    protected Set<Employee> employees;
+    protected Set<Long> employeeIds;
     protected Company company;
     protected LocalDate startPeriod;
     protected LocalDate endPeriod;
@@ -26,16 +28,19 @@ public class BatchTimecardGeneration extends BatchStrategy {
     protected TimeCardRepository timeCardRepo;
     protected TimeCardService timeCardService;
 
+    @Inject
+    public BatchTimecardGeneration(TimeCardRepository timeCardRepo, TimeCardService timeCardService) {
+        this.timeCardRepo = timeCardRepo;
+        this.timeCardService = timeCardService;
+    }
+
     @Override
     protected void start() throws IllegalArgumentException, IllegalAccessException, AxelorException {
         super.start();
 
-        timeCardRepo = Beans.get(TimeCardRepository.class);
-        timeCardService = Beans.get(TimeCardService.class);
-
         HrBatch hrBatch = batch.getHrBatch();
 
-        employees = hrBatch.getEmployeeSet();
+        employeeIds = hrBatch.getEmployeeSet().stream().map(Employee::getId).collect(Collectors.toSet());
 
         company = hrBatch.getCompany();
         if (company == null) {
@@ -48,7 +53,8 @@ public class BatchTimecardGeneration extends BatchStrategy {
 
     @Override
     protected void process() {
-        for (Employee employee : employees) {
+        for (Long id : employeeIds) {
+            Employee employee = employeeRepository.find(id);
             try {
                 generateTimeCard(employee);
                 updateEmployee(employee);
@@ -56,6 +62,7 @@ public class BatchTimecardGeneration extends BatchStrategy {
                 TraceBackService.trace(e, "Batch Timecard Generation", batch.getId()); // TODO
                 incrementAnomaly();
             }
+            JPA.clear();
         }
     }
 
@@ -76,7 +83,6 @@ public class BatchTimecardGeneration extends BatchStrategy {
      * Generates (or updates) timecard for given {@code Employee}.
      *
      * @param employee
-     * @return true if there is an anomaly, false otherwise
      */
     @Transactional(rollbackOn = {AxelorException.class, Exception.class})
     protected void generateTimeCard(Employee employee) {
