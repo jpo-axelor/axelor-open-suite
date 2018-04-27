@@ -26,6 +26,18 @@
 
         <one-to-many name="weeklyHoursList" ref="com.axelor.apps.timecard.db.WeeklyHours" title="Heures hebdomadaires"/>
 
+        <extra-code>
+            <![CDATA[
+                // Status select
+                public static final Integer STATUS_DRAFT = 1;
+                public static final Integer STATUS_AWAITING_VALIDATION = 2;
+                public static final Integer STATUS_VALIDATED = 3;
+                public static final Integer STATUS_CLOSED = 4;
+                public static final Integer STATUS_REFUSED = 5;
+                public static final Integer STATUS_CANCELED = 6;
+            ]]>
+        </extra-code>
+
         <track>
             <field name="timeCardLineList"/>
             <field name="statusSelect"/>

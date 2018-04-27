@@ -25,7 +25,14 @@
         </menubar>
 
         <panel>
-            <field name="statusSelect" widget="NavSelect" showTitle="false"/>
+            <field name="statusSelect" widget="NavSelect" showTitle="false" colSpan="8"/>
+            <panel colSpan="4" stacked="true">
+                <button name="sendBtn" title="Send" onClick="action-timecard-group-send"/>
+                <button name="validateBtn" title="Validate" onClick="action-timecard-group-validate"/>
+                <button name="cancelBtn" title="Cancel" onClick="action-timecard-group-cancel"/>
+                <button name="refuseBtn" title="Refuse" onClick="action-timecard-group-refuse"/>
+                <button name="closeBtn" title="Close" showIf="statusSelect = 3" onClick="action-timecard-group-close"/>
+            </panel>
         </panel>
 
         <panel>
@@ -84,5 +91,50 @@
         <view-param name="show-toolbar" value="false"/>
         <context name="_timeCardId" expr="eval: __self__.id"/>
     </action-view>
+
+
+    <action-group name="action-timecard-group-send">
+        <action name="action-timecard-record-send"/>
+    </action-group>
+
+    <action-record name="action-timecard-record-send" model="com.axelor.apps.timecard.db.TimeCard">
+        <field name="statusSelect" expr="eval: 2"/>
+    </action-record>
+
+
+    <action-group name="action-timecard-group-validate">
+        <action name="action-timecard-record-validate"/>
+    </action-group>
+
+    <action-record name="action-timecard-record-validate" model="com.axelor.apps.timecard.db.TimeCard">
+        <field name="statusSelect" expr="eval: 3"/>
+    </action-record>
+
+
+    <action-group name="action-timecard-group-cancel">
+        <action name="action-timecard-record-cancel"/>
+    </action-group>
+
+    <action-record name="action-timecard-record-cancel" model="com.axelor.apps.timecard.db.TimeCard">
+        <field name="statusSelect" expr="eval: 6"/>
+    </action-record>
+
+
+    <action-group name="action-timecard-group-refuse">
+        <action name="action-timecard-record-refuse"/>
+    </action-group>
+
+    <action-record name="action-timecard-record-refuse" model="com.axelor.apps.timecard.db.TimeCard">
+        <field name="statusSelect" expr="eval: 5"/>
+    </action-record>
+
+
+    <action-group name="action-timecard-group-close">
+        <action name="action-timecard-record-close"/>
+    </action-group>
+
+    <action-record name="action-timecard-record-close" model="com.axelor.apps.timecard.db.TimeCard">
+        <field name="statusSelect" expr="eval: 4"/>
+    </action-record>
 
 </object-views>

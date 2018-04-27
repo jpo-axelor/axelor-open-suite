@@ -12,8 +12,9 @@
         <option value="1">Brouillon</option>
         <option value="2">En attente de validation</option>
         <option value="3">Validé</option>
-        <option value="4">Refusé</option>
-        <option value="5">Annulé</option>
+        <option value="4">Clôturé</option>
+        <option value="5">Refusé</option>
+        <option value="6">Annulé</option>
     </selection>
 
     <selection name="timecardline.timecard.week.day.select">
