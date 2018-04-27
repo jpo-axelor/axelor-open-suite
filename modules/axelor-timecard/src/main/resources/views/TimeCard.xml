@@ -31,7 +31,7 @@
                 <button name="validateBtn" title="Validate" onClick="action-timecard-group-validate"/>
                 <button name="cancelBtn" title="Cancel" onClick="action-timecard-group-cancel"/>
                 <button name="refuseBtn" title="Refuse" onClick="action-timecard-group-refuse"/>
-                <button name="closeBtn" title="Close" showIf="statusSelect = 3" onClick="action-timecard-group-close"/>
+                <button name="closeBtn" title="Close" showIf="statusSelect == 3" onClick="action-timecard-group-close"/>
             </panel>
         </panel>
 
