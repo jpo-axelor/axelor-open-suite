@@ -41,12 +41,15 @@ import com.axelor.apps.timecard.service.TimeCardLineService;
 import com.axelor.apps.timecard.service.TimeCardLineServiceImpl;
 import com.axelor.apps.timecard.service.TimeCardService;
 import com.axelor.apps.timecard.service.TimeCardServiceImpl;
+import com.axelor.apps.timecard.service.app.AppTimecardService;
+import com.axelor.apps.timecard.service.app.AppTimecardServiceImpl;
 import com.axelor.apps.timecard.service.batch.HrBatchTimeCardService;
 
-public class TimeCardModule extends AxelorModule {
+public class TimecardModule extends AxelorModule {
 
     @Override
     protected void configure() {
+        bind(AppTimecardService.class).to(AppTimecardServiceImpl.class);
         bind(PlanningLineRepository.class).to(PlanningLineTimeCardRepository.class);
         bind(FrequencyService.class).to(FrequencyServiceImpl.class);
         bind(PlanningLineService.class).to(PlanningLineServiceImpl.class);

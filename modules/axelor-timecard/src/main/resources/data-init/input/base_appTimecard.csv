@@ -1,0 +1,2 @@
+"name";"code";"installOrder";"description";"imagePath";"modules";"dependsOn";"sequence"
+"Timecard";"timecard";30;"Timecard configuration";"app-timecard.png";"axelor-timecard";"employee,leave";40
