@@ -30,9 +30,11 @@ public class LeaveRequestTimeCardRepository extends LeaveRequestRepository {
         BigDecimal totalAbsence = BigDecimal.ZERO;
         BigDecimal totalSubstitution = BigDecimal.ZERO;
 
-        for (TimeCardLine timeCardLine : leaveRequest.getTimeCardLineList()) {
-            totalAbsence = totalAbsence.add(timeCardLine.getDuration());
-            totalSubstitution = totalSubstitution.add(timeCardLine.getTotalSubstitutionHours());
+        if (leaveRequest.getTimeCardLineList() != null) {
+            for (TimeCardLine timeCardLine : leaveRequest.getTimeCardLineList()) {
+                totalAbsence = totalAbsence.add(timeCardLine.getDuration());
+                totalSubstitution = totalSubstitution.add(timeCardLine.getTotalSubstitutionHours());
+            }
         }
 
         leaveRequest.setTotalAbsenceHours(totalAbsence);

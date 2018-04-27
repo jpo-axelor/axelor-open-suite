@@ -73,16 +73,19 @@ public class TimeCardLineController {
             }
         }
 
-        response.setValue("weekDay", startDateTime.getDayOfWeek().getValue());
-        response.setValue("date", startDateTime.toLocalDate());
-        response.setValue("startTime", startDateTime.toLocalTime());
+        if (startDateTime != null) {
+            response.setValue("weekDay", startDateTime.getDayOfWeek().getValue());
+            response.setValue("date", startDateTime.toLocalDate());
+            response.setValue("startTime", startDateTime.toLocalTime());
 
-        if (endDateTime.toLocalDate().compareTo(startDateTime.toLocalDate()) > 0) {
-            response.setValue("endTime", LocalTime.MIDNIGHT.minusSeconds(1));
-        } else {
-            response.setValue("endTime", endDateTime.toLocalTime());
+            if (endDateTime != null) {
+                if (endDateTime.toLocalDate().compareTo(startDateTime.toLocalDate()) > 0) {
+                    response.setValue("endTime", LocalTime.MIDNIGHT.minusSeconds(1));
+                } else {
+                    response.setValue("endTime", endDateTime.toLocalTime());
+                }
+            }
         }
-
 
         Integer projectId = (Integer) request.getContext().get("_projectId");
         if (projectId != null) {

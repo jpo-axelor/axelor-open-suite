@@ -25,8 +25,10 @@ public class TimeCardTimeCardRepository extends TimeCardRepository {
 
     @Override
     public TimeCard save(TimeCard timeCard) {
-        for (TimeCardLine timeCardLine : timeCard.getTimeCardLineList()) {
-            Beans.get(TimeCardLineRepository.class).save(timeCardLine);
+        if (timeCard.getTimeCardLineList() != null) {
+            for (TimeCardLine timeCardLine : timeCard.getTimeCardLineList()) {
+                Beans.get(TimeCardLineRepository.class).save(timeCardLine);
+            }
         }
 
         return super.save(timeCard);
