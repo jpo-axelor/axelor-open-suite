@@ -63,7 +63,7 @@ public class TimeCardLineController {
         endDateTime = (LocalDateTime) request.getContext().get("endDateTime");
 
         // From action-view
-        Integer timeCardLineId = (Integer) request.getContext().get("_id");
+        Integer timeCardLineId = (Integer) request.getContext().get("_timeCardLineId");
         TimeCardLine timeCardLineParent = null;
         if (timeCardLineId != null) {
             timeCardLineParent = Beans.get(TimeCardLineRepository.class).find(Long.valueOf(timeCardLineId));
