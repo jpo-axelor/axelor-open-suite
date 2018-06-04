@@ -20,6 +20,7 @@ package com.axelor.apps.timecard.web;
 import com.axelor.apps.hr.db.LeaveRequest;
 import com.axelor.apps.hr.db.repo.LeaveRequestRepository;
 import com.axelor.apps.timecard.db.TimeCardLine;
+import com.axelor.apps.timecard.service.LeaveServiceTimeCardImpl;
 import com.axelor.inject.Beans;
 import com.axelor.meta.schema.actions.ActionView;
 import com.axelor.meta.schema.actions.ActionView.ActionViewBuilder;
@@ -50,4 +51,12 @@ public class LeaveRequestTimeCardController {
         response.setView(avb.map());
     }
 
+    public void computeDurationTotals(ActionRequest request, ActionResponse response) {
+        Long leaveRequestId = (Long) request.getContext().get("id");
+        LeaveRequest leaveRequest = Beans.get(LeaveRequestRepository.class).find(leaveRequestId);
+
+        Beans.get(LeaveServiceTimeCardImpl.class).computeDurationTotals(leaveRequest);
+
+        response.setReload(true);
+    }
 }

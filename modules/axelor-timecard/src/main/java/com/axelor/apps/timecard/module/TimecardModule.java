@@ -18,10 +18,8 @@
 package com.axelor.apps.timecard.module;
 
 import com.axelor.app.AxelorModule;
-import com.axelor.apps.hr.db.repo.LeaveRequestRepository;
 import com.axelor.apps.hr.service.batch.HrBatchService;
 import com.axelor.apps.hr.service.leave.LeaveServiceImpl;
-import com.axelor.apps.timecard.db.repo.LeaveRequestTimeCardRepository;
 import com.axelor.apps.timecard.db.repo.PlanningLineRepository;
 import com.axelor.apps.timecard.db.repo.PlanningLineTimeCardRepository;
 import com.axelor.apps.timecard.db.repo.TempTimeCardLineRepository;
@@ -60,7 +58,6 @@ public class TimecardModule extends AxelorModule {
         bind(TempTimeCardLineRepository.class).to(TempTimeCardLineTimeCardRepository.class);
         bind(TempTimeCardLineService.class).to(TempTimeCardLineServiceImpl.class);
         bind(LeaveServiceImpl.class).to(LeaveServiceTimeCardImpl.class);
-        bind(LeaveRequestRepository.class).to(LeaveRequestTimeCardRepository.class);
         bind(HrBatchService.class).to(HrBatchTimeCardService.class);
     }
 

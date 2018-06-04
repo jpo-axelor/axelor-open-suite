@@ -109,4 +109,18 @@
         <attribute for="duration" name="hidden" expr="eval: __config__.app.getApp('timecard').getDeductLeavesFromTimecard()"/>
     </action-attrs>
 
+    <action-group name="action-leave-request-group-validate" id="action-timecard-leave-request-group-validate">
+        <action name="action-leave-request-validate-dates-on-save"/>
+        <action name="save"/>
+        <action name="action-leave-request-method-validate-leave-request"/>
+        <action name="action-leave-request-attrs-buttons"/>
+        <action name="action-leave-request-attrs-valid-refuse"/>
+        <action name="save"/>
+        <action name="action-leave-request-method-compute-duration-totals"/>
+    </action-group>
+
+    <action-method name="action-leave-request-method-compute-duration-totals">
+        <call class="com.axelor.apps.timecard.web.LeaveRequestTimeCardController" method="computeDurationTotals"/>
+    </action-method>
+
 </object-views>

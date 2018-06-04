@@ -37,7 +37,7 @@ import com.axelor.apps.timecard.db.repo.TimeCardLineRepository;
 import com.axelor.exception.AxelorException;
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
-
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -158,5 +158,23 @@ public class LeaveServiceTimeCardImpl extends LeaveServiceImpl {
         }
 
         super.cancel(leaveRequest);
+    }
+
+    @Transactional(rollbackOn = {AxelorException.class, Exception.class})
+    public void computeDurationTotals(LeaveRequest leaveRequest) {
+        BigDecimal totalAbsence = BigDecimal.ZERO;
+        BigDecimal totalSubstitution = BigDecimal.ZERO;
+
+        if (leaveRequest.getTimeCardLineList() != null) {
+            for (TimeCardLine timeCardLine : leaveRequest.getTimeCardLineList()) {
+                totalAbsence = totalAbsence.add(timeCardLine.getDuration());
+                totalSubstitution = totalSubstitution.add(timeCardLine.getTotalSubstitutionHours());
+            }
+        }
+
+        leaveRequest.setTotalAbsenceHours(totalAbsence);
+        leaveRequest.setTotalSubstitutionHours(totalSubstitution);
+
+        leaveRequestRepo.save(leaveRequest);
     }
 }
