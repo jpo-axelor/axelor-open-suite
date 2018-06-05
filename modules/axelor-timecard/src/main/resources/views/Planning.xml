@@ -131,6 +131,7 @@
         <view-param name="popup" value="reload"/>
         <context name="_projectId" expr="eval: project?.id"/>
         <context name="_employeeId" expr="eval: employee?.id"/>
+        <context name="_isForecastTCL" expr="eval: true"/>
     </action-view>
 
     <action-view name="action-planning-view-leave-requests-dashlet-employee" title="Demandes de congés" model="com.axelor.apps.hr.db.LeaveRequest">

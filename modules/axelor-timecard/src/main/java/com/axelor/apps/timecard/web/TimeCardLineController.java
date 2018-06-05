@@ -106,6 +106,12 @@ public class TimeCardLineController {
             response.setValue("typeSelect", TimeCardLineRepository.TYPE_EXTRA);
             response.setAttr("typeSelect", "readonly", true);
         }
+
+
+        Boolean isForecastTCL = (Boolean) request.getContext().get("_isForecastTCL");
+        if (isForecastTCL != null) {
+            response.setAttr("typeSelect", "required", true);
+        }
     }
 
     /**
