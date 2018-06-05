@@ -37,12 +37,14 @@ import com.axelor.apps.timecard.db.repo.TimeCardLineRepository;
 import com.axelor.exception.AxelorException;
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class LeaveServiceTimeCardImpl extends LeaveServiceImpl {
@@ -75,6 +77,7 @@ public class LeaveServiceTimeCardImpl extends LeaveServiceImpl {
         // Generates scheduled time card lines
 
         Employee employee = leaveRequest.getUser().getEmployee();
+        Set<Project> projects = leaveRequest.getProjectSet();
 
         LocalDate fromDate = leaveRequest.getFromDate();
         LocalDate toDate = leaveRequest.getToDate();
@@ -87,6 +90,10 @@ public class LeaveServiceTimeCardImpl extends LeaveServiceImpl {
         List<PlanningLine> planningLines = planningLineRepo.findByEmployee(employee).fetch();
         for (PlanningLine planningLine : planningLines) {
             Project project = planningLine.getProject();
+
+            if (projects != null && !projects.contains(project)) {
+                continue;
+            }
 
             List<LocalDate> dates = new ArrayList<>();
             for (Integer year : years) {

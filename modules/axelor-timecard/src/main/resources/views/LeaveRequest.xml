@@ -21,8 +21,8 @@
     </grid>
 
     <form name="leave-request-form" id="timecard-leave-request-form" title="Leave Request" model="com.axelor.apps.hr.db.LeaveRequest"
-          onNew="action-leave-request-record-default,action-leave-request-attrs-buttons,action-leave-request-record-to-justify,action-leave-request-method-leave-reason-to-justify,action-attrs-leave-request-hide-duration"
-          onLoad="action-leave-request-group-on-form-load,action-attrs-leave-request-hide-duration"
+          onNew="action-leave-request-record-default,action-leave-request-attrs-buttons,action-leave-request-record-to-justify,action-leave-request-method-leave-reason-to-justify,action-leave-request-attrs-hide-duration"
+          onLoad="action-leave-request-group-on-form-load,action-leave-request-attrs-hide-duration"
           onSave="action-leave-request-validate-dates-on-save" canCopy="false">
 
         <menubar>
@@ -51,7 +51,7 @@
         <panel name="information">
             <spacer/>
             <field name="company" canEdit="false" onChange="action-hr-record-empty-user,action-leave-request-method-leave-reason-to-justify" form-view="company-form" grid-view="company-grid"/>
-            <field name="user" form-view="user-form" grid-view="user-grid" onSelect="action-hr-attrs-set-user-domain" onChange="action-leave-request-validate-dates,action-leave-request-methode-compute-duration, action-leave-request-method-leave-reason-to-justify" canNew="false" canEdit="false" canView="false"/>
+            <field name="user" form-view="user-form" grid-view="user-grid" onSelect="action-hr-attrs-set-user-domain" onChange="action-leave-request-validate-dates,action-leave-request-methode-compute-duration, action-leave-request-method-leave-reason-to-justify,action-leave-request-record-reset-project-set" canNew="false" canEdit="false" canView="false"/>
             <field name="requestDate" colSpan="12" width="50%"/>
             <field name="leaveLine" onSelect="action-leave-request-attrs-line-domain" title="Reason" canEdit="false" canNew="false" widget="SuggestBox" required="true" onChange="action-leave-request-attrs-select,action-leave-request-attrs-inject-change" form-view="leave-line-form" grid-view="leave-line-grid"/>
             <field name="leaveLine.quantity" title="Available quantity (acquired)"/>
@@ -62,6 +62,8 @@
             <field name="toDate" onChange="action-leave-request-validate-dates,action-leave-request-methode-compute-duration"/>
             <field name="endOnSelect" onChange="action-leave-request-validate-dates,action-leave-request-methode-compute-duration"/>
             <field name="duration" readonly="true" onChange="action-leave-request-methode-duration"/>
+
+            <field name="projectSet" domain=":user MEMBER OF self.membersUserSet" widget="TagSelect" colSpan="12" canEdit="false" canNew="false"/>
 
             <field name="comments" colSpan="12"/>
         </panel>
@@ -105,7 +107,7 @@
         <call class="com.axelor.apps.timecard.web.LeaveRequestTimeCardController" method="showCalendar"/>
     </action-method>
 
-    <action-attrs name="action-attrs-leave-request-hide-duration">
+    <action-attrs name="action-leave-request-attrs-hide-duration">
         <attribute for="duration" name="hidden" expr="eval: __config__.app.getApp('timecard').getDeductLeavesFromTimecard()"/>
     </action-attrs>
 
@@ -122,5 +124,9 @@
     <action-method name="action-leave-request-method-compute-duration-totals">
         <call class="com.axelor.apps.timecard.web.LeaveRequestTimeCardController" method="computeDurationTotals"/>
     </action-method>
+
+    <action-record name="action-leave-request-record-reset-project-set" model="com.axelor.apps.hr.db.LeaveRequest">
+        <field name="projectSet" expr="eval: null"/>
+    </action-record>
 
 </object-views>
