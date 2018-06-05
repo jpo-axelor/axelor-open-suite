@@ -12,9 +12,9 @@ import com.axelor.db.JPA;
 import com.axelor.exception.AxelorException;
 import com.axelor.exception.db.IException;
 import com.axelor.exception.service.TraceBackService;
+import com.axelor.inject.Beans;
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
-
 import java.time.LocalDate;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -104,5 +104,11 @@ public class BatchTimecardGeneration extends BatchStrategy {
 
         timeCardService.generateTimeCardLines(timeCard);
         timeCardService.attachScheduledTimeCardLines(timeCard);
+        try {
+            Beans.get(TimeCardService.class).computeHours(timeCard);
+        } catch (AxelorException e) {
+            TraceBackService.trace(e, "Timecard");
+        }
+        timeCardService.computeWeeklyHours(timeCard);
     }
 }
