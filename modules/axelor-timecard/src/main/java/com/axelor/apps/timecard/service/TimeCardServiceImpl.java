@@ -281,8 +281,10 @@ public class TimeCardServiceImpl implements TimeCardService {
     protected BigDecimal computeNightHours(TimeCard timeCard) {
         BigDecimal total = BigDecimal.ZERO;
 
-        for (TimeCardLine timeCardLine : timeCard.getTimeCardLineList()) {
-            total = total.add(timeCardLine.getDurationNight());
+        if (timeCard.getTimeCardLineList() != null) {
+            for (TimeCardLine timeCardLine : timeCard.getTimeCardLineList()) {
+                total = total.add(timeCardLine.getDurationNight());
+            }
         }
 
         return total;
