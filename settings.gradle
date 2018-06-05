@@ -12,20 +12,18 @@ def modules = new File('modules/abs').listFiles().findAll { dir ->
                     !dir.name.endsWith('-fleet') &&
                     !dir.name.endsWith('-helpdesk') &&
                     !dir.name.endsWith('-marketing') &&
-                    !dir.name.endsWith('-prestashop') &&
                     !dir.name.endsWith('-production') &&
                     !dir.name.endsWith('-purchase') &&
                     !dir.name.endsWith('-quality') &&
                     !dir.name.endsWith('-stock') &&
                     !dir.name.endsWith('-supplier-management') &&
                     !dir.name.endsWith('-supplychain') &&
-                    !dir.name.endsWith('-talent') &&
-                    !dir.name.endsWith('-teamsapp')
+                    !dir.name.endsWith('-talent')
     )
 }
 
 modules.addAll(new File('modules').listFiles().findAll {
-    dir -> new File(dir, 'build.gradle').exists()
+    dir -> new File(dir, 'build.gradle').exists() && !dir.name.startsWith('traversier')
 })
 
 modules.each { dir ->
