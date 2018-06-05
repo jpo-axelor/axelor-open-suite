@@ -81,35 +81,39 @@ public class TimeCardLineServiceImpl implements TimeCardLineService {
 
     @Override
     public BigDecimal getDurationNight(LocalTime startTime, LocalTime endTime, Company payCompany) {
-        HRConfig hrConfig = payCompany.getHrConfig();
-        LocalTime startNight = hrConfig.getStartNightHours();
-        LocalTime endNight = hrConfig.getEndNightHours();
+        if (startTime != null && endTime != null) {
+            HRConfig hrConfig = payCompany.getHrConfig();
+            LocalTime startNight = hrConfig.getStartNightHours();
+            LocalTime endNight = hrConfig.getEndNightHours();
 
-        LocalTime start = LocalTime.now();
-        LocalTime end = LocalTime.now();
-        if (startTime.isBefore(endNight) && (endTime.isBefore(endNight) || endTime.equals(endNight))) {
-            start = startTime;
-            end = endTime;
-        } else if (startTime.isBefore(endNight) && endTime.isAfter(endNight)) {
-            start = startTime;
-            end = endNight;
-        } else if (startTime.isAfter(endTime) && endTime.isBefore(startNight)) {
-            start = null;
-            end = null;
-        } else if (startTime.isBefore(startNight) && endTime.isAfter(startNight)) {
-            start = startNight;
-            end = endTime;
-        } else if ((startTime.equals(startNight) || startTime.isAfter(startNight)) && endTime.isAfter(startNight)) {
-            start = startTime;
-            end = endTime;
+            LocalTime start = LocalTime.now();
+            LocalTime end = LocalTime.now();
+            if (startTime.isBefore(endNight) && (endTime.isBefore(endNight) || endTime.equals(endNight))) {
+                start = startTime;
+                end = endTime;
+            } else if (startTime.isBefore(endNight) && endTime.isAfter(endNight)) {
+                start = startTime;
+                end = endNight;
+            } else if (startTime.isAfter(endTime) && endTime.isBefore(startNight)) {
+                start = null;
+                end = null;
+            } else if (startTime.isBefore(startNight) && endTime.isAfter(startNight)) {
+                start = startNight;
+                end = endTime;
+            } else if ((startTime.equals(startNight) || startTime.isAfter(startNight)) && endTime.isAfter(startNight)) {
+                start = startTime;
+                end = endTime;
+            }
+
+            BigDecimal durationNight = BigDecimal.ZERO;
+            if (start != null && end != null) {
+                durationNight = BigDecimal.valueOf(Duration.between(start, end).toMinutes() / 60.0);
+            }
+
+            return durationNight;
         }
 
-        BigDecimal durationNight = BigDecimal.ZERO;
-        if (start != null && end != null) {
-            durationNight = BigDecimal.valueOf(Duration.between(start, end).toMinutes() / 60.0);
-        }
-
-        return durationNight;
+        return BigDecimal.ZERO;
     }
 
     @Override
