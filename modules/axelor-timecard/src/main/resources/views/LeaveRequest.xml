@@ -66,12 +66,12 @@
             <field name="comments" colSpan="12"/>
         </panel>
 
-        <panel title="Pointage">
+        <panel title="Pointage" showIf="timeCardLineList.length > 0">
             <field name="totalAbsenceHours"/>
             <field name="totalSubstitutionHours">
                 <hilite if="$number(totalSubstitutionHours) &lt; $number(totalAbsenceHours)" color="danger"/>
             </field>
-            <panel-related field="timeCardLineList" showIf="timeCardLineList.length > 0" canRemove="false" canNew="false" colSpan="12" grid-view="time-card-line-grid" form-view="time-card-line-form"/>
+            <panel-related field="timeCardLineList" canRemove="false" canNew="false" colSpan="12" grid-view="time-card-line-grid" form-view="time-card-line-form"/>
         </panel>
 
         <panel>
