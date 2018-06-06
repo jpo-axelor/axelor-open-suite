@@ -68,12 +68,15 @@
             <field name="comments" colSpan="12"/>
         </panel>
 
-        <panel title="Pointage" showIf="timeCardLineList.length > 0">
-            <field name="totalAbsenceHours"/>
-            <field name="totalSubstitutionHours">
-                <hilite if="$number(totalSubstitutionHours) &lt; $number(totalAbsenceHours)" color="danger"/>
-            </field>
-            <panel-related field="timeCardLineList" canRemove="false" canNew="false" colSpan="12" grid-view="time-card-line-grid" form-view="time-card-line-form"/>
+        <panel title="Pointage" showIf="statusSelect == 3">
+            <panel showIf="timeCardLineList.length > 0" colSpan="12">
+                <field name="totalAbsenceHours"/>
+                <field name="totalSubstitutionHours">
+                    <hilite if="$number(totalSubstitutionHours) &lt; $number(totalAbsenceHours)" color="danger"/>
+                </field>
+                <panel-related field="timeCardLineList" canRemove="false" canNew="false" colSpan="12" grid-view="time-card-line-grid" form-view="time-card-line-form"/>
+            </panel>
+            <panel-dashlet action="action-leave-request-dashlet-timecard-lines-to-reassign" colSpan="12"/>
         </panel>
 
         <panel>
@@ -128,5 +131,13 @@
     <action-record name="action-leave-request-record-reset-project-set" model="com.axelor.apps.hr.db.LeaveRequest">
         <field name="projectSet" expr="eval: null"/>
     </action-record>
+
+    <action-view name="action-leave-request-dashlet-timecard-lines-to-reassign" title="Lignes de pointage à réaffecter" model="com.axelor.apps.timecard.db.TimeCardLine">
+        <view type="grid" name="time-card-line-grid"/>
+        <view type="form" name="time-card-line-form"/>
+        <domain>self.employee.id = :_employeeId AND self.typeSelect = :_extraHoursSelect AND self.date &gt;= :fromDate AND self.date &lt;= :toDate</domain>
+        <context name="_employeeId" expr="eval: user?.employee?.id"/>
+        <context name="_extraHoursSelect" expr="eval: com.axelor.apps.timecard.db.repo.TimeCardLineRepository.TYPE_EXTRA"/>
+    </action-view>
 
 </object-views>

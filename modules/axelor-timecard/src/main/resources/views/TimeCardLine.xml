@@ -22,7 +22,7 @@
 
     <form name="time-card-line-form" title="Ligne de pointage" model="com.axelor.apps.timecard.db.TimeCardLine" width="large"
           onNew="action-time-card-line-method-set-defaults,action-time-card-line-record-compute-duration"
-          onLoad="action-time-card-line-method-get-substitutions-duration">
+          onLoad="action-time-card-line-method-get-substitutions-duration,save">
         <panel readonlyIf="typeSelect == 'contractual'">
             <field name="typeSelect" selection-in="['extra', 'absence']"/>
             <field name="isContractual" showIf="typeSelect == 'extra' &amp;&amp; isSubstitution"/>
