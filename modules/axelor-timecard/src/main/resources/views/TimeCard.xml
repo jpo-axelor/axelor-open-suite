@@ -103,8 +103,12 @@
 
 
     <action-group name="action-timecard-group-validate">
-        <action name="action-timecard-record-validate"/>
+        <action name="action-timecard-method-validate"/>
     </action-group>
+
+    <action-method name="action-timecard-method-validate">
+        <call class="com.axelor.apps.timecard.web.TimeCardController" method="validate"/>
+    </action-method>
 
     <action-record name="action-timecard-record-validate" model="com.axelor.apps.timecard.db.TimeCard">
         <field name="statusSelect" expr="eval: 3"/>

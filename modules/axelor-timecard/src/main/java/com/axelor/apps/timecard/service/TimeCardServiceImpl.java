@@ -19,6 +19,11 @@ package com.axelor.apps.timecard.service;
 
 import com.axelor.apps.hr.db.Employee;
 import com.axelor.apps.hr.db.EmploymentContract;
+import com.axelor.apps.hr.db.LeaveLine;
+import com.axelor.apps.hr.db.LeaveRequest;
+import com.axelor.apps.hr.db.repo.LeaveLineRepository;
+import com.axelor.apps.hr.db.repo.LeaveRequestRepository;
+import com.axelor.apps.hr.exception.IExceptionMessage;
 import com.axelor.apps.project.db.Project;
 import com.axelor.apps.timecard.db.PlanningLine;
 import com.axelor.apps.timecard.db.TimeCard;
@@ -29,10 +34,13 @@ import com.axelor.apps.timecard.db.repo.TimeCardLineRepository;
 import com.axelor.apps.timecard.db.repo.TimeCardRepository;
 import com.axelor.exception.AxelorException;
 import com.axelor.exception.db.IException;
+import com.axelor.i18n.I18n;
+import com.axelor.inject.Beans;
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Date;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -40,6 +48,7 @@ import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class TimeCardServiceImpl implements TimeCardService {
 
@@ -298,4 +307,49 @@ public class TimeCardServiceImpl implements TimeCardService {
         return timeCardLineService.getTotalAbsenceHours(timeCard.getEmployee(), startDate, endDate);
     }
 
+    @Override
+    @Transactional(rollbackOn = {AxelorException.class, Exception.class})
+    public void validate(TimeCard timeCard) throws AxelorException {
+        List<TimeCardLine> timeCardLinesAbsence = timeCard.getTimeCardLineList()
+                                                          .stream()
+                                                          .filter(e -> e.getTypeSelect().equals(TimeCardLineRepository.TYPE_ABSENCE))
+                                                          .collect(Collectors.toList());
+
+        for (TimeCardLine absence : timeCardLinesAbsence) {
+            LeaveRequest leaveRequest = absence.getLeaveRequest();
+
+            BigDecimal absenceHours = leaveRequest.getTotalAbsenceHours();
+            BigDecimal leaveRequestDuration = absenceHours.divide(new BigDecimal(7), absenceHours.scale(), RoundingMode.CEILING); // 7 hours in a day
+
+            Employee employee = leaveRequest.getUser().getEmployee();
+            if (employee == null) {
+                throw new AxelorException(leaveRequest, IException.CONFIGURATION_ERROR, I18n.get(IExceptionMessage.LEAVE_USER_EMPLOYEE), leaveRequest.getUser().getName());
+            }
+
+            LeaveLine leaveLine = Beans.get(LeaveLineRepository.class).all().filter("self.employee = ?1 AND self.leaveReason = ?2", employee, leaveRequest.getLeaveLine().getLeaveReason()).fetchOne();
+            if (leaveLine == null) {
+                throw new AxelorException(leaveRequest, IException.CONFIGURATION_ERROR, I18n.get(IExceptionMessage.LEAVE_LINE), employee.getName(), leaveRequest.getLeaveLine().getLeaveReason().getLeaveReason());
+            }
+
+            if (leaveRequest.getInjectConsumeSelect().equals(LeaveRequestRepository.SELECT_CONSUME)) {
+                leaveLine.setQuantity(leaveLine.getQuantity().subtract(leaveRequestDuration));
+                if (leaveLine.getQuantity().compareTo(BigDecimal.ZERO) < 0 && !employee.getNegativeValueLeave()) {
+                    throw new AxelorException(leaveRequest, IException.CONFIGURATION_ERROR, I18n.get(IExceptionMessage.LEAVE_ALLOW_NEGATIVE_VALUE_EMPLOYEE), employee.getName());
+                }
+                if (leaveLine.getQuantity().compareTo(BigDecimal.ZERO) < 0 && !leaveRequest.getLeaveLine().getLeaveReason().getAllowNegativeValue()) {
+                    throw new AxelorException(leaveRequest, IException.CONFIGURATION_ERROR, I18n.get(IExceptionMessage.LEAVE_ALLOW_NEGATIVE_VALUE_REASON), leaveRequest.getLeaveLine().getLeaveReason().getLeaveReason());
+                }
+                leaveLine.setDaysToValidate(leaveLine.getDaysToValidate().add(leaveRequestDuration));
+                leaveLine.setDaysValidated(leaveLine.getDaysValidated().add(leaveRequestDuration));
+            } else {
+                leaveLine.setQuantity(leaveLine.getQuantity().add(leaveRequestDuration));
+                leaveLine.setDaysToValidate(leaveLine.getDaysToValidate().subtract(leaveRequestDuration));
+            }
+
+            Beans.get(LeaveLineRepository.class).save(leaveLine);
+        }
+
+        timeCard.setStatusSelect(TimeCardRepository.STATUS_VALIDATED);
+        timeCardRepo.save(timeCard);
+    }
 }

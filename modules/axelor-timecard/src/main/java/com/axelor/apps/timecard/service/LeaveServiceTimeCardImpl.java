@@ -34,7 +34,10 @@ import com.axelor.apps.timecard.db.PlanningLine;
 import com.axelor.apps.timecard.db.TimeCardLine;
 import com.axelor.apps.timecard.db.repo.PlanningLineRepository;
 import com.axelor.apps.timecard.db.repo.TimeCardLineRepository;
+import com.axelor.apps.timecard.service.app.AppTimecardService;
+import com.axelor.auth.AuthUtils;
 import com.axelor.exception.AxelorException;
+import com.axelor.inject.Beans;
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 
@@ -71,7 +74,17 @@ public class LeaveServiceTimeCardImpl extends LeaveServiceImpl {
     @Override
     @Transactional(rollbackOn = {AxelorException.class, Exception.class})
     public void validate(LeaveRequest leaveRequest) throws AxelorException {
-        super.validate(leaveRequest);
+        if (!Beans.get(AppTimecardService.class).getAppTimecard().getDeductLeavesFromTimecard() && leaveRequest.getLeaveLine().getLeaveReason().getManageAccumulation()){
+            manageValidateLeaves(leaveRequest);
+        }
+
+        leaveRequest.setStatusSelect(LeaveRequestRepository.STATUS_VALIDATED);
+        leaveRequest.setValidatedBy(AuthUtils.getUser());
+        leaveRequest.setValidationDate(appBaseService.getTodayDate());
+
+        leaveRequestRepo.save(leaveRequest);
+
+        createEvents(leaveRequest);
 
 
         // Generates scheduled time card lines
