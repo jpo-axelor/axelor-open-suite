@@ -91,7 +91,7 @@ public class LeaveServiceTimeCardImpl extends LeaveServiceImpl {
         for (PlanningLine planningLine : planningLines) {
             Project project = planningLine.getProject();
 
-            if (projects != null && !projects.contains(project)) {
+            if (!projects.isEmpty() && !projects.contains(project)) {
                 continue;
             }
 
