@@ -113,6 +113,7 @@
     <action-view name="action-time-card-line-view-add-substitution" title="Ligne de remplacement" model="com.axelor.apps.timecard.db.TimeCardLine">
         <view type="form" name="time-card-line-form"/>
         <view-param name="popup" value="reload"/>
+        <context name="_timeCardLineId" expr="eval: id"/>
         <context name="_projectId" expr="eval: project?.id"/>
         <context name="_isSubstitution" expr="eval: true"/>
     </action-view>

@@ -20,6 +20,7 @@ package com.axelor.apps.timecard.db.repo;
 import com.axelor.apps.hr.db.Employee;
 import com.axelor.apps.project.db.Project;
 import com.axelor.apps.timecard.db.TimeCardLine;
+import com.axelor.apps.timecard.service.LeaveServiceTimeCardImpl;
 import com.axelor.apps.timecard.service.TimeCardLineService;
 import com.axelor.inject.Beans;
 
@@ -85,6 +86,8 @@ public class TimeCardLineTimeCardRepository extends TimeCardLineRepository {
                 totalSubstitution = totalSubstitution.add(tcl.getDuration());
             }
             timeCardLine.setTotalSubstitutionHours(totalSubstitution);
+
+            Beans.get(LeaveServiceTimeCardImpl.class).computeDurationTotals(timeCardLine.getLeaveRequest());
         }
 
         return super.save(timeCardLine);
