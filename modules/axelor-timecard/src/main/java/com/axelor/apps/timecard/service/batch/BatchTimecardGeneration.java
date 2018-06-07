@@ -10,7 +10,7 @@ import com.axelor.apps.timecard.db.repo.TimecardRepository;
 import com.axelor.apps.timecard.service.TimecardService;
 import com.axelor.db.JPA;
 import com.axelor.exception.AxelorException;
-import com.axelor.exception.db.IException;
+import com.axelor.exception.db.repo.TraceBackRepository;
 import com.axelor.exception.service.TraceBackService;
 import com.axelor.inject.Beans;
 import com.google.inject.Inject;
@@ -52,7 +52,7 @@ public class BatchTimecardGeneration extends BatchStrategy {
     Company company = hrBatch.getCompany();
     if (company == null) {
       throw new AxelorException(
-          batch, IException.MISSING_FIELD, "Le champ 'Société' est manquant.");
+          batch, TraceBackRepository.CATEGORY_MISSING_FIELD, "Le champ 'Société' est manquant.");
     }
     companyId = company.getId();
 
