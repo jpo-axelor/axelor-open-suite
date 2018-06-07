@@ -7,16 +7,15 @@ import com.google.inject.Inject;
 
 public class AppTimecardServiceImpl extends AppBaseServiceImpl implements AppTimecardService {
 
-    private AppTimecardRepository appTimecardRepo;
+  private AppTimecardRepository appTimecardRepo;
 
-    @Inject
-    public AppTimecardServiceImpl(AppTimecardRepository appTimecardRepo) {
-        this.appTimecardRepo = appTimecardRepo;
-    }
+  @Inject
+  public AppTimecardServiceImpl(AppTimecardRepository appTimecardRepo) {
+    this.appTimecardRepo = appTimecardRepo;
+  }
 
-    @Override
-    public AppTimecard getAppTimecard() {
-        return appTimecardRepo.all().fetchOne();
-    }
-
+  @Override
+  public AppTimecard getAppTimecard() {
+    return appTimecardRepo.all().fetchOne();
+  }
 }

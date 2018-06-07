@@ -7,11 +7,11 @@
 
     <entity name="WeeklyHours">
 
-        <date name="startDate" title="Date de début" readonly="true"/>
-        <date name="endDate" title="Date de fin" readonly="true"/>
-        <decimal name="contractualHours" title="Heures contractuelles" readonly="true"/>
-        <decimal name="absenceHours" title="Heures d'absence" readonly="true"/>
-        <decimal name="supplementaryHours" title="Heures supplémentaires" readonly="true"/>
+        <date name="startDate" title="Start date" readonly="true"/>
+        <date name="endDate" title="End date" readonly="true"/>
+        <decimal name="contractualHours" title="Contractual hours" readonly="true"/>
+        <decimal name="absenceHours" title="Absence hours" readonly="true"/>
+        <decimal name="supplementaryHours" title="Supplementary hours" readonly="true"/>
 
     </entity>
 

@@ -17,16 +17,20 @@
  */
 package com.axelor.apps.timecard.db.repo;
 
-import com.axelor.apps.timecard.db.PlanningLine;
-import com.axelor.apps.timecard.service.FrequencyService;
+import com.axelor.apps.timecard.db.Timecard;
+import com.axelor.apps.timecard.db.TimecardLine;
 import com.axelor.inject.Beans;
 
-public class PlanningLineTimeCardRepository extends PlanningLineRepository {
+public class TimecardTimecardRepository extends TimecardRepository {
 
-    @Override
-    public PlanningLine save(PlanningLine planningLine) {
-        planningLine.getFrequency().setSummary(Beans.get(FrequencyService.class).computeSummary(planningLine.getFrequency()));
-
-        return super.save(planningLine);
+  @Override
+  public Timecard save(Timecard timecard) {
+    if (timecard.getTimecardLineList() != null) {
+      for (TimecardLine timecardLine : timecard.getTimecardLineList()) {
+        Beans.get(TimecardLineRepository.class).save(timecardLine);
+      }
     }
+
+    return super.save(timecard);
+  }
 }

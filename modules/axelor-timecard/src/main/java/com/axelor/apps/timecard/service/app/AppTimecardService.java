@@ -5,6 +5,5 @@ import com.axelor.apps.base.service.app.AppBaseService;
 
 public interface AppTimecardService extends AppBaseService {
 
-    AppTimecard getAppTimecard();
-
+  AppTimecard getAppTimecard();
 }

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<domain-models xmlns="http://axelor.com/xml/ns/domain-models"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:schemaLocation="http://axelor.com/xml/ns/domain-models http://axelor.com/xml/ns/domain-models/domain-models_5.0.xsd">
+
+    <module name="timecard" package="com.axelor.apps.timecard.db"/>
+
+    <entity name="Timecard">
+
+        <integer name="statusSelect" selection="timecard.timecard.status.select" default="1" readonly="true"/>
+        <many-to-one name="employee" ref="com.axelor.apps.hr.db.Employee" title="Employee" required="true"/>
+        <one-to-many name="timecardLineList" ref="com.axelor.apps.timecard.db.TimecardLine" title="Timecard lines" mappedBy="timecard" orphanRemoval="true"/>
+        <date name="fromDate" title="From"/>
+        <date name="toDate" title="To"/>
+        <many-to-one name="company" title="Company" ref="com.axelor.apps.base.db.Company"/>
+        <many-to-one name="validatedBy" title="Validated by" ref="com.axelor.auth.db.User" readonly="true"/>
+        <many-to-one name="refusedBy" title="Refused by" ref="com.axelor.auth.db.User" readonly="true"/>
+        <date name="validationDate" title="Validation date" readonly="true"/>
+        <date name="refusalDate" title="Refusal date" readonly="true"/>
+        <string name="groundForRefusal" title="Ground for refusal" large="true"/>
+
+        <decimal name="complementaryHours" title="Complementary hours" readonly="true"/>
+        <decimal name="complementOfHours" title="Complement of hours" readonly="true"/>
+        <decimal name="supplementaryHours" title="Supplementary hours" readonly="true"/>
+        <decimal name="nightHours" title="Night hours" readonly="true"/>
+
+        <one-to-many name="weeklyHoursList" ref="com.axelor.apps.timecard.db.WeeklyHours" title="Weekly hours"/>
+
+        <extra-code>
+            <![CDATA[
+                // Status select
+                public static final Integer STATUS_DRAFT = 1;
+                public static final Integer STATUS_AWAITING_VALIDATION = 2;
+                public static final Integer STATUS_VALIDATED = 3;
+                public static final Integer STATUS_CLOSED = 4;
+                public static final Integer STATUS_REFUSED = 5;
+                public static final Integer STATUS_CANCELED = 6;
+            ]]>
+        </extra-code>
+
+        <track>
+            <field name="timecardLineList"/>
+            <field name="statusSelect"/>
+        </track>
+
+    </entity>
+
+</domain-models>

@@ -7,7 +7,7 @@
 
     <entity name="LeaveReason">
 
-        <boolean name="paidLeave" title="Absence payée" default="true"/>
+        <boolean name="paidLeave" title="Paid leave" default="true"/>
 
     </entity>
 

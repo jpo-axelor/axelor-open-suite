@@ -7,10 +7,10 @@
 
     <entity name="LeaveRequest" cachable="true">
 
-        <many-to-many name="projectSet" ref="com.axelor.apps.project.db.Project" title="Projets"/>
-        <decimal name="totalAbsenceHours" title="Durée d'absence (heures)" readonly="true"/>
-        <decimal name="totalSubstitutionHours" title="Durée des remplacements (heures)" readonly="true"/>
-        <one-to-many name="timeCardLineList" title="Lignes de pointage" ref="com.axelor.apps.timecard.db.TimeCardLine" mappedBy="leaveRequest"/>
+        <many-to-many name="projectSet" ref="com.axelor.apps.project.db.Project" title="Projects"/>
+        <decimal name="totalAbsenceHours" title="Absence duration (hours)" readonly="true"/>
+        <decimal name="totalSubstitutionHours" title="Substitution duration (hours)" readonly="true"/>
+        <one-to-many name="timecardLineList" title="Timecard lines" ref="com.axelor.apps.timecard.db.TimecardLine" mappedBy="leaveRequest"/>
 
     </entity>
 

@@ -3,17 +3,17 @@
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.0.xsd">
 
-    <grid name="frequency-grid" title="Fréquences" model="com.axelor.apps.timecard.db.Frequency">
+    <grid name="frequency-grid" title="Frequencies" model="com.axelor.apps.timecard.db.Frequency">
         <field name="summary"/>
     </grid>
 
-    <form name="frequency-form" title="Fréquence" model="com.axelor.apps.timecard.db.Frequency" width="large">
+    <form name="frequency-form" title="Frequency" model="com.axelor.apps.timecard.db.Frequency" width="large">
         <panel>
             <field name="summary" showTitle="false" readonly="true" css="bold" colSpan="12"/>
         </panel>
 
         <panel>
-            <panel title="Type de fréquence" colSpan="12">
+            <panel title="Frequency type" colSpan="12">
                 <field name="frequencyTypeSelect" onChange="action-frequency-method-compute-summary"/>
                 <panel>
                     <field name="everyNWeeks" showIf="frequencyTypeSelect == 'everyNWeeks'" onChange="action-frequency-method-compute-summary" hidden="true" colSpan="12"/>
@@ -25,7 +25,7 @@
                 </panel>
             </panel>
 
-            <panel title="Jours" colSpan="12" itemSpan="1">
+            <panel title="Days" colSpan="12" itemSpan="1">
                 <field name="monday" onChange="action-frequency-method-compute-summary"/>
                 <field name="tuesday" onChange="action-frequency-method-compute-summary"/>
                 <field name="wednesday" onChange="action-frequency-method-compute-summary"/>
@@ -35,7 +35,7 @@
                 <field name="sunday" onChange="action-frequency-method-compute-summary"/>
             </panel>
 
-            <panel title="Mois" colSpan="12" itemSpan="1">
+            <panel title="Months" colSpan="12" itemSpan="1">
                 <field name="january" onChange="action-frequency-method-compute-summary"/>
                 <field name="february" onChange="action-frequency-method-compute-summary"/>
                 <field name="march" onChange="action-frequency-method-compute-summary"/>

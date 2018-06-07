@@ -3,7 +3,7 @@
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.0.xsd">
 
-    <grid name="planning-line-grid" title="Lignes de planning" model="com.axelor.apps.timecard.db.PlanningLine">
+    <grid name="planning-line-grid" title="Planning lines" model="com.axelor.apps.timecard.db.PlanningLine">
         <field name="project"/>
         <field name="employee"/>
         <field name="startTime"/>
@@ -11,7 +11,7 @@
         <field name="frequency"/>
     </grid>
 
-    <form name="planning-line-form" title="Ligne de planning" model="com.axelor.apps.timecard.db.PlanningLine" width="large"
+    <form name="planning-line-form" title="Planning line" model="com.axelor.apps.timecard.db.PlanningLine" width="large"
           onNew="action-planning-line-record-set-defaults,action-planning-line-record-default-frequency"
           onSave="save,action-planningline-method-compute-monthly-wage">
         <panel>
@@ -22,7 +22,7 @@
             <field name="frequency" showIf="$readonly()" hidden="true" grid-view="frequency-grid" form-view="frequency-form"/>
             <field name="frequency" canEdit="false" canRemove="false" canSelect="false" canView="false" showTitle="false" showIf="!$readonly()" hidden="true" colSpan="12">
                 <editor>
-                    <panel title="Type de fréquence" colSpan="12">
+                    <panel title="Frequency type" colSpan="12">
                         <field name="frequencyTypeSelect"/>
                         <panel>
                             <field name="everyNWeeks" showIf="frequencyTypeSelect == 'everyNWeeks'" hidden="true" colSpan="12"/>
@@ -34,7 +34,7 @@
                         </panel>
                     </panel>
 
-                    <panel title="Jours" colSpan="12">
+                    <panel title="Days" colSpan="12">
                         <panel colSpan="3">
                             <field name="monday"/>
                             <field name="tuesday"/>
@@ -52,7 +52,7 @@
                         </panel>
                     </panel>
 
-                    <panel title="Mois" colSpan="12" itemSpan="2">
+                    <panel title="Months" colSpan="12" itemSpan="2">
                         <field name="january"/>
                         <field name="february"/>
                         <field name="march"/>

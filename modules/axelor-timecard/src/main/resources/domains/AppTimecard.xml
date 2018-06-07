@@ -7,7 +7,7 @@
 
     <entity name="AppTimecard" cachable="true" extends="App">
 
-        <boolean name="deductLeavesFromTimecard" title="Décompter les congés à partir des pointages"/>
+        <boolean name="deductLeavesFromTimecard" title="Deduct leaves from timecard"/>
 
     </entity>
 

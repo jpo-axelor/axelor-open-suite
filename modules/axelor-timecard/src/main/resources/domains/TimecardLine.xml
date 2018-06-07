@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<domain-models xmlns="http://axelor.com/xml/ns/domain-models"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:schemaLocation="http://axelor.com/xml/ns/domain-models http://axelor.com/xml/ns/domain-models/domain-models_5.0.xsd">
+
+    <module name="timecard" package="com.axelor.apps.timecard.db"/>
+
+    <entity name="TimecardLine">
+
+        <string name="fullName" namecolumn="true"/>
+
+        <many-to-one name="project" title="Project" ref="com.axelor.apps.project.db.Project"/>
+        <many-to-one name="activity" title="Activity" ref="com.axelor.apps.base.db.Product"/>
+        <many-to-one name="employee" title="Employee" ref="com.axelor.apps.hr.db.Employee"/>
+        <integer name="weekDay" title="Week day" selection="timecardline.timecard.week.day.select" readonly="true"/>
+        <date name="date" title="Date" column="date_val"/>
+        <time name="startTime" title="Start time"/>
+        <time name="endTime" title="End time"/>
+        <datetime name="startDateTime" title="Start date and time" hidden="true"/>
+        <datetime name="endDateTime" title="End date and time" hidden="true"/>
+        <many-to-one name="timecard" ref="com.axelor.apps.timecard.db.Timecard" title="Timecard" readonly="true"/>
+        <decimal name="duration" title="Duration (hours)" readonly="true"/>
+        <decimal name="durationNight" title="Night duration (hours)" readonly="true"/>
+        <string name="comments" title="Comments" large="true"/>
+        <many-to-one name="leaveLine" ref="com.axelor.apps.hr.db.LeaveLine" title="Leave line"/>
+        <many-to-one name="leaveRequest" ref="com.axelor.apps.hr.db.LeaveRequest" title="Leave request" readonly="true"/>
+        <string name="typeSelect" title="Line type" selection="timecardline.timecard.type.select"/>
+
+        <boolean name="isDeletable" hidden="true" default="false"/>
+
+        <!-- Remplacements -->
+        <decimal name="totalSubstitutionHours" title="Substitution duration (hours)" readonly="true"/>
+        <one-to-many name="substitutionTimecardLineList" title="Substitution lines" ref="com.axelor.apps.timecard.db.TimecardLine" mappedBy="absenceTimecardLine"/>
+        <many-to-one name="absenceTimecardLine" title="Replaces" ref="com.axelor.apps.timecard.db.TimecardLine" readonly="true"/>
+        <boolean name="isSubstitution" hidden="true" default="false"/>
+        <boolean name="isContractual" title="Contractual"/>
+
+        <finder-method name="findByEmployee" using="employee" all="true"/>
+        <finder-method name="findByProject" using="project" all="true"/>
+        <finder-method name="findByEmployeeAndProject" using="employee,project" all="true"/>
+
+        <extra-code>
+            <![CDATA[
+                // Week Day Select
+                public static final Integer WEEK_DAY_MONDAY = 1;
+                public static final Integer WEEK_DAY_TUESDAY = 2;
+                public static final Integer WEEK_DAY_WEDNESDAY = 3;
+                public static final Integer WEEK_DAY_THURSDAY = 4;
+                public static final Integer WEEK_DAY_FRIDAY = 5;
+                public static final Integer WEEK_DAY_SATURDAY = 6;
+                public static final Integer WEEK_DAY_SUNDAY = 7;
+
+                // Type Select
+                public static final String TYPE_CONTRACTUAL = "contractual";
+                public static final String TYPE_EXTRA = "extra";
+                public static final String TYPE_ABSENCE = "absence";
+            ]]>
+        </extra-code>
+
+    </entity>
+
+</domain-models>

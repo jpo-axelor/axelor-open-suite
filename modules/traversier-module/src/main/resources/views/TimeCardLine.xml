@@ -3,7 +3,7 @@
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.0.xsd">
 
-    <form name="time-card-line-form" id="tn-time-card-line-form" title="Ligne de pointage" model="com.axelor.apps.timecard.db.TimeCardLine" width="large"
+    <form name="time-card-line-form" id="tn-time-card-line-form" title="Ligne de pointage" model="com.axelor.apps.timecard.db.TimecardLine" width="large"
           onNew="action-time-card-line-method-set-defaults,action-time-card-line-record-compute-duration"
           onLoad="action-time-card-line-method-get-substitutions-duration">
         <panel readonlyIf="typeSelect == 'contractual'">
@@ -25,11 +25,11 @@
             <field name="comments" colSpan="12" widget="html"/>
             <spacer/>
             <panel title="Remplacements" showIf="(typeSelect == 'extra' &amp;&amp; isSubstitution) || typeSelect == 'absence'" colSpan="12">
-                <field name="absenceTimeCardLine" showIf="typeSelect == 'extra' &amp;&amp; isSubstitution" grid-view="time-card-line-grid" form-view="time-card-line-form"/>
+                <field name="absenceTimecardLine" showIf="typeSelect == 'extra' &amp;&amp; isSubstitution" grid-view="time-card-line-grid" form-view="time-card-line-form"/>
                 <spacer/>
                 <field name="totalSubstitutionHours" showIf="typeSelect == 'absence'"/>
-                <panel-related field="substitutionTimeCardLineList" readonly="true" showIf="typeSelect == 'absence'" canNew="false" colSpan="12" grid-view="time-card-line-grid" form-view="time-card-line-form"/>
-                <button name="addSubstitution" title="Ajouter un remplacement" css="btn-custom text-left" icon="fa-plus" onClick="save,action-time-card-line-view-add-substitution" showIf="typeSelect == 'absence'"/>
+                <panel-related field="substitutionTimecardLineList" readonly="true" showIf="typeSelect == 'absence'" canNew="false" colSpan="12" grid-view="time-card-line-grid" form-view="time-card-line-form"/>
+                <button name="addSubstitution" title="Add a substitution" css="btn-custom text-left" icon="fa-plus" onClick="save,action-time-card-line-view-add-substitution" showIf="typeSelect == 'absence'"/>
 
                 <field name="isSubstitution" hidden="true"/>
             </panel>

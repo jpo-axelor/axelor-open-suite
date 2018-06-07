@@ -9,34 +9,35 @@
 
         <string name="summary" namecolumn="true"/>
 
-        <boolean name="monday" title="Lundi"/>
-        <boolean name="tuesday" title="Mardi"/>
-        <boolean name="wednesday" title="Mercredi"/>
-        <boolean name="thursday" title="Jeudi"/>
-        <boolean name="friday" title="Vendredi"/>
-        <boolean name="saturday" title="Samedi"/>
-        <boolean name="sunday" title="Dimanche"/>
+        <boolean name="monday" title="Monday"/>
+        <boolean name="tuesday" title="Tuesday"/>
+        <boolean name="wednesday" title="Wednesday"/>
+        <boolean name="thursday" title="Thursday"/>
+        <boolean name="friday" title="Friday"/>
+        <boolean name="saturday" title="Saturday"/>
+        <boolean name="sunday" title="Sunday"/>
 
-        <string name="frequencyTypeSelect" title="Type de fréquence" default="monthDays" selection="frequency.timecard.frequency.type.select"/>
-        <integer name="everyNWeeks" title="Toutes les N semaines" min="1" default="1"/>
-        <boolean name="first" title="Premiers"/>
-        <boolean name="second" title="Deuxièmes"/>
-        <boolean name="third" title="Troisièmes"/>
-        <boolean name="fourth" title="Quatrièmes"/>
-        <boolean name="last" title="Derniers"/>
+        <string name="frequencyTypeSelect" title="Frequency type" default="monthDays"
+                selection="frequency.timecard.frequency.type.select"/>
+        <integer name="everyNWeeks" title="Every N weeks" min="1" default="1"/>
+        <boolean name="first" title="First"/>
+        <boolean name="second" title="Second"/>
+        <boolean name="third" title="Third"/>
+        <boolean name="fourth" title="Fourth"/>
+        <boolean name="last" title="Last"/>
 
-        <boolean name="january" title="Janvier" default="true"/>
-        <boolean name="february" title="Février" default="true"/>
-        <boolean name="march" title="Mars" default="true"/>
-        <boolean name="april" title="Avril" default="true"/>
-        <boolean name="may" title="Mai" default="true"/>
-        <boolean name="june" title="Juin" default="true"/>
-        <boolean name="july" title="Juillet" default="true"/>
-        <boolean name="august" title="Août" default="true"/>
-        <boolean name="september" title="Septembre" default="true"/>
-        <boolean name="october" title="Octobre" default="true"/>
-        <boolean name="november" title="Novembre" default="true"/>
-        <boolean name="december" title="Décembre" default="true"/>
+        <boolean name="january" title="January" default="true"/>
+        <boolean name="february" title="February" default="true"/>
+        <boolean name="march" title="March" default="true"/>
+        <boolean name="april" title="April" default="true"/>
+        <boolean name="may" title="May" default="true"/>
+        <boolean name="june" title="June" default="true"/>
+        <boolean name="july" title="July" default="true"/>
+        <boolean name="august" title="August" default="true"/>
+        <boolean name="september" title="September" default="true"/>
+        <boolean name="october" title="October" default="true"/>
+        <boolean name="november" title="November" default="true"/>
+        <boolean name="december" title="December" default="true"/>
 
         <extra-code>
             <![CDATA[

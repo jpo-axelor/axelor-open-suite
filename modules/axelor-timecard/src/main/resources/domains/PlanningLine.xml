@@ -7,12 +7,12 @@
 
     <entity name="PlanningLine">
 
-        <many-to-one name="employee" title="Employé" ref="com.axelor.apps.hr.db.Employee" required="true"/>
-        <many-to-one name="project" title="Projet" ref="com.axelor.apps.project.db.Project" required="true"/>
-        <time name="startTime" title="Heure de début" required="true"/>
-        <time name="endTime" title="Heure de fin" required="true"/>
-        <many-to-one name="frequency" title="Fréquence" ref="com.axelor.apps.timecard.db.Frequency" required="true"/>
-        <decimal name="monthlyWage" title="Mensualisation (heures)" readonly="true"/>
+        <many-to-one name="employee" title="Employee" ref="com.axelor.apps.hr.db.Employee" required="true"/>
+        <many-to-one name="project" title="Project" ref="com.axelor.apps.project.db.Project" required="true"/>
+        <time name="startTime" title="Start time" required="true"/>
+        <time name="endTime" title="End time" required="true"/>
+        <many-to-one name="frequency" title="Frequency" ref="com.axelor.apps.timecard.db.Frequency" required="true"/>
+        <decimal name="monthlyWage" title="Monthly wage (hours)" readonly="true"/>
 
         <finder-method name="findByEmployee" using="employee" all="true"/>
         <finder-method name="findByProject" using="project" all="true"/>

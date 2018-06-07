@@ -26,51 +26,55 @@ import com.axelor.apps.timecard.db.repo.PlanningLineRepository;
 import com.axelor.exception.AxelorException;
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
-
-import javax.annotation.Nullable;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.Nullable;
 
 public class PlanningLineServiceImpl implements PlanningLineService {
 
-    protected PlanningLineRepository planningLineRepo;
-    protected FrequencyService frequencyService;
-    protected AppBaseService appBaseService;
+  protected PlanningLineRepository planningLineRepo;
+  protected FrequencyService frequencyService;
+  protected AppBaseService appBaseService;
 
-    @Inject
-    public PlanningLineServiceImpl(PlanningLineRepository planningLineRepo, FrequencyService frequencyService, AppBaseService appBaseService) {
-        this.planningLineRepo = planningLineRepo;
-        this.frequencyService = frequencyService;
-        this.appBaseService = appBaseService;
+  @Inject
+  public PlanningLineServiceImpl(
+      PlanningLineRepository planningLineRepo,
+      FrequencyService frequencyService,
+      AppBaseService appBaseService) {
+    this.planningLineRepo = planningLineRepo;
+    this.frequencyService = frequencyService;
+    this.appBaseService = appBaseService;
+  }
+
+  @Override
+  @Transactional(rollbackOn = {AxelorException.class, Exception.class})
+  public void computeMonthlyWage(PlanningLine planningLine) {
+    Frequency frequency = planningLine.getFrequency();
+
+    List<LocalDate> dates = frequencyService.getDates(frequency, null);
+
+    double lineDuration =
+        Duration.between(planningLine.getStartTime(), planningLine.getEndTime()).toMinutes() / 60.0;
+    planningLine.setMonthlyWage(BigDecimal.valueOf((dates.size() * lineDuration / 12)));
+    planningLineRepo.save(planningLine);
+  }
+
+  @Override
+  public List<PlanningLine> getPlanningLines(
+      @Nullable Project project, @Nullable Employee employee) {
+    List<PlanningLine> planningLines = new ArrayList<>();
+
+    if (employee != null && project == null) {
+      planningLines = planningLineRepo.findByEmployee(employee).fetch();
+    } else if (employee == null && project != null) {
+      planningLines = planningLineRepo.findByProject(project).fetch();
+    } else if (employee != null && project != null) {
+      planningLines = planningLineRepo.findByEmployeeAndProject(employee, project).fetch();
     }
 
-    @Override
-    @Transactional(rollbackOn = {AxelorException.class, Exception.class})
-    public void computeMonthlyWage(PlanningLine planningLine) {
-        Frequency frequency = planningLine.getFrequency();
-
-        List<LocalDate> dates = frequencyService.getDates(frequency, null);
-
-        double lineDuration = Duration.between(planningLine.getStartTime(), planningLine.getEndTime()).toMinutes() / 60.0;
-        planningLine.setMonthlyWage(BigDecimal.valueOf((dates.size() * lineDuration / 12)));
-        planningLineRepo.save(planningLine);
-    }
-
-    @Override
-    public List<PlanningLine> getPlanningLines(@Nullable Project project, @Nullable Employee employee) {
-        List<PlanningLine> planningLines = new ArrayList<>();
-
-        if (employee != null && project == null) {
-            planningLines = planningLineRepo.findByEmployee(employee).fetch();
-        } else if (employee == null && project != null) {
-            planningLines = planningLineRepo.findByProject(project).fetch();
-        } else if (employee != null && project != null) {
-            planningLines = planningLineRepo.findByEmployeeAndProject(employee, project).fetch();
-        }
-
-         return planningLines;
-    }
+    return planningLines;
+  }
 }

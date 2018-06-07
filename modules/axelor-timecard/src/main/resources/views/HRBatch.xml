@@ -13,10 +13,10 @@
         </panel>
 
         <panel-tabs>
-            <panel title="Génération des pointages" hidden="true" showIf="actionSelect == 6">
+            <panel title="Timecards generation" hidden="true" showIf="actionSelect == 6">
                 <field name="period" domain="self.year.company = :company AND self.year.typeSelect = 2" requiredIf="actionSelect == 6" canEdit="false" canView="false" grid-view="period-grid" form-view="period-form"/>
                 <panel-related field="employeeSet" onSelect="action-hr-batch-attrs-employee-set-domain" canNew="false" colSpan="12" grid-view="employee-lite-grid" form-view="employee-form"/>
-                <button name="timecardGenerationBatch" title="Générer les pointages" onClick="save,action-hrbatch-method-hr-batch"/>
+                <button name="timecardGenerationBatch" title="Generate timecards" onClick="save,action-hrbatch-method-hr-batch"/>
             </panel>
 
             <panel name="leaveManagementPage" title="Leave management" hidden="true" showIf="actionSelect == 1">

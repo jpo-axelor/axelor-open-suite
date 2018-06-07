@@ -5,15 +5,15 @@
 
     <module name="timecard" package="com.axelor.apps.timecard.db"/>
 
-    <entity name="TempTimeCardLine">
+    <entity name="TempTimecardLine">
 
-        <string name="fullName" title="Nom complet"/>
+        <string name="fullName" title="Full name"/>
 
-        <many-to-one name="project" title="Projet" ref="com.axelor.apps.project.db.Project"/>
-        <many-to-one name="employee" title="Employé" ref="com.axelor.apps.hr.db.Employee" readonly="true"/>
-        <datetime name="startDateTime" title="Date et heure de début"/>
-        <datetime name="endDateTime" title="Date et heure de fin"/>
-        <string name="typeSelect" title="Type de ligne" selection="timecardline.timecard.type.select"/>
+        <many-to-one name="project" title="Project" ref="com.axelor.apps.project.db.Project"/>
+        <many-to-one name="employee" title="Employee" ref="com.axelor.apps.hr.db.Employee" readonly="true"/>
+        <datetime name="startDateTime" title="Start date and time"/>
+        <datetime name="endDateTime" title="End date and time"/>
+        <string name="typeSelect" title="Line type" selection="timecardline.timecard.type.select"/>
 
         <extra-code>
             <![CDATA[

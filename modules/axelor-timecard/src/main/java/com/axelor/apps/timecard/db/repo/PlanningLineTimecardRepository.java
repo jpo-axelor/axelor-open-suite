@@ -15,28 +15,20 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.axelor.apps.timecard.web;
+package com.axelor.apps.timecard.db.repo;
 
 import com.axelor.apps.timecard.db.PlanningLine;
-import com.axelor.apps.timecard.db.repo.PlanningLineRepository;
-import com.axelor.apps.timecard.service.PlanningLineService;
+import com.axelor.apps.timecard.service.FrequencyService;
 import com.axelor.inject.Beans;
-import com.axelor.rpc.ActionRequest;
-import com.axelor.rpc.ActionResponse;
 
-public class PlanningLineController {
+public class PlanningLineTimecardRepository extends PlanningLineRepository {
 
-  /**
-   * Computes monthly wage of {@code PlanningLine} in context.
-   *
-   * @param request
-   * @param response
-   */
-  public void computeMonthlyWage(ActionRequest request, ActionResponse response) {
-    PlanningLine planningLine =
-        Beans.get(PlanningLineRepository.class)
-            .find(request.getContext().asType(PlanningLine.class).getId());
-    Beans.get(PlanningLineService.class).computeMonthlyWage(planningLine);
-    response.setReload(true);
+  @Override
+  public PlanningLine save(PlanningLine planningLine) {
+    planningLine
+        .getFrequency()
+        .setSummary(Beans.get(FrequencyService.class).computeSummary(planningLine.getFrequency()));
+
+    return super.save(planningLine);
   }
 }

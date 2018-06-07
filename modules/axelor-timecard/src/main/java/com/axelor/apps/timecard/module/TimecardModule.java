@@ -21,44 +21,43 @@ import com.axelor.app.AxelorModule;
 import com.axelor.apps.hr.service.batch.HrBatchService;
 import com.axelor.apps.hr.service.leave.LeaveServiceImpl;
 import com.axelor.apps.timecard.db.repo.PlanningLineRepository;
-import com.axelor.apps.timecard.db.repo.PlanningLineTimeCardRepository;
-import com.axelor.apps.timecard.db.repo.TempTimeCardLineRepository;
-import com.axelor.apps.timecard.db.repo.TempTimeCardLineTimeCardRepository;
-import com.axelor.apps.timecard.db.repo.TimeCardLineRepository;
-import com.axelor.apps.timecard.db.repo.TimeCardLineTimeCardRepository;
-import com.axelor.apps.timecard.db.repo.TimeCardRepository;
-import com.axelor.apps.timecard.db.repo.TimeCardTimeCardRepository;
+import com.axelor.apps.timecard.db.repo.PlanningLineTimecardRepository;
+import com.axelor.apps.timecard.db.repo.TempTimecardLineRepository;
+import com.axelor.apps.timecard.db.repo.TempTimecardLineTimecardRepository;
+import com.axelor.apps.timecard.db.repo.TimecardLineRepository;
+import com.axelor.apps.timecard.db.repo.TimecardLineTimecardRepository;
+import com.axelor.apps.timecard.db.repo.TimecardRepository;
+import com.axelor.apps.timecard.db.repo.TimecardTimecardRepository;
 import com.axelor.apps.timecard.service.FrequencyService;
 import com.axelor.apps.timecard.service.FrequencyServiceImpl;
-import com.axelor.apps.timecard.service.LeaveServiceTimeCardImpl;
+import com.axelor.apps.timecard.service.LeaveServiceTimecardImpl;
 import com.axelor.apps.timecard.service.PlanningLineService;
 import com.axelor.apps.timecard.service.PlanningLineServiceImpl;
-import com.axelor.apps.timecard.service.TempTimeCardLineService;
-import com.axelor.apps.timecard.service.TempTimeCardLineServiceImpl;
-import com.axelor.apps.timecard.service.TimeCardLineService;
-import com.axelor.apps.timecard.service.TimeCardLineServiceImpl;
-import com.axelor.apps.timecard.service.TimeCardService;
-import com.axelor.apps.timecard.service.TimeCardServiceImpl;
+import com.axelor.apps.timecard.service.TempTimecardLineService;
+import com.axelor.apps.timecard.service.TempTimecardLineServiceImpl;
+import com.axelor.apps.timecard.service.TimecardLineService;
+import com.axelor.apps.timecard.service.TimecardLineServiceImpl;
+import com.axelor.apps.timecard.service.TimecardService;
+import com.axelor.apps.timecard.service.TimecardServiceImpl;
 import com.axelor.apps.timecard.service.app.AppTimecardService;
 import com.axelor.apps.timecard.service.app.AppTimecardServiceImpl;
-import com.axelor.apps.timecard.service.batch.HrBatchTimeCardService;
+import com.axelor.apps.timecard.service.batch.HrBatchTimecardService;
 
 public class TimecardModule extends AxelorModule {
 
-    @Override
-    protected void configure() {
-        bind(AppTimecardService.class).to(AppTimecardServiceImpl.class);
-        bind(PlanningLineRepository.class).to(PlanningLineTimeCardRepository.class);
-        bind(FrequencyService.class).to(FrequencyServiceImpl.class);
-        bind(PlanningLineService.class).to(PlanningLineServiceImpl.class);
-        bind(TimeCardService.class).to(TimeCardServiceImpl.class);
-        bind(TimeCardRepository.class).to(TimeCardTimeCardRepository.class);
-        bind(TimeCardLineService.class).to(TimeCardLineServiceImpl.class);
-        bind(TimeCardLineRepository.class).to(TimeCardLineTimeCardRepository.class);
-        bind(TempTimeCardLineRepository.class).to(TempTimeCardLineTimeCardRepository.class);
-        bind(TempTimeCardLineService.class).to(TempTimeCardLineServiceImpl.class);
-        bind(LeaveServiceImpl.class).to(LeaveServiceTimeCardImpl.class);
-        bind(HrBatchService.class).to(HrBatchTimeCardService.class);
-    }
-
+  @Override
+  protected void configure() {
+    bind(AppTimecardService.class).to(AppTimecardServiceImpl.class);
+    bind(PlanningLineRepository.class).to(PlanningLineTimecardRepository.class);
+    bind(FrequencyService.class).to(FrequencyServiceImpl.class);
+    bind(PlanningLineService.class).to(PlanningLineServiceImpl.class);
+    bind(TimecardService.class).to(TimecardServiceImpl.class);
+    bind(TimecardRepository.class).to(TimecardTimecardRepository.class);
+    bind(TimecardLineService.class).to(TimecardLineServiceImpl.class);
+    bind(TimecardLineRepository.class).to(TimecardLineTimecardRepository.class);
+    bind(TempTimecardLineRepository.class).to(TempTimecardLineTimecardRepository.class);
+    bind(TempTimecardLineService.class).to(TempTimecardLineServiceImpl.class);
+    bind(LeaveServiceImpl.class).to(LeaveServiceTimecardImpl.class);
+    bind(HrBatchService.class).to(HrBatchTimecardService.class);
+  }
 }

@@ -3,7 +3,7 @@
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.0.xsd">
 
-    <grid name="time-card-line-grid" title="Lignes de pointage" model="com.axelor.apps.timecard.db.TimeCardLine" orderBy="startDateTime">
+    <grid name="time-card-line-grid" title="Timecard lines" model="com.axelor.apps.timecard.db.TimecardLine" orderBy="startDateTime">
         <hilite if="$number(totalSubstitutionHours) &lt; $number(duration) &amp;&amp; typeSelect == 'absence'" color="danger"/>
         <hilite if="$number(totalSubstitutionHours) &gt;= $number(duration) &amp;&amp; typeSelect == 'absence'" color="warning"/>
         <field name="project" readonlyIf="typeSelect == 'contractual'"/>
@@ -20,7 +20,7 @@
         <field name="duration" hidden="true"/>
     </grid>
 
-    <form name="time-card-line-form" title="Ligne de pointage" model="com.axelor.apps.timecard.db.TimeCardLine" width="large"
+    <form name="time-card-line-form" title="Timecard line" model="com.axelor.apps.timecard.db.TimecardLine" width="large"
           onNew="action-time-card-line-method-set-defaults,action-time-card-line-record-compute-duration"
           onLoad="action-time-card-line-method-get-substitutions-duration,save">
         <panel readonlyIf="typeSelect == 'contractual'">
@@ -41,79 +41,79 @@
             <field name="leaveRequest" showIf="leaveRequest &amp;&amp; typeSelect == 'absence'" grid-view="leave-request-grid" form-view="leave-request-form"/>
             <field name="comments" colSpan="12" widget="html"/>
             <spacer/>
-            <panel title="Remplacements" showIf="(typeSelect == 'extra' &amp;&amp; isSubstitution) || typeSelect == 'absence'" colSpan="12">
-                <field name="absenceTimeCardLine" showIf="typeSelect == 'extra' &amp;&amp; isSubstitution" grid-view="time-card-line-grid" form-view="time-card-line-form"/>
+            <panel title="Substitutions" showIf="(typeSelect == 'extra' &amp;&amp; isSubstitution) || typeSelect == 'absence'" colSpan="12">
+                <field name="absenceTimecardLine" showIf="typeSelect == 'extra' &amp;&amp; isSubstitution" grid-view="time-card-line-grid" form-view="time-card-line-form"/>
                 <spacer/>
                 <field name="totalSubstitutionHours" showIf="typeSelect == 'absence'"/>
-                <panel-related field="substitutionTimeCardLineList" readonly="true" showIf="typeSelect == 'absence'" canNew="false" colSpan="12" grid-view="time-card-line-grid" form-view="time-card-line-form"/>
-                <button name="addSubstitution" title="Ajouter un remplacement" css="btn-custom text-left" icon="fa-plus" onClick="save,action-time-card-line-view-add-substitution" showIf="typeSelect == 'absence'"/>
+                <panel-related field="substitutionTimecardLineList" readonly="true" showIf="typeSelect == 'absence'" canNew="false" colSpan="12" grid-view="time-card-line-grid" form-view="time-card-line-form"/>
+                <button name="addSubstitution" title="Add a substitution" css="btn-custom text-left" icon="fa-plus" onClick="save,action-time-card-line-view-add-substitution" showIf="typeSelect == 'absence'"/>
 
                 <field name="isSubstitution" hidden="true"/>
             </panel>
         </panel>
     </form>
 
-    <form name="time-card-line-substitution-wizard-form" title="Assistant remplacements" model="com.axelor.apps.base.db.Wizard"
+    <form name="time-card-line-substitution-wizard-form" title="Substitution assistant" model="com.axelor.apps.base.db.Wizard"
           onNew="action-time-card-line-method-set-wizard-defaults">
         <panel>
-            <field name="$startDate" title="Date de début" widget="Date" colSpan="4"/>
-            <field name="$endDate" title="Date de fin" widget="Date" colSpan="4"/>
-            <field name="$isContractual" title="Contractuelle" widget="Boolean" colSpan="4"/>
-            <field name="$employeeToReplace" title="Employé à remplacer" widget="ManyToOne" target="com.axelor.apps.hr.db.Employee" readonly="true"/>
-            <field name="$employeeReplacing" title="Employé remplaçant" widget="ManyToOne" target="com.axelor.apps.hr.db.Employee"/>
-            <field name="$projects" title="Chantiers" widget="TagSelect" target="com.axelor.apps.project.db.Project" canEdit="false" canNew="false" colSpan="12"/>
-            <button name="validate" title="Valider" onClick="action-time-card-line-method-generate-extra-tcl" colOffset="3"/>
+            <field name="$startDate" title="Start date" widget="Date" colSpan="4"/>
+            <field name="$endDate" title="End date" widget="Date" colSpan="4"/>
+            <field name="$isContractual" title="Contractual" widget="Boolean" colSpan="4"/>
+            <field name="$employeeToReplace" title="Employee to replace" widget="ManyToOne" target="com.axelor.apps.hr.db.Employee" readonly="true"/>
+            <field name="$employeeReplacing" title="Employee replacing" widget="ManyToOne" target="com.axelor.apps.hr.db.Employee"/>
+            <field name="$projects" title="Projects" widget="TagSelect" target="com.axelor.apps.project.db.Project" canEdit="false" canNew="false" colSpan="12"/>
+            <button name="validate" title="Validate" onClick="action-time-card-line-method-generate-extra-tcl" colOffset="3"/>
         </panel>
     </form>
 
-    <calendar name="time-card-line-calendar" title="Pointage" model="com.axelor.apps.timecard.db.TimeCardLine"
+    <calendar name="time-card-line-calendar" title="Timecard" model="com.axelor.apps.timecard.db.TimecardLine"
               eventStart="startDateTime" eventStop="endDateTime" colorBy="typeSelect" editable="true">
         <field name="project"/>
         <field name="typeSelect"/>
     </calendar>
 
-    <calendar name="time-card-line-leave-request-calendar" title="Demande de congés" model="com.axelor.apps.timecard.db.TimeCardLine"
+    <calendar name="time-card-line-leave-request-calendar" title="Leave requests" model="com.axelor.apps.timecard.db.TimecardLine"
               eventStart="startDateTime" eventStop="endDateTime" colorBy="typeSelect" editable="false">
         <field name="fullName"/>
         <field name="typeSelect"/>
     </calendar>
 
     <action-method name="action-time-card-line-method-set-defaults">
-        <call class="com.axelor.apps.timecard.web.TimeCardLineController" method="setDefaults"/>
+        <call class="com.axelor.apps.timecard.web.TimecardLineController" method="setDefaults"/>
     </action-method>
 
     <action-method name="action-time-card-line-method-set-wizard-defaults">
-        <call class="com.axelor.apps.timecard.web.TimeCardLineController" method="setWizardDefaults"/>
+        <call class="com.axelor.apps.timecard.web.TimecardLineController" method="setWizardDefaults"/>
     </action-method>
 
     <action-method name="action-time-card-line-method-generate-extra-tcl">
-        <call class="com.axelor.apps.timecard.web.TimeCardLineController" method="generateExtraTCL"/>
+        <call class="com.axelor.apps.timecard.web.TimecardLineController" method="generateExtraTCL"/>
     </action-method>
 
     <action-attrs name="action-time-card-line-attrs-leaveline-domain">
         <attribute for="leaveLine" name="domain" expr="eval: &quot; self.employee.id = ${__this__.employee?.id} &quot;"/>
     </action-attrs>
 
-    <action-record name="action-time-card-line-record-compute-duration" model="com.axelor.apps.timecard.db.TimeCardLine">
+    <action-record name="action-time-card-line-record-compute-duration" model="com.axelor.apps.timecard.db.TimecardLine">
         <field name="duration" expr="eval: java.time.Duration.between(startTime, endTime).toMinutes() / 60"/>
     </action-record>
 
     <action-method name="action-time-card-line-method-compute-night-hours">
-        <call class="com.axelor.apps.timecard.web.TimeCardLineController" method="computeNightHours"/>
+        <call class="com.axelor.apps.timecard.web.TimecardLineController" method="computeNightHours"/>
     </action-method>
 
     <action-method name="action-time-card-line-method-get-substitutions-duration">
-        <call class="com.axelor.apps.timecard.web.TimeCardLineController" method="computeSubstitutionsDuration"/>
+        <call class="com.axelor.apps.timecard.web.TimecardLineController" method="computeSubstitutionsDuration"/>
     </action-method>
 
-    <action-record name="action-time-card-line-record-get-week-day" model="com.axelor.apps.timecard.db.TimeCardLine">
+    <action-record name="action-time-card-line-record-get-week-day" model="com.axelor.apps.timecard.db.TimecardLine">
         <field name="weekDay" expr="eval: date.getDayOfWeek().getValue()"/>
     </action-record>
 
-    <action-view name="action-time-card-line-view-add-substitution" title="Ligne de remplacement" model="com.axelor.apps.timecard.db.TimeCardLine">
+    <action-view name="action-time-card-line-view-add-substitution" title="Substitution line" model="com.axelor.apps.timecard.db.TimecardLine">
         <view type="form" name="time-card-line-form"/>
         <view-param name="popup" value="reload"/>
-        <context name="_timeCardLineId" expr="eval: id"/>
+        <context name="_timecardLineId" expr="eval: id"/>
         <context name="_projectId" expr="eval: project?.id"/>
         <context name="_isSubstitution" expr="eval: true"/>
     </action-view>

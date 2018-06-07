@@ -5,11 +5,16 @@ apply {
 }
 
 axelor {
-    title "Axelor :: TimeCard"
-    description "TimeCard Module"
+    title "Axelor :: Timecard"
+    description "Timecard Module"
 }
 
 dependencies {
     compile project(":modules:axelor-human-resource")
 }
 
+spotless {
+    java {
+        googleJavaFormat()
+    }
+}

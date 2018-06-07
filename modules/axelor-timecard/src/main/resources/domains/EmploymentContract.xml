@@ -7,7 +7,7 @@
 
     <entity name="EmploymentContract">
 
-        <decimal name="monthlyWage" title="Mensualisation"/>
+        <decimal name="monthlyWage" title="Monthly wage"/>
 
     </entity>
 

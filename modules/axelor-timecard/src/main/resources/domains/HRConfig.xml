@@ -8,8 +8,8 @@
     <entity name="HRConfig">
 
         <!-- TIMECARD CONFIGURATION -->
-        <time name="startNightHours" title="Début des heures de nuit"/>
-        <time name="endNightHours" title="Fin des heures de nuit"/>
+        <time name="startNightHours" title="Night hours start"/>
+        <time name="endNightHours" title="Night hours end"/>
 
     </entity>
 

@@ -7,9 +7,9 @@
           onNew="action-planning-method-set-defaults"
           onLoad="action-planning-attrs-refresh-dashlets,action-planning-method-compute-monthly-wage">
         <menubar>
-            <menu title="Outils" icon="fa-wrench">
-                <item title="Prévisualiser" action="action-planning-method-preview" readonlyIf="(!project &amp;&amp; !employee) || !startDate || !endDate"/>
-                <item title="Générer les lignes de remplacements" action="save,action-planning-view-open-substitution-wizard"/>
+            <menu title="Tools" icon="fa-wrench">
+                <item title="Preview" action="action-planning-method-preview" readonlyIf="(!project &amp;&amp; !employee) || !startDate || !endDate"/>
+                <item title="Generate substitution lines" action="save,action-planning-view-open-substitution-wizard"/>
             </menu>
         </menubar>
 
@@ -22,24 +22,24 @@
         </panel>
 
         <panel itemSpan="12" hidden="true" showIf="(project || employee) &amp;&amp; startDate &amp;&amp; endDate">
-            <panel-dashlet name="planningLinesDashlet" title="Lignes de planning" action="action-planning-view-planning-lines-dashlet-both" hidden="true" showIf="project &amp;&amp; employee"/>
-            <panel-dashlet name="planningLinesDashlet" title="Lignes de planning" action="action-planning-view-planning-lines-dashlet-project" hidden="true" showIf="project &amp;&amp; !employee"/>
-            <panel-dashlet name="planningLinesDashlet" title="Lignes de planning" action="action-planning-view-planning-lines-dashlet-employee" hidden="true" showIf="!project &amp;&amp; employee"/>
+            <panel-dashlet name="planningLinesDashlet" title="Planning lines" action="action-planning-view-planning-lines-dashlet-both" hidden="true" showIf="project &amp;&amp; employee"/>
+            <panel-dashlet name="planningLinesDashlet" title="Planning lines" action="action-planning-view-planning-lines-dashlet-project" hidden="true" showIf="project &amp;&amp; !employee"/>
+            <panel-dashlet name="planningLinesDashlet" title="Planning lines" action="action-planning-view-planning-lines-dashlet-employee" hidden="true" showIf="!project &amp;&amp; employee"/>
 
-            <button name="addPlanningLine" title="Ajouter une ligne de planning" css="btn-custom text-left" icon="fa-plus" onClick="save,action-planning-view-add-planning-line"/>
+            <button name="addPlanningLine" title="Add a planning line" css="btn-custom text-left" icon="fa-plus" onClick="save,action-planning-view-add-planning-line"/>
         </panel>
 
         <panel itemSpan="12" hidden="true" showIf="(project || employee) &amp;&amp; startDate &amp;&amp; endDate">
-            <panel-dashlet name="timeCardLinesDashlet" title="Lignes de pointage prévisionnelles" action="action-planning-view-time-card-lines-dashlet-both" hidden="true" showIf="project &amp;&amp; employee"/>
-            <panel-dashlet name="timeCardLinesDashlet" title="Lignes de pointage prévisionnelles" action="action-planning-view-time-card-lines-dashlet-project" hidden="true" showIf="project &amp;&amp; !employee"/>
-            <panel-dashlet name="timeCardLinesDashlet" title="Lignes de pointage prévisionnelles" action="action-planning-view-time-card-lines-dashlet-employee" hidden="true" showIf="!project &amp;&amp; employee"/>
+            <panel-dashlet name="timecardLinesDashlet" title="Scheduled timecard lines" action="action-planning-view-time-card-lines-dashlet-both" hidden="true" showIf="project &amp;&amp; employee"/>
+            <panel-dashlet name="timecardLinesDashlet" title="Scheduled timecard lines" action="action-planning-view-time-card-lines-dashlet-project" hidden="true" showIf="project &amp;&amp; !employee"/>
+            <panel-dashlet name="timecardLinesDashlet" title="Scheduled timecard lines" action="action-planning-view-time-card-lines-dashlet-employee" hidden="true" showIf="!project &amp;&amp; employee"/>
 
-            <button name="addTimeCardLine" title="Ajouter une ligne de pointage prévisionnelle" css="btn-custom text-left" icon="fa-plus" onClick="save,action-planning-view-add-time-card-line"/>
+            <button name="addTimecardLine" title="Add a scheduled timecard line" css="btn-custom text-left" icon="fa-plus" onClick="save,action-planning-view-add-time-card-line"/>
         </panel>
 
         <panel itemSpan="12" hidden="true" showIf="(project || employee) &amp;&amp; startDate &amp;&amp; endDate">
-            <panel-dashlet name="leaveRequestsDashlet" title="Demandes de congés" action="action-planning-view-leave-requests-dashlet-employee" hidden="true" showIf="(!project &amp;&amp; employee) || (project &amp;&amp; employee)"/>
-            <panel-dashlet name="leaveRequestsDashlet" title="Demandes de congés" action="action-planning-view-leave-requests-dashlet-project" hidden="true" showIf="project &amp;&amp; !employee"/>
+            <panel-dashlet name="leaveRequestsDashlet" title="Leave requests" action="action-planning-view-leave-requests-dashlet-employee" hidden="true" showIf="(!project &amp;&amp; employee) || (project &amp;&amp; employee)"/>
+            <panel-dashlet name="leaveRequestsDashlet" title="Leave requests" action="action-planning-view-leave-requests-dashlet-project" hidden="true" showIf="project &amp;&amp; !employee"/>
         </panel>
     </form>
 
@@ -49,7 +49,7 @@
 
     <action-attrs name="action-planning-attrs-refresh-dashlets">
         <attribute for="planningLinesDashlet" name="refresh" expr="true"/>
-        <attribute for="timeCardLinesDashlet" name="refresh" expr="true"/>
+        <attribute for="timecardLinesDashlet" name="refresh" expr="true"/>
         <attribute for="leaveRequestsDashlet" name="refresh" expr="true"/>
     </action-attrs>
 
@@ -57,7 +57,7 @@
         <call class="com.axelor.apps.timecard.web.PlanningController" method="computeMonthlyWage"/>
     </action-method>
 
-    <action-view name="action-planning-view-planning-lines-dashlet-both" title="Lignes de planning" model="com.axelor.apps.timecard.db.PlanningLine">
+    <action-view name="action-planning-view-planning-lines-dashlet-both" title="Planning lines" model="com.axelor.apps.timecard.db.PlanningLine">
         <view type="grid" name="planning-line-grid"/>
         <view type="form" name="planning-line-form"/>
         <view-param name="popup" value="reload"/>
@@ -67,7 +67,7 @@
         <context name="_projectId" expr="eval: project.id"/>
     </action-view>
 
-    <action-view name="action-planning-view-planning-lines-dashlet-project" title="Lignes de planning" model="com.axelor.apps.timecard.db.PlanningLine">
+    <action-view name="action-planning-view-planning-lines-dashlet-project" title="Planning lines" model="com.axelor.apps.timecard.db.PlanningLine">
         <view type="grid" name="planning-line-grid"/>
         <view type="form" name="planning-line-form"/>
         <view-param name="popup" value="reload"/>
@@ -76,7 +76,7 @@
         <context name="_projectId" expr="eval: project.id"/>
     </action-view>
 
-    <action-view name="action-planning-view-planning-lines-dashlet-employee" title="Lignes de planning" model="com.axelor.apps.timecard.db.PlanningLine">
+    <action-view name="action-planning-view-planning-lines-dashlet-employee" title="Planning lines" model="com.axelor.apps.timecard.db.PlanningLine">
         <view type="grid" name="planning-line-grid"/>
         <view type="form" name="planning-line-form"/>
         <view-param name="popup" value="reload"/>
@@ -85,14 +85,14 @@
         <context name="_employeeId" expr="eval: employee.id"/>
     </action-view>
 
-    <action-view name="action-planning-view-add-planning-line" title="Ligne de planning" model="com.axelor.apps.timecard.db.PlanningLine">
+    <action-view name="action-planning-view-add-planning-line" title="Planning line" model="com.axelor.apps.timecard.db.PlanningLine">
         <view type="form" name="planning-line-form"/>
         <view-param name="popup" value="reload"/>
         <context name="_projectId" expr="eval: project?.id"/>
         <context name="_employeeId" expr="eval: employee?.id"/>
     </action-view>
 
-    <action-view name="action-planning-view-time-card-lines-dashlet-both" title="Lignes de pointage prévisionnelles" model="com.axelor.apps.timecard.db.TimeCardLine">
+    <action-view name="action-planning-view-time-card-lines-dashlet-both" title="Scheduled timecard lines" model="com.axelor.apps.timecard.db.TimecardLine">
         <view type="grid" name="time-card-line-grid"/>
         <view type="form" name="time-card-line-form"/>
         <view-param name="popup" value="reload"/>
@@ -104,7 +104,7 @@
         <context name="_endDate" expr="eval: endDate"/>
     </action-view>
 
-    <action-view name="action-planning-view-time-card-lines-dashlet-project" title="Lignes de pointage prévisionnelles" model="com.axelor.apps.timecard.db.TimeCardLine">
+    <action-view name="action-planning-view-time-card-lines-dashlet-project" title="Scheduled timecard lines" model="com.axelor.apps.timecard.db.TimecardLine">
         <view type="grid" name="time-card-line-grid"/>
         <view type="form" name="time-card-line-form"/>
         <view-param name="popup" value="reload"/>
@@ -115,7 +115,7 @@
         <context name="_endDate" expr="eval: endDate"/>
     </action-view>
 
-    <action-view name="action-planning-view-time-card-lines-dashlet-employee" title="Lignes de pointage prévisionnelles" model="com.axelor.apps.timecard.db.TimeCardLine">
+    <action-view name="action-planning-view-time-card-lines-dashlet-employee" title="Scheduled timecard lines" model="com.axelor.apps.timecard.db.TimecardLine">
         <view type="grid" name="time-card-line-grid"/>
         <view type="form" name="time-card-line-form"/>
         <view-param name="popup" value="reload"/>
@@ -126,7 +126,7 @@
         <context name="_endDate" expr="eval: endDate"/>
     </action-view>
 
-    <action-view name="action-planning-view-add-time-card-line" title="Ligne de pointage" model="com.axelor.apps.timecard.db.TimeCardLine">
+    <action-view name="action-planning-view-add-time-card-line" title="Timecard line" model="com.axelor.apps.timecard.db.TimecardLine">
         <view type="form" name="time-card-line-form"/>
         <view-param name="popup" value="reload"/>
         <context name="_projectId" expr="eval: project?.id"/>
@@ -134,7 +134,7 @@
         <context name="_isForecastTCL" expr="eval: true"/>
     </action-view>
 
-    <action-view name="action-planning-view-leave-requests-dashlet-employee" title="Demandes de congés" model="com.axelor.apps.hr.db.LeaveRequest">
+    <action-view name="action-planning-view-leave-requests-dashlet-employee" title="Leave requests" model="com.axelor.apps.hr.db.LeaveRequest">
         <view type="grid" name="leave-request-grid"/>
         <view type="form" name="leave-request-form"/>
         <view-param name="popup" value="true"/>
@@ -145,7 +145,7 @@
         <context name="_endDate" expr="eval: endDate"/>
     </action-view>
 
-    <action-view name="action-planning-view-leave-requests-dashlet-project" title="Demandes de congés" model="com.axelor.apps.hr.db.LeaveRequest">
+    <action-view name="action-planning-view-leave-requests-dashlet-project" title="Leave requests" model="com.axelor.apps.hr.db.LeaveRequest">
         <view type="grid" name="leave-request-grid"/>
         <view type="form" name="leave-request-form"/>
         <view-param name="popup" value="true"/>
@@ -160,7 +160,7 @@
         <call class="com.axelor.apps.timecard.web.PlanningController" method="preview"/>
     </action-method>
 
-    <action-view name="action-planning-view-open-substitution-wizard" title="Assistant remplacements" model="com.axelor.apps.base.db.Wizard">
+    <action-view name="action-planning-view-open-substitution-wizard" title="Substitution assistant" model="com.axelor.apps.base.db.Wizard">
         <view type="form" name="time-card-line-substitution-wizard-form"/>
         <view-param name="popup" value="reload"/>
         <view-param name="popup-save" value="false"/>

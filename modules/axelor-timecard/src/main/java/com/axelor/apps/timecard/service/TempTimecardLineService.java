@@ -15,22 +15,23 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.axelor.apps.timecard.db.repo;
+package com.axelor.apps.timecard.service;
 
-import com.axelor.apps.timecard.db.TimeCard;
-import com.axelor.apps.timecard.db.TimeCardLine;
-import com.axelor.inject.Beans;
+import com.axelor.apps.hr.db.Employee;
+import com.axelor.apps.project.db.Project;
+import com.axelor.apps.timecard.db.TempTimecardLine;
+import java.time.LocalDate;
+import java.util.List;
 
-public class TimeCardTimeCardRepository extends TimeCardRepository {
+public interface TempTimecardLineService {
 
-    @Override
-    public TimeCard save(TimeCard timeCard) {
-        if (timeCard.getTimeCardLineList() != null) {
-            for (TimeCardLine timeCardLine : timeCard.getTimeCardLineList()) {
-                Beans.get(TimeCardLineRepository.class).save(timeCardLine);
-            }
-        }
+  /** Deletes all existing {@link TempTimecardLine}. */
+  void invalidateTempTimecardLines();
 
-        return super.save(timeCard);
-    }
+  /**
+   * Generates {@link TempTimecardLine}s for given {@link Project}, {@link Employee} between
+   * inclusive {@code startDate} and {@code endDate}, after deleting existing ones.
+   */
+  List<TempTimecardLine> generateTempTimecardLines(
+      Project project, Employee employee, LocalDate startDate, LocalDate endDate);
 }

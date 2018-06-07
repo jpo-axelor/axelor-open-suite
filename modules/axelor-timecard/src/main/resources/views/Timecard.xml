@@ -3,7 +3,7 @@
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.0.xsd">
 
-    <grid name="time-card-grid" title="Pointages" model="com.axelor.apps.timecard.db.TimeCard">
+    <grid name="time-card-grid" title="Timecards" model="com.axelor.apps.timecard.db.Timecard">
         <field name="statusSelect"/>
         <field name="company"/>
         <field name="employee"/>
@@ -11,16 +11,16 @@
         <field name="toDate"/>
     </grid>
 
-    <form name="time-card-form" title="Pointage" model="com.axelor.apps.timecard.db.TimeCard" width="large">
+    <form name="time-card-form" title="Timecard" model="com.axelor.apps.timecard.db.Timecard" width="large">
         <toolbar>
-            <button name="computeHours" title="Calculer les heures" onClick="save,action-time-card-method-compute-hours"/>
+            <button name="computeHours" title="Compute hours" onClick="save,action-time-card-method-compute-hours"/>
         </toolbar>
 
         <menubar>
-            <menu title="Outils" icon="fa-wrench">
-                <item title="Générer les lignes de remplacements" action="save,action-time-card-view-open-substitution-wizard" readonlyIf="!id"/>
-                <item title="Générer les lignes de pointage" action="save,action-time-card-method-generate-time-card-lines"/>
-                <item title="Voir calendrier" action="save,action-time-card-view-show-calendar"/>
+            <menu title="Tools" icon="fa-wrench">
+                <item title="Generate substitution lines" action="save,action-time-card-view-open-substitution-wizard" readonlyIf="!id"/>
+                <item title="Generate timecard lines" action="save,action-time-card-method-generate-time-card-lines"/>
+                <item title="Show calendar" action="save,action-time-card-view-show-calendar"/>
             </menu>
         </menubar>
 
@@ -53,7 +53,7 @@
         </panel>
 
 
-        <panel-related field="timeCardLineList" grid-view="time-card-line-grid" form-view="time-card-line-form"/>
+        <panel-related field="timecardLineList" grid-view="time-card-line-grid" form-view="time-card-line-form"/>
 
         <panel>
             <field name="validatedBy"/>
@@ -69,27 +69,27 @@
     </form>
 
     <action-method name="action-time-card-method-generate-time-card-lines">
-        <call class="com.axelor.apps.timecard.web.TimeCardController" method="generateTimeCardLines"/>
+        <call class="com.axelor.apps.timecard.web.TimecardController" method="generateTimecardLines"/>
     </action-method>
 
     <action-method name="action-time-card-method-compute-hours">
-        <call class="com.axelor.apps.timecard.web.TimeCardController" method="computeHours"/>
+        <call class="com.axelor.apps.timecard.web.TimecardController" method="computeHours"/>
     </action-method>
 
-    <action-view name="action-time-card-view-show-calendar" title="Pointage - ${employee.name}" model="com.axelor.apps.timecard.db.TimeCardLine">
+    <action-view name="action-time-card-view-show-calendar" title="Timecard - ${employee.name}" model="com.axelor.apps.timecard.db.TimecardLine">
         <view type="calendar" name="time-card-line-calendar"/>
-        <domain>self.timeCard.id = :_id</domain>
-        <context name="calendarDate" expr="eval: timeCardLineList.sort{ it.date }[0]?.getDate()"/>
+        <domain>self.timecard.id = :_id</domain>
+        <context name="calendarDate" expr="eval: timecardLineList.sort{ it.date }[0]?.getDate()"/>
         <context name="_projectId" expr="eval: project?.id"/>
         <context name="_employeeId" expr="eval: employee?.id"/>
     </action-view>
 
-    <action-view name="action-time-card-view-open-substitution-wizard" title="Assistant remplacements" model="com.axelor.apps.base.db.Wizard">
+    <action-view name="action-time-card-view-open-substitution-wizard" title="Substitution assistant" model="com.axelor.apps.base.db.Wizard">
         <view type="form" name="time-card-line-substitution-wizard-form"/>
         <view-param name="popup" value="reload"/>
         <view-param name="popup-save" value="false"/>
         <view-param name="show-toolbar" value="false"/>
-        <context name="_timeCardId" expr="eval: __self__.id"/>
+        <context name="_timecardId" expr="eval: __self__.id"/>
     </action-view>
 
 
@@ -97,7 +97,7 @@
         <action name="action-timecard-record-send"/>
     </action-group>
 
-    <action-record name="action-timecard-record-send" model="com.axelor.apps.timecard.db.TimeCard">
+    <action-record name="action-timecard-record-send" model="com.axelor.apps.timecard.db.Timecard">
         <field name="statusSelect" expr="eval: 2"/>
     </action-record>
 
@@ -107,10 +107,10 @@
     </action-group>
 
     <action-method name="action-timecard-method-validate">
-        <call class="com.axelor.apps.timecard.web.TimeCardController" method="validate"/>
+        <call class="com.axelor.apps.timecard.web.TimecardController" method="validate"/>
     </action-method>
 
-    <action-record name="action-timecard-record-validate" model="com.axelor.apps.timecard.db.TimeCard">
+    <action-record name="action-timecard-record-validate" model="com.axelor.apps.timecard.db.Timecard">
         <field name="statusSelect" expr="eval: 3"/>
     </action-record>
 
@@ -119,7 +119,7 @@
         <action name="action-timecard-record-cancel"/>
     </action-group>
 
-    <action-record name="action-timecard-record-cancel" model="com.axelor.apps.timecard.db.TimeCard">
+    <action-record name="action-timecard-record-cancel" model="com.axelor.apps.timecard.db.Timecard">
         <field name="statusSelect" expr="eval: 6"/>
     </action-record>
 
@@ -128,7 +128,7 @@
         <action name="action-timecard-record-refuse"/>
     </action-group>
 
-    <action-record name="action-timecard-record-refuse" model="com.axelor.apps.timecard.db.TimeCard">
+    <action-record name="action-timecard-record-refuse" model="com.axelor.apps.timecard.db.Timecard">
         <field name="statusSelect" expr="eval: 5"/>
     </action-record>
 
@@ -137,7 +137,7 @@
         <action name="action-timecard-record-close"/>
     </action-group>
 
-    <action-record name="action-timecard-record-close" model="com.axelor.apps.timecard.db.TimeCard">
+    <action-record name="action-timecard-record-close" model="com.axelor.apps.timecard.db.Timecard">
         <field name="statusSelect" expr="eval: 4"/>
     </action-record>
 

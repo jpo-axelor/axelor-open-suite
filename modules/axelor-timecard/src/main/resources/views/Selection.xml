@@ -4,37 +4,37 @@
               xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.0.xsd">
 
     <selection name="frequency.timecard.frequency.type.select">
-        <option value="monthDays">Jours du mois</option>
-        <option value="everyNWeeks">Toutes les N semaines</option>
+        <option value="monthDays">Month days</option>
+        <option value="everyNWeeks">Every N weeks</option>
     </selection>
 
     <selection name="timecard.timecard.status.select">
-        <option value="1">Brouillon</option>
-        <option value="2">En attente de validation</option>
-        <option value="3">Validé</option>
-        <option value="4">Clôturé</option>
-        <option value="5">Refusé</option>
-        <option value="6">Annulé</option>
+        <option value="1">Draft</option>
+        <option value="2">Awaiting validation</option>
+        <option value="3">Validated</option>
+        <option value="4">Closed</option>
+        <option value="5">Refused</option>
+        <option value="6">Canceled</option>
     </selection>
 
     <selection name="timecardline.timecard.week.day.select">
-        <option value="1">Lundi</option>
-        <option value="2">Mardi</option>
-        <option value="3">Mercredi</option>
-        <option value="4">Jeudi</option>
-        <option value="5">Vendredi</option>
-        <option value="6">Samedi</option>
-        <option value="7">Dimanche</option>
+        <option value="1">Monday</option>
+        <option value="2">Tuesday</option>
+        <option value="3">Wednesday</option>
+        <option value="4">Thursday</option>
+        <option value="5">Friday</option>
+        <option value="6">Saturday</option>
+        <option value="7">Sunday</option>
     </selection>
 
     <selection name="timecardline.timecard.type.select">
-        <option value="contractual">Contractuelle</option>
-        <option value="extra">En plus</option>
+        <option value="contractual">Contractual</option>
+        <option value="extra">Extra</option>
         <option value="absence">Absence</option>
     </selection>
 
     <selection name="ihr.batch.action.select" id="timecard.ihr.batch.action.select">
-        <option value="6">Génération des pointages</option>
+        <option value="6">Timecards generation</option>
     </selection>
 
 </object-views>

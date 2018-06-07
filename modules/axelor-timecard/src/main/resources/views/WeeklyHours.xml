@@ -3,7 +3,7 @@
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.0.xsd">
 
-    <grid name="weekly-hours-grid" title="Heures hebdomadaires" model="com.axelor.apps.timecard.db.WeeklyHours" orderBy="startDate">
+    <grid name="weekly-hours-grid" title="Weekly hours" model="com.axelor.apps.timecard.db.WeeklyHours" orderBy="startDate">
         <field name="startDate"/>
         <field name="endDate"/>
         <field name="contractualHours"/>
@@ -11,7 +11,7 @@
         <field name="supplementaryHours"/>
     </grid>
 
-    <form name="weekly-hours-form" title="Heures hebdomadaire" model="com.axelor.apps.timecard.db.WeeklyHours">
+    <form name="weekly-hours-form" title="Weekly hours" model="com.axelor.apps.timecard.db.WeeklyHours">
         <panel>
             <field name="startDate"/>
             <field name="endDate"/>
