@@ -33,11 +33,12 @@ import com.axelor.apps.timecard.db.repo.PlanningLineRepository;
 import com.axelor.apps.timecard.db.repo.TimecardLineRepository;
 import com.axelor.apps.timecard.db.repo.TimecardRepository;
 import com.axelor.exception.AxelorException;
-import com.axelor.exception.db.IException;
+import com.axelor.exception.db.repo.TraceBackRepository;
 import com.axelor.i18n.I18n;
 import com.axelor.inject.Beans;
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Date;
@@ -304,17 +305,17 @@ public class TimecardServiceImpl implements TimecardService {
     if (employmentContract == null) {
       throw new AxelorException(
           timecard.getEmployee(),
-          IException.MISSING_FIELD,
-          "Veuillez configurer un contrat principal sur l'employé(e) %s",
-          timecard.getEmployee().getName()); // TODO: translation
+          TraceBackRepository.CATEGORY_MISSING_FIELD,
+          I18n.get("Please configure a main employement contract for employee %s"),
+          timecard.getEmployee().getName());
     }
     BigDecimal monthlyWage = employmentContract.getMonthlyWage();
     if (monthlyWage.compareTo(BigDecimal.ZERO) == 0) {
       throw new AxelorException(
           employmentContract,
-          IException.MISSING_FIELD,
-          "Veuillez ajouter une mensualisation sur le contrat principal de l'employé(e) %s",
-          timecard.getEmployee().getName()); // TODO: translation
+          TraceBackRepository.CATEGORY_MISSING_FIELD,
+          I18n.get("Please add a monthly wage on the main employement contract for employee %s"),
+          timecard.getEmployee().getName());
     }
     BigDecimal tenPercentMonthlyWage = monthlyWage.multiply(BigDecimal.valueOf(0.1));
 
@@ -380,7 +381,7 @@ public class TimecardServiceImpl implements TimecardService {
       if (employee == null) {
         throw new AxelorException(
             leaveRequest,
-            IException.CONFIGURATION_ERROR,
+            TraceBackRepository.CATEGORY_CONFIGURATION_ERROR,
             I18n.get(IExceptionMessage.LEAVE_USER_EMPLOYEE),
             leaveRequest.getUser().getName());
       }
@@ -396,7 +397,7 @@ public class TimecardServiceImpl implements TimecardService {
       if (leaveLine == null) {
         throw new AxelorException(
             leaveRequest,
-            IException.CONFIGURATION_ERROR,
+            TraceBackRepository.CATEGORY_CONFIGURATION_ERROR,
             I18n.get(IExceptionMessage.LEAVE_LINE),
             employee.getName(),
             leaveRequest.getLeaveLine().getLeaveReason().getLeaveReason());
@@ -408,7 +409,7 @@ public class TimecardServiceImpl implements TimecardService {
             && !employee.getNegativeValueLeave()) {
           throw new AxelorException(
               leaveRequest,
-              IException.CONFIGURATION_ERROR,
+              TraceBackRepository.CATEGORY_CONFIGURATION_ERROR,
               I18n.get(IExceptionMessage.LEAVE_ALLOW_NEGATIVE_VALUE_EMPLOYEE),
               employee.getName());
         }
@@ -416,7 +417,7 @@ public class TimecardServiceImpl implements TimecardService {
             && !leaveRequest.getLeaveLine().getLeaveReason().getAllowNegativeValue()) {
           throw new AxelorException(
               leaveRequest,
-              IException.CONFIGURATION_ERROR,
+              TraceBackRepository.CATEGORY_CONFIGURATION_ERROR,
               I18n.get(IExceptionMessage.LEAVE_ALLOW_NEGATIVE_VALUE_REASON),
               leaveRequest.getLeaveLine().getLeaveReason().getLeaveReason());
         }
