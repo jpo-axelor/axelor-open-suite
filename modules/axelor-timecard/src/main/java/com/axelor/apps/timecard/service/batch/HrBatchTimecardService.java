@@ -7,7 +7,7 @@ import com.axelor.apps.hr.db.repo.HrBatchRepository;
 import com.axelor.apps.hr.service.batch.HrBatchService;
 import com.axelor.db.Model;
 import com.axelor.exception.AxelorException;
-import com.axelor.exception.db.IException;
+import com.axelor.exception.db.repo.TraceBackRepository;
 import com.axelor.i18n.I18n;
 import com.axelor.inject.Beans;
 
@@ -39,7 +39,7 @@ public class HrBatchTimecardService extends HrBatchService {
         break;
       default:
         throw new AxelorException(
-            IException.INCONSISTENCY,
+            TraceBackRepository.CATEGORY_INCONSISTENCY,
             I18n.get(IExceptionMessage.BASE_BATCH_1),
             hrBatch.getActionSelect(),
             hrBatch.getCode());
