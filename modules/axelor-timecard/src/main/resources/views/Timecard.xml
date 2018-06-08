@@ -65,6 +65,7 @@
 
         <panel-mail>
             <mail-messages limit="4"/>
+            <mail-followers/>
         </panel-mail>
     </form>
 
