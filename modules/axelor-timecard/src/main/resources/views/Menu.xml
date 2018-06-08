@@ -3,7 +3,7 @@
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.0.xsd">
 
-    <menuitem name="timecard-root" title="Timecard" icon="fa-list-ul" icon-background="#E0A936" order="-109"/>
+    <menuitem name="timecard-root" title="Timecard" icon="fa-calendar" icon-background="#84429f" parent="hr-root" order="6"/>
 
 
     <menuitem name="timecard-timecard" parent="timecard-root" title="Timecards" action="timecard.timecard"/>
@@ -21,11 +21,11 @@
     </action-view>
 
 
-    <menuitem name="timecard-planningline" parent="timecard-root" title="Planning lines" action="timecard.planningline"/>
+    <!--<menuitem name="timecard-planningline" parent="timecard-root" title="Planning lines" action="timecard.planningline"/>-->
 
-    <action-view name="timecard.planningline" title="Planning lines" model="com.axelor.apps.timecard.db.PlanningLine">
-        <view type="grid" name="planning-line-grid"/>
-        <view type="form" name="planning-line-form"/>
-    </action-view>
+    <!--<action-view name="timecard.planningline" title="Planning lines" model="com.axelor.apps.timecard.db.PlanningLine">-->
+        <!--<view type="grid" name="planning-line-grid"/>-->
+        <!--<view type="form" name="planning-line-form"/>-->
+    <!--</action-view>-->
 
 </object-views>
