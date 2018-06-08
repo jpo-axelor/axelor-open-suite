@@ -84,6 +84,9 @@ public class FrequencyServiceImpl implements FrequencyService {
         }
         summary.append(I18n.get("last"));
       }
+
+      int lastCommaIndex = summary.lastIndexOf(",");
+      summary.replace(lastCommaIndex, lastCommaIndex + 1, " " + I18n.get("and"));
     }
 
     summary.append(" ");
@@ -164,6 +167,9 @@ public class FrequencyServiceImpl implements FrequencyService {
         }
         summary.append(I18n.get("Sunday", "Sundays", 2));
       }
+
+      int lastCommaIndex = summary.lastIndexOf(",");
+      summary.replace(lastCommaIndex, lastCommaIndex + 1, " " + I18n.get("and"));
     }
 
     summary.append(" ").append(I18n.get("of")).append(" ");
@@ -304,6 +310,9 @@ public class FrequencyServiceImpl implements FrequencyService {
         }
         summary.append(I18n.get("December"));
       }
+
+      int lastCommaIndex = summary.lastIndexOf(",");
+      summary.replace(lastCommaIndex, lastCommaIndex + 1, " " + I18n.get("and"));
     }
 
     summary.append(".");
