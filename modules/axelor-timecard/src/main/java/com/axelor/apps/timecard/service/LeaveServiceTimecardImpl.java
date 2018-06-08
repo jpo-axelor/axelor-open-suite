@@ -17,6 +17,7 @@
  */
 package com.axelor.apps.timecard.service;
 
+import com.axelor.apps.base.db.ICalendarEvent;
 import com.axelor.apps.base.db.repo.ICalendarEventRepository;
 import com.axelor.apps.base.ical.ICalendarService;
 import com.axelor.apps.base.service.app.AppBaseService;
@@ -210,7 +211,17 @@ public class LeaveServiceTimecardImpl extends LeaveServiceImpl {
       timecardLineRepo.all().filter("self.id IN (?)", timecardLineIds).delete();
     }
 
-    super.cancel(leaveRequest);
+    if (!Beans.get(AppTimecardService.class).getAppTimecard().getDeductLeavesFromTimecard()
+        && leaveRequest.getLeaveLine().getLeaveReason().getManageAccumulation()) {
+      manageCancelLeaves(leaveRequest);
+    }
+
+    if (leaveRequest.getIcalendarEvent() != null) {
+      ICalendarEvent event = leaveRequest.getIcalendarEvent();
+      leaveRequest.setIcalendarEvent(null);
+      icalEventRepo.remove(icalEventRepo.find(event.getId()));
+    }
+    leaveRequest.setStatusSelect(LeaveRequestRepository.STATUS_CANCELED);
   }
 
   @Transactional(rollbackOn = {AxelorException.class, Exception.class})
