@@ -165,6 +165,7 @@
         <view-param name="popup" value="reload"/>
         <view-param name="popup-save" value="false"/>
         <view-param name="show-toolbar" value="false"/>
+        <view-param name="show-confirm" value="false"/>
         <context name="_planningId" expr="eval: __self__.id"/>
     </action-view>
 
