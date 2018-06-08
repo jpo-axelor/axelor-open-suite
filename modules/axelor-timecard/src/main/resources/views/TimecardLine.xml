@@ -28,7 +28,7 @@
             <field name="isContractual" showIf="typeSelect == 'extra' &amp;&amp; isSubstitution"/>
             <field name="project" domain="self.statusSelect = 2" canEdit="false"/>
             <field name="employee"/>
-            <field name="product"/>
+            <field name="activity"/>
             <spacer/>
             <field name="weekDay" colSpan="2"/>
             <field name="date" onChange="action-time-card-line-record-get-week-day" colSpan="2"/>
@@ -45,7 +45,7 @@
                 <field name="absenceTimecardLine" showIf="typeSelect == 'extra' &amp;&amp; isSubstitution" grid-view="time-card-line-grid" form-view="time-card-line-form"/>
                 <spacer/>
                 <field name="totalSubstitutionHours" showIf="typeSelect == 'absence'"/>
-                <panel-related field="substitutionTimecardLineList" readonly="true" showIf="typeSelect == 'absence'" canNew="false" colSpan="12" grid-view="time-card-line-grid" form-view="time-card-line-form"/>
+                <panel-related field="substitutionTimecardLineList" showIf="typeSelect == 'absence'" canNew="false" canEdit="false" colSpan="12" grid-view="time-card-line-grid" form-view="time-card-line-form"/>
                 <button name="addSubstitution" title="Add a substitution" css="btn-custom text-left" icon="fa-plus" onClick="save,action-time-card-line-view-add-substitution" showIf="typeSelect == 'absence'"/>
 
                 <field name="isSubstitution" hidden="true"/>
