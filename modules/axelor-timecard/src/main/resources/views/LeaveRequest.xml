@@ -131,6 +131,7 @@
     <action-view name="action-leave-request-dashlet-timecard-lines-to-reassign" title="Timecard lines to reassign" model="com.axelor.apps.timecard.db.TimecardLine">
         <view type="grid" name="time-card-line-grid"/>
         <view type="form" name="time-card-line-form"/>
+        <view-param name="popup" value="reload"/>
         <domain>self.employee.id = :_employeeId AND self.typeSelect = :_extraHoursSelect AND self.date &gt;= :fromDate AND self.date &lt;= :toDate</domain>
         <context name="_employeeId" expr="eval: user?.employee?.id"/>
         <context name="_extraHoursSelect" expr="eval: com.axelor.apps.timecard.db.repo.TimecardLineRepository.TYPE_EXTRA"/>
