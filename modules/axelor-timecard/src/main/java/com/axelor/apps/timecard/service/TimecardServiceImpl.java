@@ -226,6 +226,7 @@ public class TimecardServiceImpl implements TimecardService {
 
     for (Integer week : weeks) {
       WeeklyHours wh = new WeeklyHours();
+      cal.setFirstDayOfWeek(Calendar.MONDAY);
       cal.set(Calendar.WEEK_OF_YEAR, week);
 
       cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);

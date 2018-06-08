@@ -91,8 +91,10 @@ public class TimecardLineTimecardRepository extends TimecardLineRepository {
       }
       timecardLine.setTotalSubstitutionHours(totalSubstitution);
 
-      Beans.get(LeaveServiceTimecardImpl.class)
-          .computeDurationTotals(timecardLine.getLeaveRequest());
+      if (timecardLine.getLeaveRequest() != null) {
+        Beans.get(LeaveServiceTimecardImpl.class)
+            .computeDurationTotals(timecardLine.getLeaveRequest());
+      }
     }
 
     return super.save(timecardLine);
