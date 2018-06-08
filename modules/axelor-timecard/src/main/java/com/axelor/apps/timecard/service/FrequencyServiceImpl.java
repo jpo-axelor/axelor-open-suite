@@ -20,6 +20,7 @@ package com.axelor.apps.timecard.service;
 import com.axelor.apps.base.service.app.AppBaseService;
 import com.axelor.apps.timecard.db.Frequency;
 import com.axelor.apps.timecard.db.repo.FrequencyRepository;
+import com.axelor.i18n.I18n;
 import com.google.inject.Inject;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -45,33 +46,34 @@ public class FrequencyServiceImpl implements FrequencyService {
     // Frequency
     if (frequency.getFrequencyTypeSelect().equals(FrequencyRepository.TYPE_EVERY_N_WEEKS)) {
       if (frequency.getEveryNWeeks() == 1) {
-        summary.append("Toutes les semaines");
+        summary.append(I18n.get("Every weeks"));
       } else {
-        summary.append("Toutes les ").append(frequency.getEveryNWeeks()).append(" semaines");
+        summary.append(I18n.get("Every")).append(" ").append(frequency.getEveryNWeeks()).append(" ").append(
+            I18n.get("weeks"));
       }
-      summary.append(", les");
+      summary.append(I18n.get(", the"));
     } else if (frequency.getFrequencyTypeSelect().equals(FrequencyRepository.TYPE_MONTH_DAYS)) {
-      summary.append("Tous les ");
+      summary.append(I18n.get("Every")).append(" ");
       if (frequency.getFirst()) {
-        summary.append("premiers");
+        summary.append(I18n.get("first"));
       }
       if (frequency.getSecond()) {
         if (frequency.getFirst()) {
           summary.append(", ");
         }
-        summary.append("deuxièmes");
+        summary.append(I18n.get("second"));
       }
       if (frequency.getThird()) {
         if (frequency.getFirst() || frequency.getSecond()) {
           summary.append(", ");
         }
-        summary.append("troisièmes");
+        summary.append(I18n.get("third"));
       }
       if (frequency.getFourth()) {
         if (frequency.getFirst() || frequency.getSecond() || frequency.getThird()) {
           summary.append(", ");
         }
-        summary.append("quatrièmes");
+        summary.append(I18n.get("fourth"));
       }
       if (frequency.getLast()) {
         if (frequency.getFirst()
@@ -80,7 +82,7 @@ public class FrequencyServiceImpl implements FrequencyService {
             || frequency.getFourth()) {
           summary.append(", ");
         }
-        summary.append("derniers");
+        summary.append(I18n.get("last"));
       }
     }
 
@@ -93,15 +95,15 @@ public class FrequencyServiceImpl implements FrequencyService {
         && frequency.getThursday()
         && frequency.getFriday()
         && !(frequency.getSaturday() || frequency.getSunday())) {
-      summary.append("jours de semaine");
+      summary.append(I18n.get("weekdays"));
     } else if (frequency.getSaturday()
         && frequency.getSunday()
         && !(frequency.getMonday()
-            || frequency.getTuesday()
-            || frequency.getWednesday()
-            || frequency.getThursday()
-            || frequency.getFriday())) {
-      summary.append("jours de week-end");
+        || frequency.getTuesday()
+        || frequency.getWednesday()
+        || frequency.getThursday()
+        || frequency.getFriday())) {
+      summary.append(I18n.get("weekends"));
     } else if (frequency.getMonday()
         && frequency.getTuesday()
         && frequency.getWednesday()
@@ -109,28 +111,28 @@ public class FrequencyServiceImpl implements FrequencyService {
         && frequency.getFriday()
         && frequency.getSaturday()
         && frequency.getSunday()) {
-      summary.append("jours");
+      summary.append(I18n.get("days"));
     } else {
       if (frequency.getMonday()) {
-        summary.append("lundis");
+        summary.append(I18n.get("Monday", "Mondays", 2)); // force plural for other languages
       }
       if (frequency.getTuesday()) {
         if (frequency.getMonday()) {
           summary.append(", ");
         }
-        summary.append("mardis");
+        summary.append(I18n.get("Tuesday", "Tuesdays", 2));
       }
       if (frequency.getWednesday()) {
         if (frequency.getMonday() || frequency.getTuesday()) {
           summary.append(", ");
         }
-        summary.append("mercredis");
+        summary.append(I18n.get("Wednesday", "Wednesdays", 2));
       }
       if (frequency.getThursday()) {
         if (frequency.getMonday() || frequency.getTuesday() || frequency.getWednesday()) {
           summary.append(", ");
         }
-        summary.append("jeudis");
+        summary.append(I18n.get("Thursday", "Thursdays", 2));
       }
       if (frequency.getFriday()) {
         if (frequency.getMonday()
@@ -139,7 +141,7 @@ public class FrequencyServiceImpl implements FrequencyService {
             || frequency.getThursday()) {
           summary.append(", ");
         }
-        summary.append("vendredis");
+        summary.append(I18n.get("Friday", "Fridays", 2));
       }
       if (frequency.getSaturday()) {
         if (frequency.getMonday()
@@ -149,7 +151,7 @@ public class FrequencyServiceImpl implements FrequencyService {
             || frequency.getFriday()) {
           summary.append(", ");
         }
-        summary.append("samedis");
+        summary.append(I18n.get("Saturday", "Saturdays", 2));
       }
       if (frequency.getSunday()) {
         if (frequency.getMonday()
@@ -160,11 +162,11 @@ public class FrequencyServiceImpl implements FrequencyService {
             || frequency.getSaturday()) {
           summary.append(", ");
         }
-        summary.append("dimanches");
+        summary.append(I18n.get("Sunday", "Sundays", 2));
       }
     }
 
-    summary.append(" de ");
+    summary.append(" ").append(I18n.get("of")).append(" ");
 
     // Months
     if (frequency.getJanuary()
@@ -179,28 +181,28 @@ public class FrequencyServiceImpl implements FrequencyService {
         && frequency.getOctober()
         && frequency.getNovember()
         && frequency.getDecember()) {
-      summary.append("chaque mois");
+      summary.append(I18n.get("each month"));
     } else {
       if (frequency.getJanuary()) {
-        summary.append("janvier");
+        summary.append(I18n.get("January"));
       }
       if (frequency.getFebruary()) {
         if (frequency.getJanuary()) {
           summary.append(", ");
         }
-        summary.append("février");
+        summary.append(I18n.get("February"));
       }
       if (frequency.getMarch()) {
         if (frequency.getJanuary() || frequency.getFebruary()) {
           summary.append(", ");
         }
-        summary.append("mars");
+        summary.append(I18n.get("March"));
       }
       if (frequency.getApril()) {
         if (frequency.getJanuary() || frequency.getFebruary() || frequency.getMarch()) {
           summary.append(", ");
         }
-        summary.append("avril");
+        summary.append(I18n.get("April"));
       }
       if (frequency.getMay()) {
         if (frequency.getJanuary()
@@ -209,7 +211,7 @@ public class FrequencyServiceImpl implements FrequencyService {
             || frequency.getApril()) {
           summary.append(", ");
         }
-        summary.append("mai");
+        summary.append(I18n.get("May"));
       }
       if (frequency.getJune()) {
         if (frequency.getJanuary()
@@ -219,7 +221,7 @@ public class FrequencyServiceImpl implements FrequencyService {
             || frequency.getMay()) {
           summary.append(", ");
         }
-        summary.append("juin");
+        summary.append(I18n.get("June"));
       }
       if (frequency.getJuly()) {
         if (frequency.getJanuary()
@@ -230,7 +232,7 @@ public class FrequencyServiceImpl implements FrequencyService {
             || frequency.getJune()) {
           summary.append(", ");
         }
-        summary.append("juillet");
+        summary.append(I18n.get("July"));
       }
       if (frequency.getAugust()) {
         if (frequency.getJanuary()
@@ -242,7 +244,7 @@ public class FrequencyServiceImpl implements FrequencyService {
             || frequency.getJuly()) {
           summary.append(", ");
         }
-        summary.append("août");
+        summary.append(I18n.get("August"));
       }
       if (frequency.getSeptember()) {
         if (frequency.getJanuary()
@@ -255,7 +257,7 @@ public class FrequencyServiceImpl implements FrequencyService {
             || frequency.getAugust()) {
           summary.append(", ");
         }
-        summary.append("septembre");
+        summary.append(I18n.get("September"));
       }
       if (frequency.getOctober()) {
         if (frequency.getJanuary()
@@ -269,7 +271,7 @@ public class FrequencyServiceImpl implements FrequencyService {
             || frequency.getSeptember()) {
           summary.append(", ");
         }
-        summary.append("octobre");
+        summary.append(I18n.get("October"));
       }
       if (frequency.getNovember()) {
         if (frequency.getJanuary()
@@ -284,7 +286,7 @@ public class FrequencyServiceImpl implements FrequencyService {
             || frequency.getOctober()) {
           summary.append(", ");
         }
-        summary.append("novembre");
+        summary.append(I18n.get("November"));
       }
       if (frequency.getDecember()) {
         if (frequency.getJanuary()
@@ -300,7 +302,7 @@ public class FrequencyServiceImpl implements FrequencyService {
             || frequency.getNovember()) {
           summary.append(", ");
         }
-        summary.append("décembre");
+        summary.append(I18n.get("December"));
       }
     }
 
@@ -349,7 +351,9 @@ public class FrequencyServiceImpl implements FrequencyService {
     return new ArrayList<>(dates);
   }
 
-  /** Retrieves a LocalDate instance of given date in arguments. */
+  /**
+   * Retrieves a LocalDate instance of given date in arguments.
+   */
   public LocalDate getDay(int dayOfWeek, int dayOfWeekInMonth, int year, int month) {
     Calendar cal = Calendar.getInstance();
     cal.set(Calendar.DAY_OF_WEEK, dayOfWeek);
