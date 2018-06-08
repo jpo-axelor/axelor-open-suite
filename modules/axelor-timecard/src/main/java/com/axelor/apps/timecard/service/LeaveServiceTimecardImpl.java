@@ -37,6 +37,8 @@ import com.axelor.apps.timecard.db.repo.TimecardLineRepository;
 import com.axelor.apps.timecard.service.app.AppTimecardService;
 import com.axelor.auth.AuthUtils;
 import com.axelor.exception.AxelorException;
+import com.axelor.exception.db.repo.TraceBackRepository;
+import com.axelor.i18n.I18n;
 import com.axelor.inject.Beans;
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
@@ -197,9 +199,9 @@ public class LeaveServiceTimecardImpl extends LeaveServiceImpl {
 
     if (timecardLines != null && !timecardLines.isEmpty()) {
       for (TimecardLine timecardLine : timecardLines) {
-        // TODO: test the if condition
         if (!timecardLine.getSubstitutionTimecardLineList().isEmpty()) {
-          return;
+          throw new AxelorException(timecardLine, TraceBackRepository.TYPE_FUNCTIONNAL,
+              I18n.get("Please cancel all substitution lines before canceling leave request."));
         }
       }
 
