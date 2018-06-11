@@ -21,7 +21,8 @@
     </grid>
 
     <form name="timecard-line-form" title="Timecard line" model="com.axelor.apps.timecard.db.TimecardLine" width="large"
-          onNew="action-timecard-line-method-set-defaults,action-timecard-line-record-compute-duration">
+          onNew="action-timecard-line-method-set-defaults,action-timecard-line-record-compute-duration"
+          onLoad="action-timecard-line-record-update-durations">
         <panel readonlyIf="typeSelect == 'contractual'">
             <field name="typeSelect" selection-in="['extra', 'absence']"/>
             <field name="isContractual" showIf="typeSelect == 'extra' &amp;&amp; isSubstitution"/>

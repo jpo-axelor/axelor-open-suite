@@ -74,7 +74,7 @@
                 <field name="totalSubstitutionHours">
                     <hilite if="$number(totalSubstitutionHours) &lt; $number(totalAbsenceHours)" color="danger"/>
                 </field>
-                <panel-related field="timecardLineList" onChange="action-leave-request-record-update-durations" canRemove="false" canNew="false" colSpan="12" grid-view="timecard-line-grid" form-view="timecard-line-form"/>
+                <panel-related field="timecardLineList" onChange="action-leave-request-record-update-durations,save" canRemove="false" canNew="false" colSpan="12" grid-view="timecard-line-grid" form-view="timecard-line-form"/>
             </panel>
             <panel-dashlet action="action-leave-request-dashlet-timecard-lines-to-reassign" colSpan="12"/>
         </panel>
