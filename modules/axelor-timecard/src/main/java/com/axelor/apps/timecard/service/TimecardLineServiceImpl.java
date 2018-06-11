@@ -24,6 +24,8 @@ import com.axelor.apps.project.db.Project;
 import com.axelor.apps.timecard.db.TimecardLine;
 import com.axelor.apps.timecard.db.repo.TimecardLineRepository;
 import com.axelor.exception.AxelorException;
+import com.axelor.exception.db.repo.TraceBackRepository;
+import com.axelor.i18n.I18n;
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 import java.math.BigDecimal;
@@ -133,7 +135,13 @@ public class TimecardLineServiceImpl implements TimecardLineService {
       List<Project> projects,
       LocalDate startDate,
       LocalDate endDate,
-      boolean isContractual) {
+      boolean isContractual)
+      throws AxelorException {
+
+    if (newEmployee.getMainEmploymentContract() == null) {
+      throw new AxelorException(newEmployee, TraceBackRepository.CATEGORY_MISSING_FIELD, I18n.get("Please configure a main employement contract for employee %s"), newEmployee.getName());
+    }
+
     int totalGenerated = 0;
 
     List<TimecardLine> timecardLines =

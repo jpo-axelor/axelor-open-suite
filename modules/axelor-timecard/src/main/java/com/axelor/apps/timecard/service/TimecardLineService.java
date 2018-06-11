@@ -21,6 +21,7 @@ import com.axelor.apps.base.db.Company;
 import com.axelor.apps.hr.db.Employee;
 import com.axelor.apps.project.db.Project;
 import com.axelor.apps.timecard.db.TimecardLine;
+import com.axelor.exception.AxelorException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -57,7 +58,8 @@ public interface TimecardLineService {
       List<Project> projects,
       LocalDate startDate,
       LocalDate endDate,
-      boolean isContractual);
+      boolean isContractual)
+      throws AxelorException;
 
   /** Computes and returns total contractual hours for given employee within given range. */
   BigDecimal getTotalContractualHours(Employee employee, LocalDate startDate, LocalDate endDate);

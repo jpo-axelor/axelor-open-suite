@@ -59,9 +59,9 @@
             <field name="$endDate" title="End date" widget="Date" colSpan="4"/>
             <field name="$isContractual" title="Contractual" widget="Boolean" colSpan="4"/>
             <field name="$employeeToReplace" title="Employee to replace" widget="ManyToOne" target="com.axelor.apps.hr.db.Employee" readonly="true"/>
-            <field name="$employeeReplacing" title="Employee replacing" widget="ManyToOne" target="com.axelor.apps.hr.db.Employee"/>
-            <field name="$projects" title="Projects" widget="TagSelect" target="com.axelor.apps.project.db.Project" canEdit="false" canNew="false" colSpan="12"/>
-            <button name="validate" title="Validate" onClick="action-timecard-line-method-generate-extra-tcl" colOffset="3"/>
+            <field name="$employeeReplacing" title="Employee replacing" required="true" widget="ManyToOne" target="com.axelor.apps.hr.db.Employee"/>
+            <field name="$projects" title="Projects" required="true" widget="TagSelect" target="com.axelor.apps.project.db.Project" canEdit="false" canNew="false" colSpan="12"/>
+            <button name="validate" title="Validate" readonlyIf="!employeeReplacing || !$projects" onClick="action-timecard-line-method-generate-extra-tcl" colOffset="3"/>
         </panel>
     </form>
 

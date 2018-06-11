@@ -30,6 +30,8 @@ import com.axelor.apps.timecard.db.repo.PlanningRepository;
 import com.axelor.apps.timecard.db.repo.TimecardLineRepository;
 import com.axelor.apps.timecard.db.repo.TimecardRepository;
 import com.axelor.apps.timecard.service.TimecardLineService;
+import com.axelor.exception.AxelorException;
+import com.axelor.exception.service.TraceBackService;
 import com.axelor.i18n.I18n;
 import com.axelor.inject.Beans;
 import com.axelor.rpc.ActionRequest;
@@ -189,17 +191,23 @@ public class TimecardLineController {
       projects.add(projectRepo.find(Long.valueOf((Integer) p.get("id"))));
     }
 
-    int total =
-        Beans.get(TimecardLineService.class)
-            .generateExtraTCL(
-                employeeRepo.find(
-                    Long.valueOf(((Integer) ((Map) context.get("employeeToReplace")).get("id")))),
-                employeeRepo.find(
-                    Long.valueOf(((Integer) ((Map) context.get("employeeReplacing")).get("id")))),
-                projects,
-                LocalDate.parse((String) context.get("startDate")),
-                LocalDate.parse((String) context.get("endDate")),
-                (Boolean) context.get("isContractual"));
+    int total = 0;
+    try {
+      total =
+          Beans.get(TimecardLineService.class)
+              .generateExtraTCL(
+                  employeeRepo.find(
+                      Long.valueOf(((Integer) ((Map) context.get("employeeToReplace")).get("id")))),
+                  employeeRepo.find(
+                      Long.valueOf(((Integer) ((Map) context.get("employeeReplacing")).get("id")))),
+                  projects,
+                  LocalDate.parse((String) context.get("startDate")),
+                  LocalDate.parse((String) context.get("endDate")),
+                  (Boolean) context.get("isContractual"));
+    } catch (AxelorException e) {
+      TraceBackService.trace(response, e);
+      return;
+    }
 
     response.setCanClose(true);
     response.setNotify(
