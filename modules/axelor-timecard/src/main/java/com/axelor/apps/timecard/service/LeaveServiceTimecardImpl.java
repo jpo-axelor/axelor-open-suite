@@ -43,6 +43,7 @@ import com.axelor.i18n.I18n;
 import com.axelor.inject.Beans;
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -190,6 +191,13 @@ public class LeaveServiceTimecardImpl extends LeaveServiceImpl {
         }
       }
     }
+
+    BigDecimal totalAbsenceHours = BigDecimal.ZERO;
+    for (TimecardLine timecardLine : leaveRequest.getTimecardLineList()) {
+      totalAbsenceHours = totalAbsenceHours.add(timecardLine.getDuration());
+    }
+    leaveRequest.setTotalAbsenceHours(totalAbsenceHours);
+    leaveRequestRepo.save(leaveRequest);
   }
 
   @Override
