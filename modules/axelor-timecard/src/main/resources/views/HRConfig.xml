@@ -3,7 +3,7 @@
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.0.xsd">
 
-    <form name="hr-config-form" id="time-card-hr-config-form" title="Human Resources configuration" model="com.axelor.apps.hr.db.HRConfig" width="large"
+    <form name="hr-config-form" id="timecard-hr-config-form" title="Human Resources configuration" model="com.axelor.apps.hr.db.HRConfig" width="large"
           onNew="action-hr-config-record-default">
         <panel name="main">
             <field name="company" canEdit="false" form-view="company-form" colSpan="4" grid-view="company-grid"/>

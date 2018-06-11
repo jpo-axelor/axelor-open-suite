@@ -3,7 +3,7 @@
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.0.xsd">
 
-    <grid name="leave-request-grid" id="time-card-leave-request-grid" title="Leave requests" model="com.axelor.apps.hr.db.LeaveRequest" orderBy="fromDate,startOnSelect">
+    <grid name="leave-request-grid" id="timecard-leave-request-grid" title="Leave requests" model="com.axelor.apps.hr.db.LeaveRequest" orderBy="fromDate,startOnSelect">
         <hilite color="danger" if="statusSelect == 4"/>
         <hilite color="success" if="statusSelect == 3"/>
         <hilite color="warning" if="statusSelect == 2"/>
@@ -74,7 +74,7 @@
                 <field name="totalSubstitutionHours">
                     <hilite if="$number(totalSubstitutionHours) &lt; $number(totalAbsenceHours)" color="danger"/>
                 </field>
-                <panel-related field="timecardLineList" onChange="action-leave-request-record-update-durations" canRemove="false" canNew="false" colSpan="12" grid-view="time-card-line-grid" form-view="time-card-line-form"/>
+                <panel-related field="timecardLineList" onChange="action-leave-request-record-update-durations" canRemove="false" canNew="false" colSpan="12" grid-view="timecard-line-grid" form-view="timecard-line-form"/>
             </panel>
             <panel-dashlet action="action-leave-request-dashlet-timecard-lines-to-reassign" colSpan="12"/>
         </panel>
@@ -99,7 +99,7 @@
     </form>
 
     <action-view name="action-leave-request-view-open-substitution-wizard" title="Substitution assistant" model="com.axelor.apps.base.db.Wizard">
-        <view type="form" name="time-card-line-substitution-wizard-form"/>
+        <view type="form" name="timecard-line-substitution-wizard-form"/>
         <view-param name="popup" value="reload"/>
         <view-param name="popup-save" value="false"/>
         <view-param name="show-toolbar" value="false"/>
@@ -129,8 +129,8 @@
     </action-record>
 
     <action-view name="action-leave-request-dashlet-timecard-lines-to-reassign" title="Timecard lines to reassign" model="com.axelor.apps.timecard.db.TimecardLine">
-        <view type="grid" name="time-card-line-grid"/>
-        <view type="form" name="time-card-line-form"/>
+        <view type="grid" name="timecard-line-grid"/>
+        <view type="form" name="timecard-line-form"/>
         <view-param name="popup" value="reload"/>
         <domain>self.employee.id = :_employeeId AND self.typeSelect = :_extraHoursSelect AND self.date &gt;= :fromDate AND self.date &lt;= :toDate</domain>
         <context name="_employeeId" expr="eval: user?.employee?.id"/>

@@ -114,19 +114,19 @@ public class PlanningController {
     if (employee != null && project == null) {
       actionView =
           ActionView.define("Prévisualisation - " + employee.getName())
-              .add("calendar", "temp-time-card-line-calendar-by-project")
+              .add("calendar", "temp-timecard-line-calendar-by-project")
               .domain("self.employee.id = :_employeeId")
               .context("_employeeId", employee.getId());
     } else if (employee == null && project != null) {
       actionView =
           ActionView.define("Prévisualisation - " + project.getName())
-              .add("calendar", "temp-time-card-line-calendar-by-employee")
+              .add("calendar", "temp-timecard-line-calendar-by-employee")
               .domain("self.project.id = :_projectId")
               .context("_projectId", project.getId());
     } else if (employee != null && project != null) {
       actionView =
           ActionView.define("Prévisualisation - " + employee.getName())
-              .add("calendar", "temp-time-card-line-calendar-by-project")
+              .add("calendar", "temp-timecard-line-calendar-by-project")
               .domain("self.employee.id = :_employeeId AND self.project.id = :_projectId")
               .context("_employeeId", employee.getId())
               .context("_projectId", project.getId());

@@ -3,7 +3,7 @@
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.0.xsd">
 
-    <grid name="time-card-grid" title="Timecards" model="com.axelor.apps.timecard.db.Timecard">
+    <grid name="timecard-grid" title="Timecards" model="com.axelor.apps.timecard.db.Timecard">
         <field name="statusSelect"/>
         <field name="company"/>
         <field name="employee"/>
@@ -11,16 +11,16 @@
         <field name="toDate"/>
     </grid>
 
-    <form name="time-card-form" title="Timecard" model="com.axelor.apps.timecard.db.Timecard" width="large">
+    <form name="timecard-form" title="Timecard" model="com.axelor.apps.timecard.db.Timecard" width="large">
         <toolbar>
-            <button name="computeHours" title="Compute hours" onClick="save,action-time-card-method-compute-hours"/>
+            <button name="computeHours" title="Compute hours" onClick="save,action-timecard-method-compute-hours"/>
         </toolbar>
 
         <menubar>
             <menu title="Tools" icon="fa-wrench">
-                <item title="Generate substitution lines" action="save,action-time-card-view-open-substitution-wizard" readonlyIf="!id"/>
-                <item title="Generate timecard lines" action="save,action-time-card-method-generate-time-card-lines"/>
-                <item title="Show calendar" action="save,action-time-card-view-show-calendar"/>
+                <item title="Generate substitution lines" action="save,action-timecard-view-open-substitution-wizard" readonlyIf="!id"/>
+                <item title="Generate timecard lines" action="save,action-timecard-method-generate-timecard-lines"/>
+                <item title="Show calendar" action="save,action-timecard-view-show-calendar"/>
             </menu>
         </menubar>
 
@@ -53,7 +53,7 @@
         </panel>
 
 
-        <panel-related field="timecardLineList" grid-view="time-card-line-grid" form-view="time-card-line-form"/>
+        <panel-related field="timecardLineList" grid-view="timecard-line-grid" form-view="timecard-line-form"/>
 
         <panel>
             <field name="validatedBy"/>
@@ -69,24 +69,24 @@
         </panel-mail>
     </form>
 
-    <action-method name="action-time-card-method-generate-time-card-lines">
+    <action-method name="action-timecard-method-generate-timecard-lines">
         <call class="com.axelor.apps.timecard.web.TimecardController" method="generateTimecardLines"/>
     </action-method>
 
-    <action-method name="action-time-card-method-compute-hours">
+    <action-method name="action-timecard-method-compute-hours">
         <call class="com.axelor.apps.timecard.web.TimecardController" method="computeHours"/>
     </action-method>
 
-    <action-view name="action-time-card-view-show-calendar" title="Timecard - ${employee.name}" model="com.axelor.apps.timecard.db.TimecardLine">
-        <view type="calendar" name="time-card-line-calendar"/>
+    <action-view name="action-timecard-view-show-calendar" title="Timecard - ${employee.name}" model="com.axelor.apps.timecard.db.TimecardLine">
+        <view type="calendar" name="timecard-line-calendar"/>
         <domain>self.timecard.id = :_id</domain>
         <context name="calendarDate" expr="eval: timecardLineList.sort{ it.date }[0]?.getDate()"/>
         <context name="_projectId" expr="eval: project?.id"/>
         <context name="_employeeId" expr="eval: employee?.id"/>
     </action-view>
 
-    <action-view name="action-time-card-view-open-substitution-wizard" title="Substitution assistant" model="com.axelor.apps.base.db.Wizard">
-        <view type="form" name="time-card-line-substitution-wizard-form"/>
+    <action-view name="action-timecard-view-open-substitution-wizard" title="Substitution assistant" model="com.axelor.apps.base.db.Wizard">
+        <view type="form" name="timecard-line-substitution-wizard-form"/>
         <view-param name="popup" value="reload"/>
         <view-param name="popup-save" value="false"/>
         <view-param name="show-toolbar" value="false"/>

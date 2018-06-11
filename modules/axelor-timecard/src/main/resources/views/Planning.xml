@@ -30,11 +30,11 @@
         </panel>
 
         <panel itemSpan="12" hidden="true" showIf="(project || employee) &amp;&amp; startDate &amp;&amp; endDate">
-            <panel-dashlet name="timecardLinesDashlet" title="Scheduled timecard lines" action="action-planning-view-time-card-lines-dashlet-both" hidden="true" showIf="project &amp;&amp; employee"/>
-            <panel-dashlet name="timecardLinesDashlet" title="Scheduled timecard lines" action="action-planning-view-time-card-lines-dashlet-project" hidden="true" showIf="project &amp;&amp; !employee"/>
-            <panel-dashlet name="timecardLinesDashlet" title="Scheduled timecard lines" action="action-planning-view-time-card-lines-dashlet-employee" hidden="true" showIf="!project &amp;&amp; employee"/>
+            <panel-dashlet name="timecardLinesDashlet" title="Scheduled timecard lines" action="action-planning-view-timecard-lines-dashlet-both" hidden="true" showIf="project &amp;&amp; employee"/>
+            <panel-dashlet name="timecardLinesDashlet" title="Scheduled timecard lines" action="action-planning-view-timecard-lines-dashlet-project" hidden="true" showIf="project &amp;&amp; !employee"/>
+            <panel-dashlet name="timecardLinesDashlet" title="Scheduled timecard lines" action="action-planning-view-timecard-lines-dashlet-employee" hidden="true" showIf="!project &amp;&amp; employee"/>
 
-            <button name="addTimecardLine" title="Add a scheduled timecard line" css="btn-custom text-left" icon="fa-plus" onClick="save,action-planning-view-add-time-card-line"/>
+            <button name="addTimecardLine" title="Add a scheduled timecard line" css="btn-custom text-left" icon="fa-plus" onClick="save,action-planning-view-add-timecard-line"/>
         </panel>
 
         <panel itemSpan="12" hidden="true" showIf="(project || employee) &amp;&amp; startDate &amp;&amp; endDate">
@@ -92,9 +92,9 @@
         <context name="_employeeId" expr="eval: employee?.id"/>
     </action-view>
 
-    <action-view name="action-planning-view-time-card-lines-dashlet-both" title="Scheduled timecard lines" model="com.axelor.apps.timecard.db.TimecardLine">
-        <view type="grid" name="time-card-line-grid"/>
-        <view type="form" name="time-card-line-form"/>
+    <action-view name="action-planning-view-timecard-lines-dashlet-both" title="Scheduled timecard lines" model="com.axelor.apps.timecard.db.TimecardLine">
+        <view type="grid" name="timecard-line-grid"/>
+        <view type="form" name="timecard-line-form"/>
         <view-param name="popup" value="reload"/>
         <view-param name="show-toolbar" value="true"/>
         <domain>self.employee.id = :_employeeId AND self.project.id = :_projectId AND self.isDeletable = false AND (self.date BETWEEN :_startDate AND :_endDate)</domain>
@@ -104,9 +104,9 @@
         <context name="_endDate" expr="eval: endDate"/>
     </action-view>
 
-    <action-view name="action-planning-view-time-card-lines-dashlet-project" title="Scheduled timecard lines" model="com.axelor.apps.timecard.db.TimecardLine">
-        <view type="grid" name="time-card-line-grid"/>
-        <view type="form" name="time-card-line-form"/>
+    <action-view name="action-planning-view-timecard-lines-dashlet-project" title="Scheduled timecard lines" model="com.axelor.apps.timecard.db.TimecardLine">
+        <view type="grid" name="timecard-line-grid"/>
+        <view type="form" name="timecard-line-form"/>
         <view-param name="popup" value="reload"/>
         <view-param name="show-toolbar" value="true"/>
         <domain>self.project.id = :_projectId AND self.isDeletable = false AND (self.date BETWEEN :_startDate AND :_endDate)</domain>
@@ -115,9 +115,9 @@
         <context name="_endDate" expr="eval: endDate"/>
     </action-view>
 
-    <action-view name="action-planning-view-time-card-lines-dashlet-employee" title="Scheduled timecard lines" model="com.axelor.apps.timecard.db.TimecardLine">
-        <view type="grid" name="time-card-line-grid"/>
-        <view type="form" name="time-card-line-form"/>
+    <action-view name="action-planning-view-timecard-lines-dashlet-employee" title="Scheduled timecard lines" model="com.axelor.apps.timecard.db.TimecardLine">
+        <view type="grid" name="timecard-line-grid"/>
+        <view type="form" name="timecard-line-form"/>
         <view-param name="popup" value="reload"/>
         <view-param name="show-toolbar" value="true"/>
         <domain>self.employee.id = :_employeeId AND self.isDeletable = false AND (self.date BETWEEN :_startDate AND :_endDate)</domain>
@@ -126,8 +126,8 @@
         <context name="_endDate" expr="eval: endDate"/>
     </action-view>
 
-    <action-view name="action-planning-view-add-time-card-line" title="Timecard line" model="com.axelor.apps.timecard.db.TimecardLine">
-        <view type="form" name="time-card-line-form"/>
+    <action-view name="action-planning-view-add-timecard-line" title="Timecard line" model="com.axelor.apps.timecard.db.TimecardLine">
+        <view type="form" name="timecard-line-form"/>
         <view-param name="popup" value="reload"/>
         <context name="_projectId" expr="eval: project?.id"/>
         <context name="_employeeId" expr="eval: employee?.id"/>
@@ -161,7 +161,7 @@
     </action-method>
 
     <action-view name="action-planning-view-open-substitution-wizard" title="Substitution assistant" model="com.axelor.apps.base.db.Wizard">
-        <view type="form" name="time-card-line-substitution-wizard-form"/>
+        <view type="form" name="timecard-line-substitution-wizard-form"/>
         <view-param name="popup" value="reload"/>
         <view-param name="popup-save" value="false"/>
         <view-param name="show-toolbar" value="false"/>

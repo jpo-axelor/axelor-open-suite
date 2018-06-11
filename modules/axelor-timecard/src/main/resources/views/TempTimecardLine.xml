@@ -3,7 +3,7 @@
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.0.xsd">
 
-    <form name="temp-time-card-line-form" title="Timecard line" model="com.axelor.apps.timecard.db.TempTimecardLine">
+    <form name="temp-timecard-line-form" title="Timecard line" model="com.axelor.apps.timecard.db.TempTimecardLine">
         <panel>
             <field name="project" grid-view="project-grid" form-view="project-form"/>
             <field name="employee" grid-view="employee-grid" form-view="employee-form"/>
@@ -13,13 +13,13 @@
         </panel>
     </form>
 
-    <calendar name="temp-time-card-line-calendar-by-project" title="Timecard" model="com.axelor.apps.timecard.db.TempTimecardLine"
+    <calendar name="temp-timecard-line-calendar-by-project" title="Timecard" model="com.axelor.apps.timecard.db.TempTimecardLine"
               eventStart="startDateTime" eventStop="endDateTime" colorBy="project" editable="false">
         <field name="fullName"/>
         <field name="project"/>
     </calendar>
 
-    <calendar name="temp-time-card-line-calendar-by-employee" title="Timecard" model="com.axelor.apps.timecard.db.TempTimecardLine"
+    <calendar name="temp-timecard-line-calendar-by-employee" title="Timecard" model="com.axelor.apps.timecard.db.TempTimecardLine"
               eventStart="startDateTime" eventStop="endDateTime" colorBy="employee" editable="false">
         <field name="fullName"/>
         <field name="employee"/>

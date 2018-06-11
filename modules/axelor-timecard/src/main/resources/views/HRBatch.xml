@@ -75,7 +75,7 @@
         </panel-tabs>
     </form>
 
-    <action-attrs name="action-hr-batch-attrs-employee-set-domain" id="action-hr-batch-attrs-employee-set-domain-time-card">
+    <action-attrs name="action-hr-batch-attrs-employee-set-domain" id="action-hr-batch-attrs-employee-set-domain-timecard">
         <attribute for="employeeSet" name="domain" expr="eval: null"/>
         <attribute for="employeeSet" name="domain" expr="eval: &quot;self.mainEmploymentContract.payCompany.id = ${company.id}&quot;" if="eval: company != null"/>
     </action-attrs>

@@ -43,7 +43,7 @@ public class LeaveRequestTimecardController {
     ActionViewBuilder avb =
         ActionView.define("Demande de congés - " + leaveRequest.getUser().getEmployee().getName())
             .model(TimecardLine.class.getName())
-            .add("calendar", "time-card-line-leave-request-calendar")
+            .add("calendar", "timecard-line-leave-request-calendar")
             .domain(
                 "self.leaveRequest.id = "
                     + leaveRequestId

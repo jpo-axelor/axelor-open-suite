@@ -9,8 +9,8 @@
     <menuitem name="timecard-timecard" parent="timecard-root" title="Timecards" action="timecard.timecard"/>
 
     <action-view name="timecard.timecard" title="Timecards" model="com.axelor.apps.timecard.db.Timecard">
-        <view type="grid" name="time-card-grid"/>
-        <view type="form" name="time-card-form"/>
+        <view type="grid" name="timecard-grid"/>
+        <view type="form" name="timecard-form"/>
     </action-view>
 
 
