@@ -20,6 +20,8 @@ package com.axelor.apps.timecard.db.repo;
 import com.axelor.apps.hr.db.Employee;
 import com.axelor.apps.project.db.Project;
 import com.axelor.apps.timecard.db.TempTimecardLine;
+import com.axelor.apps.timecard.service.TimecardLineService;
+import com.axelor.inject.Beans;
 
 public class TempTimecardLineTimecardRepository extends TempTimecardLineRepository {
 
@@ -35,17 +37,7 @@ public class TempTimecardLineTimecardRepository extends TempTimecardLineReposito
 
     String typeSelect = tempTimecardLine.getTypeSelect();
     if (typeSelect != null) {
-      switch (typeSelect) {
-        case TYPE_CONTRACTUAL:
-          fullName.append("[C]");
-          break;
-        case TYPE_EXTRA:
-          fullName.append("[+]");
-          break;
-        case TYPE_ABSENCE:
-          fullName.append("[A]");
-          break;
-      }
+      fullName.append(Beans.get(TimecardLineService.class).getTypeSelectCode(typeSelect));
     }
 
     Employee employee = tempTimecardLine.getEmployee();

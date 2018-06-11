@@ -43,7 +43,6 @@ import com.axelor.i18n.I18n;
 import com.axelor.inject.Beans;
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -201,7 +200,9 @@ public class LeaveServiceTimecardImpl extends LeaveServiceImpl {
     if (timecardLines != null && !timecardLines.isEmpty()) {
       for (TimecardLine timecardLine : timecardLines) {
         if (!timecardLine.getSubstitutionTimecardLineList().isEmpty()) {
-          throw new AxelorException(timecardLine, TraceBackRepository.TYPE_FUNCTIONNAL,
+          throw new AxelorException(
+              timecardLine,
+              TraceBackRepository.TYPE_FUNCTIONNAL,
               I18n.get("Please cancel all substitution lines before canceling leave request."));
         }
       }
@@ -222,23 +223,5 @@ public class LeaveServiceTimecardImpl extends LeaveServiceImpl {
       icalEventRepo.remove(icalEventRepo.find(event.getId()));
     }
     leaveRequest.setStatusSelect(LeaveRequestRepository.STATUS_CANCELED);
-  }
-
-  @Transactional(rollbackOn = {AxelorException.class, Exception.class})
-  public void computeDurationTotals(LeaveRequest leaveRequest) {
-    BigDecimal totalAbsence = BigDecimal.ZERO;
-    BigDecimal totalSubstitution = BigDecimal.ZERO;
-
-    if (leaveRequest.getTimecardLineList() != null) {
-      for (TimecardLine timecardLine : leaveRequest.getTimecardLineList()) {
-        totalAbsence = totalAbsence.add(timecardLine.getDuration());
-        totalSubstitution = totalSubstitution.add(timecardLine.getTotalSubstitutionHours());
-      }
-    }
-
-    leaveRequest.setTotalAbsenceHours(totalAbsence);
-    leaveRequest.setTotalSubstitutionHours(totalSubstitution);
-
-    leaveRequestRepo.save(leaveRequest);
   }
 }

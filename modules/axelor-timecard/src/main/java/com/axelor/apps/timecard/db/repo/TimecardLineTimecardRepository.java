@@ -20,48 +20,38 @@ package com.axelor.apps.timecard.db.repo;
 import com.axelor.apps.hr.db.Employee;
 import com.axelor.apps.project.db.Project;
 import com.axelor.apps.timecard.db.TimecardLine;
-import com.axelor.apps.timecard.service.LeaveServiceTimecardImpl;
 import com.axelor.apps.timecard.service.TimecardLineService;
+import com.axelor.i18n.I18n;
 import com.axelor.inject.Beans;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.List;
+import javax.persistence.PersistenceException;
 
 public class TimecardLineTimecardRepository extends TimecardLineRepository {
 
   @Override
   public TimecardLine save(TimecardLine timecardLine) {
+    TimecardLineService timecardLineService = Beans.get(TimecardLineService.class);
+
     // Full name
     StringBuilder fullName = new StringBuilder();
 
     String typeSelect = timecardLine.getTypeSelect();
     if (typeSelect != null) {
-      switch (typeSelect) {
-        case TYPE_CONTRACTUAL:
-          fullName.append("[C]");
-          break;
-        case TYPE_EXTRA:
-          fullName.append("[+]");
-          break;
-        case TYPE_ABSENCE:
-          fullName.append("[A]");
-          break;
-      }
-
-      fullName.append(" ");
+      fullName.append(timecardLineService.getTypeSelectCode(typeSelect));
     }
 
     Employee employee = timecardLine.getEmployee();
     if (employee != null) {
-      fullName.append(employee.getName());
       fullName.append(" ");
+      fullName.append(employee.getName());
     }
 
     Project project = timecardLine.getProject();
     if (project != null) {
-      fullName.append("- ");
+      fullName.append(" - ");
       fullName.append(project.getName());
     }
 
@@ -76,24 +66,16 @@ public class TimecardLineTimecardRepository extends TimecardLineRepository {
     timecardLine.setDuration(
         BigDecimal.valueOf(Duration.between(startTime, endTime).toMinutes() / 60.0));
 
-    timecardLine.setDurationNight(
-        Beans.get(TimecardLineService.class)
-            .getDurationNight(
-                startTime,
-                endTime,
-                timecardLine.getEmployee().getMainEmploymentContract().getPayCompany()));
-
-    List<TimecardLine> tcls = timecardLine.getSubstitutionTimecardLineList();
-    if (tcls != null) {
-      BigDecimal totalSubstitution = BigDecimal.ZERO;
-      for (TimecardLine tcl : tcls) {
-        totalSubstitution = totalSubstitution.add(tcl.getDuration());
-      }
-      timecardLine.setTotalSubstitutionHours(totalSubstitution);
-
-      if (timecardLine.getLeaveRequest() != null) {
-        Beans.get(LeaveServiceTimecardImpl.class)
-            .computeDurationTotals(timecardLine.getLeaveRequest());
+    if (employee != null) {
+      try {
+        timecardLine.setDurationNight(
+            timecardLineService.getDurationNight(
+                startTime, endTime, employee.getMainEmploymentContract().getPayCompany()));
+      } catch (NullPointerException npe) {
+        throw new PersistenceException(
+            I18n.get(
+                "Please configure a main employement contract for employee " + employee.getName()),
+            npe);
       }
     }
 

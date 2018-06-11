@@ -4,8 +4,7 @@
               xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.0.xsd">
 
     <form name="time-card-line-form" id="tn-time-card-line-form" title="Ligne de pointage" model="com.axelor.apps.timecard.db.TimecardLine" width="large"
-          onNew="action-time-card-line-method-set-defaults,action-time-card-line-record-compute-duration"
-          onLoad="action-time-card-line-method-get-substitutions-duration">
+          onNew="action-time-card-line-method-set-defaults,action-time-card-line-record-compute-duration">
         <panel readonlyIf="typeSelect == 'contractual'">
             <field name="typeSelect" selection-in="['extra', 'absence']"/>
             <field name="isContractual" showIf="typeSelect == 'extra' &amp;&amp; isSubstitution"/>

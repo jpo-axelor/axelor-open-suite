@@ -73,4 +73,7 @@ public interface TimecardLineService {
 
   /** Returns total substitution hours in given {@link TimecardLine}. */
   BigDecimal getSubstitutionsDuration(TimecardLine timecardLine);
+
+  /** Returns the code for given {@code typeSelect}. */
+  String getTypeSelectCode(String typeSelect);
 }

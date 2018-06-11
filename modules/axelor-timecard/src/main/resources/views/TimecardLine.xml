@@ -21,8 +21,7 @@
     </grid>
 
     <form name="time-card-line-form" title="Timecard line" model="com.axelor.apps.timecard.db.TimecardLine" width="large"
-          onNew="action-time-card-line-method-set-defaults,action-time-card-line-record-compute-duration"
-          onLoad="action-time-card-line-method-get-substitutions-duration,save">
+          onNew="action-time-card-line-method-set-defaults,action-time-card-line-record-compute-duration">
         <panel readonlyIf="typeSelect == 'contractual'">
             <field name="typeSelect" selection-in="['extra', 'absence']"/>
             <field name="isContractual" showIf="typeSelect == 'extra' &amp;&amp; isSubstitution"/>
@@ -45,7 +44,7 @@
                 <field name="absenceTimecardLine" showIf="typeSelect == 'extra' &amp;&amp; isSubstitution" grid-view="time-card-line-grid" form-view="time-card-line-form"/>
                 <spacer/>
                 <field name="totalSubstitutionHours" showIf="typeSelect == 'absence'"/>
-                <panel-related field="substitutionTimecardLineList" showIf="typeSelect == 'absence'" canNew="false" canEdit="false" colSpan="12" grid-view="time-card-line-grid" form-view="time-card-line-form"/>
+                <panel-related field="substitutionTimecardLineList" onChange="action-timecard-line-record-update-durations" showIf="typeSelect == 'absence'" canNew="false" canEdit="false" colSpan="12" grid-view="time-card-line-grid" form-view="time-card-line-form"/>
                 <button name="addSubstitution" title="Add a substitution" css="btn-custom text-left" icon="fa-plus" onClick="save,action-time-card-line-view-add-substitution" showIf="typeSelect == 'absence'"/>
 
                 <field name="isSubstitution" hidden="true"/>
@@ -102,10 +101,6 @@
         <call class="com.axelor.apps.timecard.web.TimecardLineController" method="computeNightHours"/>
     </action-method>
 
-    <action-method name="action-time-card-line-method-get-substitutions-duration">
-        <call class="com.axelor.apps.timecard.web.TimecardLineController" method="computeSubstitutionsDuration"/>
-    </action-method>
-
     <action-record name="action-time-card-line-record-get-week-day" model="com.axelor.apps.timecard.db.TimecardLine">
         <field name="weekDay" expr="eval: date.getDayOfWeek().getValue()"/>
     </action-record>
@@ -117,5 +112,9 @@
         <context name="_projectId" expr="eval: project?.id"/>
         <context name="_isSubstitution" expr="eval: true"/>
     </action-view>
+
+    <action-record name="action-timecard-line-record-update-durations" model="com.axelor.apps.timecard.db.TimecardLine">
+        <field name="totalSubstitutionHours" expr="eval: substitutionTimecardLineList.sum{ it.duration }"/>
+    </action-record>
 
 </object-views>

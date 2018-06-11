@@ -246,4 +246,29 @@ public class TimecardLineServiceImpl implements TimecardLineService {
 
     return totalSubstitution;
   }
+
+  @Override
+  public String getTypeSelectCode(String typeSelect) {
+    String code;
+
+    switch (typeSelect) {
+      case TimecardLineRepository.TYPE_CONTRACTUAL:
+        code = "[C]";
+        break;
+
+      case TimecardLineRepository.TYPE_EXTRA:
+        code = "[+]";
+        break;
+
+      case TimecardLineRepository.TYPE_ABSENCE:
+        code = "[A]";
+        break;
+
+      default:
+        code = "";
+        break;
+    }
+
+    return code;
+  }
 }

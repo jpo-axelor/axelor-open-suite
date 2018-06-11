@@ -74,7 +74,7 @@
                 <field name="totalSubstitutionHours">
                     <hilite if="$number(totalSubstitutionHours) &lt; $number(totalAbsenceHours)" color="danger"/>
                 </field>
-                <panel-related field="timecardLineList" canRemove="false" canNew="false" colSpan="12" grid-view="time-card-line-grid" form-view="time-card-line-form"/>
+                <panel-related field="timecardLineList" onChange="action-leave-request-record-update-durations" canRemove="false" canNew="false" colSpan="12" grid-view="time-card-line-grid" form-view="time-card-line-form"/>
             </panel>
             <panel-dashlet action="action-leave-request-dashlet-timecard-lines-to-reassign" colSpan="12"/>
         </panel>
@@ -136,5 +136,10 @@
         <context name="_employeeId" expr="eval: user?.employee?.id"/>
         <context name="_extraHoursSelect" expr="eval: com.axelor.apps.timecard.db.repo.TimecardLineRepository.TYPE_EXTRA"/>
     </action-view>
+
+    <action-record name="action-leave-request-record-update-durations" model="com.axelor.apps.hr.db.LeaveRequest">
+        <field name="totalAbsenceHours" expr="eval: timecardLineList?.sum{ it.duration }"/>
+        <field name="totalSubstitutionHours" expr="eval: timecardLineList?.sum{ it.totalSubstitutionHours }"/>
+    </action-record>
 
 </object-views>
