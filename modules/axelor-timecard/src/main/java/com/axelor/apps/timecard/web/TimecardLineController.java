@@ -31,6 +31,7 @@ import com.axelor.apps.timecard.db.repo.TimecardLineRepository;
 import com.axelor.apps.timecard.db.repo.TimecardRepository;
 import com.axelor.apps.timecard.service.TimecardLineService;
 import com.axelor.exception.AxelorException;
+import com.axelor.exception.db.repo.TraceBackRepository;
 import com.axelor.exception.service.TraceBackService;
 import com.axelor.i18n.I18n;
 import com.axelor.inject.Beans;
@@ -191,7 +192,7 @@ public class TimecardLineController {
       projects.add(projectRepo.find(Long.valueOf((Integer) p.get("id"))));
     }
 
-    int total = 0;
+    int total;
     try {
       total =
           Beans.get(TimecardLineService.class)
@@ -225,8 +226,23 @@ public class TimecardLineController {
   public void computeNightHours(ActionRequest request, ActionResponse response) {
     Context context = request.getContext();
 
+    if (context.get("employee") == null) {
+      return;
+    }
+
     Employee employee =
         Beans.get(EmployeeRepository.class).find(((Employee) context.get("employee")).getId());
+
+    if (employee.getMainEmploymentContract() == null) {
+      TraceBackService.trace(
+          response,
+          new AxelorException(
+              employee,
+              TraceBackRepository.CATEGORY_MISSING_FIELD,
+              I18n.get("Please configure a main employement contract for employee %s"),
+              employee.getName()));
+      return;
+    }
 
     response.setValue(
         "durationNight",

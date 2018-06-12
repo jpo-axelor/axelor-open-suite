@@ -27,7 +27,7 @@
             <field name="typeSelect" selection-in="['extra', 'absence']"/>
             <field name="isContractual" showIf="typeSelect == 'extra' &amp;&amp; isSubstitution"/>
             <field name="project" domain="self.statusSelect = 2" canEdit="false"/>
-            <field name="employee"/>
+            <field name="employee" required="true" onChange="action-timecard-line-method-compute-night-hours"/>
             <field name="activity"/>
             <spacer/>
             <field name="weekDay" colSpan="2"/>
@@ -62,7 +62,7 @@
             <field name="$employeeToReplace" title="Employee to replace" widget="ManyToOne" target="com.axelor.apps.hr.db.Employee" readonly="true"/>
             <field name="$employeeReplacing" title="Employee replacing" required="true" widget="ManyToOne" target="com.axelor.apps.hr.db.Employee" canEdit="false"/>
             <field name="$projects" title="Projects" required="true" widget="TagSelect" target="com.axelor.apps.project.db.Project" canEdit="false" canNew="false" colSpan="12"/>
-            <button name="validate" title="Validate" readonlyIf="!employeeReplacing || !$projects" onClick="action-timecard-line-method-generate-extra-tcl" colOffset="3"/>
+            <button name="validate" title="Validate" readonlyIf="!$employeeReplacing || !$projects" onClick="action-timecard-line-method-generate-extra-tcl" colOffset="3"/>
         </panel>
     </form>
 
@@ -95,7 +95,7 @@
     </action-attrs>
 
     <action-record name="action-timecard-line-record-compute-duration" model="com.axelor.apps.timecard.db.TimecardLine">
-        <field name="duration" expr="eval: java.time.Duration.between(startTime, endTime).toMinutes() / 60"/>
+        <field name="duration" expr="eval: java.time.Duration.between(startTime, endTime).toMinutes() / 60" if="startTime != null &amp;&amp; endTime != null"/>
     </action-record>
 
     <action-method name="action-timecard-line-method-compute-night-hours">

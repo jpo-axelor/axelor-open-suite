@@ -64,6 +64,7 @@ public class TimecardLineServiceImpl implements TimecardLineService {
     timecardLine.setDate(date);
     timecardLine.setStartTime(startTime);
     timecardLine.setEndTime(endTime);
+    timecardLine.setDuration(BigDecimal.valueOf(Duration.between(startTime, endTime).toHours()));
 
     timecardLine.setTypeSelect(lineType);
 
@@ -139,7 +140,11 @@ public class TimecardLineServiceImpl implements TimecardLineService {
       throws AxelorException {
 
     if (newEmployee.getMainEmploymentContract() == null) {
-      throw new AxelorException(newEmployee, TraceBackRepository.CATEGORY_MISSING_FIELD, I18n.get("Please configure a main employement contract for employee %s"), newEmployee.getName());
+      throw new AxelorException(
+          newEmployee,
+          TraceBackRepository.CATEGORY_MISSING_FIELD,
+          I18n.get("Please configure a main employement contract for employee %s"),
+          newEmployee.getName());
     }
 
     int totalGenerated = 0;
@@ -154,6 +159,7 @@ public class TimecardLineServiceImpl implements TimecardLineService {
                 endDate,
                 TimecardLineRepository.TYPE_ABSENCE)
             .fetch();
+
     for (TimecardLine timecardLine : timecardLines) {
       TimecardLine tcl =
           generateTimecardLine(
@@ -168,7 +174,9 @@ public class TimecardLineServiceImpl implements TimecardLineService {
       tcl.setIsSubstitution(true);
       tcl.setIsContractual(isContractual);
 
+      timecardLine.setTotalSubstitutionHours(tcl.getDuration());
       timecardLine.addSubstitutionTimecardLineListItem(tcl);
+
       timecardLineRepo.save(tcl);
       timecardLineRepo.save(timecardLine);
 

@@ -48,8 +48,12 @@ public class FrequencyServiceImpl implements FrequencyService {
       if (frequency.getEveryNWeeks() == 1) {
         summary.append(I18n.get("Every weeks"));
       } else {
-        summary.append(I18n.get("Every")).append(" ").append(frequency.getEveryNWeeks()).append(" ").append(
-            I18n.get("weeks"));
+        summary
+            .append(I18n.get("Every"))
+            .append(" ")
+            .append(frequency.getEveryNWeeks())
+            .append(" ")
+            .append(I18n.get("weeks"));
       }
       summary.append(I18n.get(", the"));
     } else if (frequency.getFrequencyTypeSelect().equals(FrequencyRepository.TYPE_MONTH_DAYS)) {
@@ -102,10 +106,10 @@ public class FrequencyServiceImpl implements FrequencyService {
     } else if (frequency.getSaturday()
         && frequency.getSunday()
         && !(frequency.getMonday()
-        || frequency.getTuesday()
-        || frequency.getWednesday()
-        || frequency.getThursday()
-        || frequency.getFriday())) {
+            || frequency.getTuesday()
+            || frequency.getWednesday()
+            || frequency.getThursday()
+            || frequency.getFriday())) {
       summary.append(I18n.get("weekends"));
     } else if (frequency.getMonday()
         && frequency.getTuesday()
@@ -360,9 +364,7 @@ public class FrequencyServiceImpl implements FrequencyService {
     return new ArrayList<>(dates);
   }
 
-  /**
-   * Retrieves a LocalDate instance of given date in arguments.
-   */
+  /** Retrieves a LocalDate instance of given date in arguments. */
   public LocalDate getDay(int dayOfWeek, int dayOfWeekInMonth, int year, int month) {
     Calendar cal = Calendar.getInstance();
     cal.set(Calendar.DAY_OF_WEEK, dayOfWeek);

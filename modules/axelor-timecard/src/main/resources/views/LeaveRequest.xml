@@ -22,7 +22,7 @@
 
     <form name="leave-request-form" id="timecard-leave-request-form" title="Leave request" model="com.axelor.apps.hr.db.LeaveRequest"
           onNew="action-leave-request-record-default,action-leave-request-attrs-buttons,action-leave-request-record-to-justify,action-leave-request-method-leave-reason-to-justify,action-leave-request-attrs-hide-duration"
-          onLoad="action-leave-request-group-on-form-load,action-leave-request-attrs-hide-duration"
+          onLoad="action-leave-request-group-on-form-load,action-leave-request-attrs-hide-duration,action-leave-request-record-update-durations"
           onSave="action-leave-request-validate-dates-on-save" canCopy="false">
 
         <menubar>
