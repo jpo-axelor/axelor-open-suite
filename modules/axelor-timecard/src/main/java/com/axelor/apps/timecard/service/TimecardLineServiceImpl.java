@@ -173,6 +173,9 @@ public class TimecardLineServiceImpl implements TimecardLineService {
 
       tcl.setIsSubstitution(true);
       tcl.setIsContractual(isContractual);
+      if (isContractual) {
+        tcl.setTypeSelect(TimecardLineRepository.TYPE_CONTRACTUAL);
+      }
 
       timecardLine.setTotalSubstitutionHours(tcl.getDuration());
       timecardLine.addSubstitutionTimecardLineListItem(tcl);

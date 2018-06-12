@@ -22,10 +22,11 @@
 
     <form name="timecard-line-form" title="Timecard line" model="com.axelor.apps.timecard.db.TimecardLine" width="large"
           onNew="action-timecard-line-method-set-defaults,action-timecard-line-record-compute-duration"
-          onLoad="action-timecard-line-record-update-durations">
+          onLoad="action-timecard-line-record-update-durations"
+          onSave="action-timecard-line-record-update-type-select">
         <panel readonlyIf="typeSelect == 'contractual'">
             <field name="typeSelect" selection-in="['extra', 'absence']"/>
-            <field name="isContractual" showIf="typeSelect == 'extra' &amp;&amp; isSubstitution"/>
+            <field name="isContractual" showIf="typeSelect == 'extra' &amp;&amp; isSubstitution" onChange="action-timecard-line-attrs-type-select-readonly"/>
             <field name="project" domain="self.statusSelect = 2" canEdit="false"/>
             <field name="employee" canEdit="true" required="true" onChange="action-timecard-line-method-compute-night-hours"/>
             <field name="activity"/>
@@ -41,8 +42,8 @@
             <field name="leaveRequest" showIf="leaveRequest &amp;&amp; typeSelect == 'absence'" grid-view="leave-request-grid" form-view="leave-request-form"/>
             <field name="comments" colSpan="12" widget="html"/>
             <spacer/>
-            <panel title="Substitutions" showIf="(typeSelect == 'extra' &amp;&amp; isSubstitution) || typeSelect == 'absence'" colSpan="12">
-                <field name="absenceTimecardLine" showIf="typeSelect == 'extra' &amp;&amp; isSubstitution" grid-view="timecard-line-grid" form-view="timecard-line-form"/>
+            <panel title="Substitutions" showIf="isSubstitution || typeSelect == 'absence'" colSpan="12">
+                <field name="absenceTimecardLine" showIf="isSubstitution" grid-view="timecard-line-grid" form-view="timecard-line-form"/>
                 <spacer/>
                 <field name="totalSubstitutionHours" showIf="typeSelect == 'absence'"/>
                 <panel-related field="substitutionTimecardLineList" onChange="action-timecard-line-record-update-durations" showIf="typeSelect == 'absence'" canNew="false" canEdit="false" colSpan="12" grid-view="timecard-line-grid" form-view="timecard-line-form"/>
@@ -118,4 +119,11 @@
         <field name="totalSubstitutionHours" expr="eval: substitutionTimecardLineList.sum{ it.duration }"/>
     </action-record>
 
+    <action-attrs name="action-timecard-line-attrs-type-select-readonly">
+        <attribute for="typeSelect" name="readonly" expr="eval: isContractual"/>
+    </action-attrs>
+
+    <action-record name="action-timecard-line-record-update-type-select" model="com.axelor.apps.timecard.db.TimecardLine">
+        <field name="typeSelect" expr="eval: com.axelor.apps.timecard.db.repo.TimecardLineRepository.TYPE_CONTRACTUAL" if="isContractual"/>
+    </action-record>
 </object-views>
