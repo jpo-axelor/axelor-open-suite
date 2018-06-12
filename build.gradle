@@ -33,7 +33,7 @@ allprojects {
     apply plugin: "com.diffplug.gradle.spotless"
 
     group = "com.axelor"
-    version = "0.3.0"
+    version = rootProject.file("version.txt").text.trim()
 
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
