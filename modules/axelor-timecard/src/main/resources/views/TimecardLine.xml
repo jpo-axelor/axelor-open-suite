@@ -27,7 +27,7 @@
             <field name="typeSelect" selection-in="['extra', 'absence']"/>
             <field name="isContractual" showIf="typeSelect == 'extra' &amp;&amp; isSubstitution"/>
             <field name="project" domain="self.statusSelect = 2" canEdit="false"/>
-            <field name="employee" required="true" onChange="action-timecard-line-method-compute-night-hours"/>
+            <field name="employee" canEdit="true" required="true" onChange="action-timecard-line-method-compute-night-hours"/>
             <field name="activity"/>
             <spacer/>
             <field name="weekDay" colSpan="2"/>
