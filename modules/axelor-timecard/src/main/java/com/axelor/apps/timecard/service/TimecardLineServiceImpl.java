@@ -19,13 +19,18 @@ package com.axelor.apps.timecard.service;
 
 import com.axelor.apps.base.db.Company;
 import com.axelor.apps.hr.db.Employee;
+import com.axelor.apps.hr.db.EmploymentContract;
 import com.axelor.apps.hr.db.HRConfig;
+import com.axelor.apps.hr.db.repo.EmploymentContractRepository;
 import com.axelor.apps.project.db.Project;
+import com.axelor.apps.timecard.db.EmployeeSuggestion;
 import com.axelor.apps.timecard.db.TimecardLine;
+import com.axelor.apps.timecard.db.repo.EmployeeSuggestionRepository;
 import com.axelor.apps.timecard.db.repo.TimecardLineRepository;
 import com.axelor.exception.AxelorException;
 import com.axelor.exception.db.repo.TraceBackRepository;
 import com.axelor.i18n.I18n;
+import com.axelor.inject.Beans;
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 import java.math.BigDecimal;
@@ -33,16 +38,23 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 
 public class TimecardLineServiceImpl implements TimecardLineService {
 
   protected TimecardLineRepository timecardLineRepo;
+  protected EmployeeSuggestionRepository employeeSuggestionRepo;
 
   @Inject
-  public TimecardLineServiceImpl(TimecardLineRepository timecardLineRepo) {
+  public TimecardLineServiceImpl(
+      TimecardLineRepository timecardLineRepo,
+      EmployeeSuggestionRepository employeeSuggestionRepo) {
     this.timecardLineRepo = timecardLineRepo;
+    this.employeeSuggestionRepo = employeeSuggestionRepo;
   }
 
   @Override
@@ -289,5 +301,45 @@ public class TimecardLineServiceImpl implements TimecardLineService {
     }
 
     return code;
+  }
+
+  @Override
+  @Transactional(rollbackOn = {AxelorException.class, Exception.class})
+  public Set<EmployeeSuggestion> suggestEmployee(Long projectId, Long employeeToReplaceId) {
+    List<TimecardLine> timecardLines =
+        Beans.get(TimecardLineRepository.class)
+            .all()
+            .filter("self.project.id = ? AND self.employee.id <> ?", projectId, employeeToReplaceId)
+            .fetch();
+
+    Set<Employee> employees =
+        timecardLines.stream().map(TimecardLine::getEmployee).collect(Collectors.toSet());
+
+    Set<EmployeeSuggestion> employeeSuggestions = new HashSet<>();
+    for (Employee employee : employees) {
+      EmployeeSuggestion employeeSuggestion = new EmployeeSuggestion();
+
+      employeeSuggestion.setEmployee(employee);
+
+      EmploymentContract employmentContract = employee.getMainEmploymentContract();
+      employeeSuggestion.setHasMainEmployementContract(
+          employmentContract != null
+              && (employmentContract
+                      .getStatus()
+                      .equals(EmploymentContractRepository.STATUS_IN_TRIAL)
+                  || employmentContract
+                      .getStatus()
+                      .equals(EmploymentContractRepository.STATUS_ACTIVE)));
+
+      employeeSuggestion.setHasWorkedOnOneOfTheProjects(
+          timecardLines
+              .stream()
+              .anyMatch(timecardLine -> timecardLine.getProject().getId().equals(projectId)));
+
+      employeeSuggestionRepo.save(employeeSuggestion);
+      employeeSuggestions.add(employeeSuggestion);
+    }
+
+    return employeeSuggestions;
   }
 }

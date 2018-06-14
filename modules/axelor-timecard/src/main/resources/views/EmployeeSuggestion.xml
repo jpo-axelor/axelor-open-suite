@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.0.xsd">
+
+    <grid name="employee-suggestion-grid" title="Employee suggestions" model="com.axelor.apps.timecard.db.EmployeeSuggestion"
+          orderBy="hasAlreadyWorkedOnAllProjects,hasMainEmployementContract">
+        <field name="employee"/>
+        <field name="employee.contactPartner.contactAddress.city.zip"/>
+        <field name="employee.contactPartner.contactAddress.city"/>
+        <field name="employee.contactPartner.fixedPhone"/>
+        <field name="employee.contactPartner.mobilePhone"/>
+        <field name="hasWorkedOnOneOfTheProjects"/>
+        <field name="hasMainEmployementContract"/>
+    </grid>
+
+    <form name="employee-suggestion-form" title="Employee suggestion" model="com.axelor.apps.timecard.db.EmployeeSuggestion">
+        <panel readonly="true">
+            <field name="employee"/>
+            <field name="employee.contactPartner.contactAddress.city.zip" colSpan="3"/>
+            <field name="employee.contactPartner.contactAddress.city" colSpan="3"/>
+            <field name="employee.contactPartner.fixedPhone"/>
+            <field name="employee.contactPartner.mobilePhone"/>
+            <field name="hasWorkedOnOneOfTheProjects"/>
+            <field name="hasMainEmployementContract"/>
+        </panel>
+    </form>
+
+</object-views>

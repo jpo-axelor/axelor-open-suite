@@ -17,12 +17,14 @@
  */
 package com.axelor.apps.timecard.web;
 
+import com.axelor.apps.base.db.Wizard;
 import com.axelor.apps.hr.db.Employee;
 import com.axelor.apps.hr.db.LeaveRequest;
 import com.axelor.apps.hr.db.repo.EmployeeRepository;
 import com.axelor.apps.hr.db.repo.LeaveRequestRepository;
 import com.axelor.apps.project.db.Project;
 import com.axelor.apps.project.db.repo.ProjectRepository;
+import com.axelor.apps.timecard.db.EmployeeSuggestion;
 import com.axelor.apps.timecard.db.Planning;
 import com.axelor.apps.timecard.db.Timecard;
 import com.axelor.apps.timecard.db.TimecardLine;
@@ -47,6 +49,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
+import org.apache.commons.lang3.StringUtils;
 
 public class TimecardLineController {
 
@@ -265,5 +269,80 @@ public class TimecardLineController {
             .find(request.getContext().asType(TimecardLine.class).getId());
     BigDecimal total = Beans.get(TimecardLineService.class).getSubstitutionsDuration(timecardLine);
     response.setValue("totalSubstitutionHours", total);
+  }
+
+  /**
+   * Suggest a list of {@link Employee} based on projects of the context.
+   *
+   * @param request
+   * @param response
+   */
+  public void suggestEmployee(ActionRequest request, ActionResponse response) {
+    TimecardLineService timecardLineService = Beans.get(TimecardLineService.class);
+    Context context = request.getContext();
+
+    Set<EmployeeSuggestion> employeeSuggestions = new HashSet<>();
+
+    if (context.getContextClass().equals(Wizard.class)) {
+      /*
+       * From substitution wizard
+       */
+      List projects = (List) context.get("projects");
+      if (projects == null || projects.isEmpty()) {
+        response.setAlert(I18n.get("Please select at least one project."));
+        return;
+      }
+
+      Long employeeToReplaceId =
+          ((Integer) ((Map) context.get("employeeToReplace")).get("id")).longValue();
+
+      for (Object project : projects) {
+        Long projectId = ((Integer) ((Map) project).get("id")).longValue();
+
+        Set<EmployeeSuggestion> newEmployeeSuggestions =
+            timecardLineService.suggestEmployee(projectId, employeeToReplaceId);
+
+        for (EmployeeSuggestion newES : newEmployeeSuggestions) {
+          employeeSuggestions.removeIf(
+              es ->
+                  es.getEmployee().equals(newES.getEmployee())
+                      && newES.getHasWorkedOnOneOfTheProjects());
+          employeeSuggestions.add(newES);
+        }
+      }
+
+    } else if (context.getContextClass().equals(TimecardLine.class)) {
+      /*
+       * From timecard line form
+       */
+      Project project = (Project) context.get("project");
+      if (project == null) {
+        response.setAlert(I18n.get("Please select a project."));
+        return;
+      }
+
+      Long employeeToReplaceId =
+          ((TimecardLine) context.get("absenceTimecardLine")).getEmployee().getId();
+      Long projectId = project.getId();
+
+      employeeSuggestions = timecardLineService.suggestEmployee(projectId, employeeToReplaceId);
+    }
+
+    // Set elements of the view
+    response.setValue("$employeeSuggestionList", employeeSuggestions);
+
+    Set<Long> employeeSuggestionsIds =
+        employeeSuggestions
+            .stream()
+            .map(EmployeeSuggestion::getEmployee)
+            .map(Employee::getId)
+            .collect(Collectors.toSet());
+    employeeSuggestionsIds.add(0L);
+
+    response.setAttr("$employeeSuggestion", "value", "null");
+    response.setAttr(
+        "$employeeSuggestion",
+        "domain",
+        "self.id IN (" + StringUtils.join(employeeSuggestionsIds, ",") + ")");
   }
 }

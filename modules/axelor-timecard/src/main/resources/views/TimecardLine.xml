@@ -28,7 +28,17 @@
             <field name="typeSelect" selection-in="['extra', 'absence']"/>
             <field name="isContractual" showIf="typeSelect == 'extra' &amp;&amp; isSubstitution" onChange="action-timecard-line-attrs-type-select-readonly"/>
             <field name="project" domain="self.statusSelect = 2" canEdit="false"/>
-            <field name="employee" canEdit="true" required="true" onChange="action-timecard-line-method-compute-night-hours"/>
+            <panel stacked="true">
+                <panel name="suggestionOffPanel">
+                    <field name="employee" canEdit="true" required="true" onChange="action-timecard-line-method-compute-night-hours"/>
+                    <button name="suggestEmployeeBtn" title="Suggest employee" icon="fa-refresh" css="btn-custom" onClick="action-timecard-line-method-show-suggestions,action-timecard-line-attrs-show-suggestions" showIf="isSubstitution &amp;&amp; !$readonly()"/>
+                </panel>
+                <panel name="suggestionOnPanel" hidden="true">
+                    <field name="$employeeSuggestion" title="Employee suggestion" canEdit="true" widget="ManyToOne" target="com.axelor.apps.hr.db.Employee" onChange="action-timecard-line-attrs-set-employee-replacing,action-timecard-line-attrs-hide-suggestions"/>
+                    <button name="cancelSuggestEmployeeBtn" title="Cancel" icon="fa-times" css="btn-custom" onClick="action-timecard-line-attrs-hide-suggestions"/>
+                </panel>
+            </panel>
+            <field name="$employeeSuggestionList" widget="OneToMany" target="com.axelor.apps.timecard.db.EmployeeSuggestion" readonly="true" hidden="true" colSpan="12" grid-view="employee-suggestion-grid" form-view="employee-suggestion-form"/>
             <field name="activity"/>
             <spacer/>
             <field name="weekDay" colSpan="2"/>
@@ -61,7 +71,17 @@
             <field name="$endDate" title="End date" widget="Date" colSpan="4"/>
             <field name="$isContractual" title="Contractual" widget="Boolean" colSpan="4"/>
             <field name="$employeeToReplace" title="Employee to replace" widget="ManyToOne" target="com.axelor.apps.hr.db.Employee" readonly="true"/>
-            <field name="$employeeReplacing" title="Employee replacing" required="true" widget="ManyToOne" target="com.axelor.apps.hr.db.Employee" canEdit="false"/>
+            <panel stacked="true">
+                <panel name="suggestionOffPanel">
+                    <field name="$employeeReplacing" title="Employee replacing" required="true" widget="ManyToOne" target="com.axelor.apps.hr.db.Employee" canEdit="false"/>
+                    <button name="suggestEmployeeBtn" title="Suggest employee" icon="fa-refresh" css="btn-custom" onClick="action-timecard-line-method-show-suggestions,action-timecard-line-attrs-show-suggestions"/>
+                </panel>
+                <panel name="suggestionOnPanel" hidden="true">
+                    <field name="$employeeSuggestion" title="Employee suggestion" canEdit="true" widget="ManyToOne" target="com.axelor.apps.hr.db.Employee" onChange="action-timecard-line-attrs-set-employee-replacing,action-timecard-line-attrs-hide-suggestions"/>
+                    <button name="cancelSuggestEmployeeBtn" title="Cancel" icon="fa-times" css="btn-custom" onClick="action-timecard-line-attrs-hide-suggestions"/>
+                </panel>
+            </panel>
+            <field name="$employeeSuggestionList" widget="OneToMany" target="com.axelor.apps.timecard.db.EmployeeSuggestion" readonly="true" hidden="true" colSpan="12" grid-view="employee-suggestion-grid" form-view="employee-suggestion-form"/>
             <field name="$projects" title="Projects" required="true" widget="TagSelect" target="com.axelor.apps.project.db.Project" canEdit="false" canNew="false" colSpan="12"/>
             <button name="validate" title="Validate" readonlyIf="!$employeeReplacing || !$projects" onClick="action-timecard-line-method-generate-extra-tcl" colOffset="3"/>
         </panel>
@@ -126,4 +146,26 @@
     <action-record name="action-timecard-line-record-update-type-select" model="com.axelor.apps.timecard.db.TimecardLine">
         <field name="typeSelect" expr="eval: com.axelor.apps.timecard.db.repo.TimecardLineRepository.TYPE_CONTRACTUAL" if="isContractual"/>
     </action-record>
+
+    <action-attrs name="action-timecard-line-attrs-show-suggestions">
+        <attribute for="suggestionOffPanel" name="hidden" expr="true"/>
+        <attribute for="suggestionOnPanel" name="hidden" expr="false"/>
+        <attribute for="$employeeSuggestionList" name="hidden" expr="false"/>
+    </action-attrs>
+
+    <action-method name="action-timecard-line-method-show-suggestions">
+        <call class="com.axelor.apps.timecard.web.TimecardLineController" method="suggestEmployee"/>
+    </action-method>
+
+    <action-attrs name="action-timecard-line-attrs-hide-suggestions">
+        <attribute for="suggestionOffPanel" name="hidden" expr="false"/>
+        <attribute for="suggestionOnPanel" name="hidden" expr="true"/>
+        <attribute for="$employeeSuggestionList" name="hidden" expr="true"/>
+    </action-attrs>
+
+    <action-attrs name="action-timecard-line-attrs-set-employee-replacing">
+        <attribute for="employee" name="value" expr="eval: employeeSuggestion"/>
+        <attribute for="employeeReplacing" name="value" expr="eval: employeeSuggestion"/>
+    </action-attrs>
+
 </object-views>

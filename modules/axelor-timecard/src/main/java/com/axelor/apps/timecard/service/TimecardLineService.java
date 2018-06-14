@@ -20,12 +20,14 @@ package com.axelor.apps.timecard.service;
 import com.axelor.apps.base.db.Company;
 import com.axelor.apps.hr.db.Employee;
 import com.axelor.apps.project.db.Project;
+import com.axelor.apps.timecard.db.EmployeeSuggestion;
 import com.axelor.apps.timecard.db.TimecardLine;
 import com.axelor.exception.AxelorException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Set;
 import javax.annotation.Nullable;
 
 public interface TimecardLineService {
@@ -78,4 +80,7 @@ public interface TimecardLineService {
 
   /** Returns the code for given {@code typeSelect}. */
   String getTypeSelectCode(String typeSelect);
+
+  /** Returns a set of {@link EmployeeSuggestion} for given arguments. */
+  Set<EmployeeSuggestion> suggestEmployee(Long projectId, Long employeeToReplaceId);
 }
