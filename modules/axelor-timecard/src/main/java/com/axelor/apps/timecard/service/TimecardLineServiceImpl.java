@@ -37,9 +37,11 @@ import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.temporal.WeekFields;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.annotation.Nullable;
@@ -48,13 +50,16 @@ public class TimecardLineServiceImpl implements TimecardLineService {
 
   protected TimecardLineRepository timecardLineRepo;
   protected EmployeeSuggestionRepository employeeSuggestionRepo;
+  protected TimecardService timecardService;
 
   @Inject
   public TimecardLineServiceImpl(
       TimecardLineRepository timecardLineRepo,
-      EmployeeSuggestionRepository employeeSuggestionRepo) {
+      EmployeeSuggestionRepository employeeSuggestionRepo,
+      TimecardService timecardService) {
     this.timecardLineRepo = timecardLineRepo;
     this.employeeSuggestionRepo = employeeSuggestionRepo;
+    this.timecardService = timecardService;
   }
 
   @Override
@@ -305,7 +310,8 @@ public class TimecardLineServiceImpl implements TimecardLineService {
 
   @Override
   @Transactional(rollbackOn = {AxelorException.class, Exception.class})
-  public Set<EmployeeSuggestion> suggestEmployee(Long projectId, Long employeeToReplaceId) {
+  public Set<EmployeeSuggestion> suggestEmployee(
+      Long projectId, Long employeeToReplaceId, @Nullable LocalDate date) {
     List<TimecardLine> timecardLines =
         Beans.get(TimecardLineRepository.class)
             .all()
@@ -335,6 +341,13 @@ public class TimecardLineServiceImpl implements TimecardLineService {
           timecardLines
               .stream()
               .anyMatch(timecardLine -> timecardLine.getProject().getId().equals(projectId)));
+
+      WeekFields weekFields = WeekFields.of(Locale.getDefault());
+      if (date != null) {
+        employeeSuggestion.setTotalHoursWorked(
+            timecardService.computeWorkedHours(
+                date.getYear(), date.get(weekFields.weekOfWeekBasedYear()), employee));
+      }
 
       employeeSuggestionRepo.save(employeeSuggestion);
       employeeSuggestions.add(employeeSuggestion);

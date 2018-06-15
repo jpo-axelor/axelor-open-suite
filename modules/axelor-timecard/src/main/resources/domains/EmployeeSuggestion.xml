@@ -10,6 +10,7 @@
         <many-to-one name="employee" ref="com.axelor.apps.hr.db.Employee" title="Employee"/>
         <boolean name="hasWorkedOnOneOfTheProjects" title="Has worked on one of the projects"/>
         <boolean name="hasMainEmployementContract" title="Has main employement contract"/>
+        <decimal name="totalHoursWorked" title="Total hours worked"/>
 
     </entity>
 

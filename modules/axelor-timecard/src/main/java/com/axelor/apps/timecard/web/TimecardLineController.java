@@ -300,7 +300,7 @@ public class TimecardLineController {
         Long projectId = ((Integer) ((Map) project).get("id")).longValue();
 
         Set<EmployeeSuggestion> newEmployeeSuggestions =
-            timecardLineService.suggestEmployee(projectId, employeeToReplaceId);
+            timecardLineService.suggestEmployee(projectId, employeeToReplaceId, null);
 
         for (EmployeeSuggestion newES : newEmployeeSuggestions) {
           employeeSuggestions.removeIf(
@@ -324,8 +324,10 @@ public class TimecardLineController {
       Long employeeToReplaceId =
           ((TimecardLine) context.get("absenceTimecardLine")).getEmployee().getId();
       Long projectId = project.getId();
+      LocalDate date = (LocalDate) context.get("date");
 
-      employeeSuggestions = timecardLineService.suggestEmployee(projectId, employeeToReplaceId);
+      employeeSuggestions =
+          timecardLineService.suggestEmployee(projectId, employeeToReplaceId, date);
     }
 
     // Set elements of the view

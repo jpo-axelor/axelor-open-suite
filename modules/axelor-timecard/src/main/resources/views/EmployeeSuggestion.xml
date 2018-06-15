@@ -12,9 +12,34 @@
         <field name="employee.contactPartner.mobilePhone"/>
         <field name="hasWorkedOnOneOfTheProjects"/>
         <field name="hasMainEmployementContract"/>
+        <field name="totalHoursWorked"/>
+    </grid>
+
+    <grid name="employee-suggestion-wizard-grid" title="Employee suggestions" model="com.axelor.apps.timecard.db.EmployeeSuggestion"
+          orderBy="hasAlreadyWorkedOnAllProjects,hasMainEmployementContract">
+        <field name="employee"/>
+        <field name="employee.contactPartner.contactAddress.city.zip"/>
+        <field name="employee.contactPartner.contactAddress.city"/>
+        <field name="employee.contactPartner.fixedPhone"/>
+        <field name="employee.contactPartner.mobilePhone"/>
+        <field name="hasWorkedOnOneOfTheProjects"/>
+        <field name="hasMainEmployementContract"/>
     </grid>
 
     <form name="employee-suggestion-form" title="Employee suggestion" model="com.axelor.apps.timecard.db.EmployeeSuggestion">
+        <panel readonly="true">
+            <field name="employee"/>
+            <field name="employee.contactPartner.contactAddress.city.zip" colSpan="3"/>
+            <field name="employee.contactPartner.contactAddress.city" colSpan="3"/>
+            <field name="employee.contactPartner.fixedPhone"/>
+            <field name="employee.contactPartner.mobilePhone"/>
+            <field name="totalHoursWorked" colSpan="4"/>
+            <field name="hasWorkedOnOneOfTheProjects" colSpan="4"/>
+            <field name="hasMainEmployementContract" colSpan="4"/>
+        </panel>
+    </form>
+
+    <form name="employee-suggestion-wizard-form" title="Employee suggestion" model="com.axelor.apps.timecard.db.EmployeeSuggestion">
         <panel readonly="true">
             <field name="employee"/>
             <field name="employee.contactPartner.contactAddress.city.zip" colSpan="3"/>

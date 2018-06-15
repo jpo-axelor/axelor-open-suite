@@ -30,11 +30,11 @@
             <field name="project" domain="self.statusSelect = 2" canEdit="false"/>
             <panel stacked="true">
                 <panel name="suggestionOffPanel">
-                    <field name="employee" canEdit="true" required="true" onChange="action-timecard-line-method-compute-night-hours"/>
+                    <field name="employee" canEdit="false" required="true" onChange="action-timecard-line-method-compute-night-hours"/>
                     <button name="suggestEmployeeBtn" title="Suggest employee" icon="fa-refresh" css="btn-custom" onClick="action-timecard-line-method-show-suggestions,action-timecard-line-attrs-show-suggestions" showIf="isSubstitution &amp;&amp; !$readonly()"/>
                 </panel>
                 <panel name="suggestionOnPanel" hidden="true">
-                    <field name="$employeeSuggestion" title="Employee suggestion" canEdit="true" widget="ManyToOne" target="com.axelor.apps.hr.db.Employee" onChange="action-timecard-line-attrs-set-employee-replacing,action-timecard-line-attrs-hide-suggestions"/>
+                    <field name="$employeeSuggestion" title="Employee suggestion" canEdit="false" widget="ManyToOne" target="com.axelor.apps.hr.db.Employee" onChange="action-timecard-line-attrs-set-employee-replacing,action-timecard-line-attrs-hide-suggestions"/>
                     <button name="cancelSuggestEmployeeBtn" title="Cancel" icon="fa-times" css="btn-custom" onClick="action-timecard-line-attrs-hide-suggestions"/>
                 </panel>
             </panel>
@@ -77,11 +77,11 @@
                     <button name="suggestEmployeeBtn" title="Suggest employee" icon="fa-refresh" css="btn-custom" onClick="action-timecard-line-method-show-suggestions,action-timecard-line-attrs-show-suggestions"/>
                 </panel>
                 <panel name="suggestionOnPanel" hidden="true">
-                    <field name="$employeeSuggestion" title="Employee suggestion" canEdit="true" widget="ManyToOne" target="com.axelor.apps.hr.db.Employee" onChange="action-timecard-line-attrs-set-employee-replacing,action-timecard-line-attrs-hide-suggestions"/>
+                    <field name="$employeeSuggestion" title="Employee suggestion" canEdit="false" widget="ManyToOne" target="com.axelor.apps.hr.db.Employee" onChange="action-timecard-line-attrs-set-employee-replacing,action-timecard-line-attrs-hide-suggestions"/>
                     <button name="cancelSuggestEmployeeBtn" title="Cancel" icon="fa-times" css="btn-custom" onClick="action-timecard-line-attrs-hide-suggestions"/>
                 </panel>
             </panel>
-            <field name="$employeeSuggestionList" widget="OneToMany" target="com.axelor.apps.timecard.db.EmployeeSuggestion" readonly="true" hidden="true" colSpan="12" grid-view="employee-suggestion-grid" form-view="employee-suggestion-form"/>
+            <field name="$employeeSuggestionList" widget="OneToMany" target="com.axelor.apps.timecard.db.EmployeeSuggestion" readonly="true" hidden="true" colSpan="12" grid-view="employee-suggestion-wizard-grid" form-view="employee-suggestion-wizard-form"/>
             <field name="$projects" title="Projects" required="true" widget="TagSelect" target="com.axelor.apps.project.db.Project" canEdit="false" canNew="false" colSpan="12"/>
             <button name="validate" title="Validate" readonlyIf="!$employeeReplacing || !$projects" onClick="action-timecard-line-method-generate-extra-tcl" colOffset="3"/>
         </panel>
@@ -165,7 +165,7 @@
 
     <action-attrs name="action-timecard-line-attrs-set-employee-replacing">
         <attribute for="employee" name="value" expr="eval: employeeSuggestion"/>
-        <attribute for="employeeReplacing" name="value" expr="eval: employeeSuggestion"/>
+        <attribute for="$employeeReplacing" name="value" expr="eval: employeeSuggestion"/>
     </action-attrs>
 
 </object-views>

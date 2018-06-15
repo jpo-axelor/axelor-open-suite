@@ -269,9 +269,10 @@ public class TimecardServiceImpl implements TimecardService {
     return weeks;
   }
 
-  protected BigDecimal computeSupplementaryHours(Timecard timecard, int weekOfYear) {
+  @Override
+  public BigDecimal computeWorkedHours(int year, int weekOfYear, Employee employee) {
     Calendar cal = Calendar.getInstance();
-    cal.set(Calendar.YEAR, timecard.getToDate().getYear());
+    cal.set(Calendar.YEAR, year);
     cal.set(Calendar.WEEK_OF_YEAR, weekOfYear);
 
     cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
@@ -280,14 +281,18 @@ public class TimecardServiceImpl implements TimecardService {
     LocalDate endDate = new Date(cal.getTime().getTime()).toLocalDate();
 
     BigDecimal totalContractual =
-        timecardLineService.getTotalContractualHours(timecard.getEmployee(), startDate, endDate);
-    BigDecimal totalExtra =
-        timecardLineService.getTotalExtraHours(timecard.getEmployee(), startDate, endDate);
+        timecardLineService.getTotalContractualHours(employee, startDate, endDate);
+    BigDecimal totalExtra = timecardLineService.getTotalExtraHours(employee, startDate, endDate);
     BigDecimal totalNotPaidLeaves =
-        timecardLineService.getTotalNotPaidLeavesHours(timecard.getEmployee(), startDate, endDate);
+        timecardLineService.getTotalNotPaidLeavesHours(employee, startDate, endDate);
 
+    return totalContractual.add(totalExtra).subtract(totalNotPaidLeaves);
+  }
+
+  protected BigDecimal computeSupplementaryHours(Timecard timecard, int weekOfYear) {
     BigDecimal total =
-        totalContractual.add(totalExtra).subtract(totalNotPaidLeaves).subtract(new BigDecimal(35));
+        this.computeWorkedHours(timecard.getToDate().getYear(), weekOfYear, timecard.getEmployee());
+    total = total.subtract(new BigDecimal(35));
 
     return total.compareTo(BigDecimal.ZERO) < 0 ? BigDecimal.ZERO : total;
   }

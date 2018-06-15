@@ -17,9 +17,11 @@
  */
 package com.axelor.apps.timecard.service;
 
+import com.axelor.apps.hr.db.Employee;
 import com.axelor.apps.timecard.db.Timecard;
 import com.axelor.apps.timecard.db.TimecardLine;
 import com.axelor.exception.AxelorException;
+import java.math.BigDecimal;
 
 public interface TimecardService {
 
@@ -37,4 +39,9 @@ public interface TimecardService {
 
   /** Validates the given {@link Timecard}. */
   void validate(Timecard timecard) throws AxelorException;
+
+  /**
+   * Computes {@code employee}'s total worked hours for given {@code weekOfYear} of {@code year}.
+   */
+  BigDecimal computeWorkedHours(int year, int weekOfYear, Employee employee);
 }
