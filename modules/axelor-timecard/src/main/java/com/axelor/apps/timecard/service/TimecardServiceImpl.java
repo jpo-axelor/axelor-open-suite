@@ -274,6 +274,7 @@ public class TimecardServiceImpl implements TimecardService {
     Calendar cal = Calendar.getInstance();
     cal.set(Calendar.YEAR, year);
     cal.set(Calendar.WEEK_OF_YEAR, weekOfYear);
+    cal.setFirstDayOfWeek(Calendar.MONDAY);
 
     cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
     LocalDate startDate = new Date(cal.getTime().getTime()).toLocalDate();
