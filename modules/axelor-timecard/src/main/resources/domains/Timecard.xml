@@ -19,6 +19,8 @@
         <date name="refusalDate" title="Refusal date" readonly="true"/>
         <string name="groundForRefusal" title="Ground for refusal" large="true"/>
 
+        <string name="payrollPreparationComment" title="Payroll preparation comment" large="true"/>
+
         <decimal name="complementaryHours" title="Complementary hours" readonly="true"/>
         <decimal name="complementOfHours" title="Complement of hours" readonly="true"/>
         <decimal name="supplementaryHours" title="Supplementary hours" readonly="true"/>
