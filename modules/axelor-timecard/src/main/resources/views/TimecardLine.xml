@@ -42,17 +42,17 @@
             <field name="activity"/>
             <spacer/>
             <field name="weekDay" colSpan="2"/>
-            <field name="date" onChange="action-timecard-line-record-get-week-day" colSpan="2"/>
+            <field name="date" onChange="action-timecard-line-record-get-week-day" colSpan="2" required="true"/>
             <field name="startTime" colSpan="2" onChange="action-timecard-line-record-compute-duration,action-timecard-line-method-compute-night-hours" validIf="startTime &lt; endTime"/>
             <field name="endTime" colSpan="2" onChange="action-timecard-line-record-compute-duration,action-timecard-line-method-compute-night-hours" validIf="startTime &lt; endTime"/>
             <field name="duration" colSpan="2"/>
             <field name="durationNight" colSpan="2"/>
             <spacer/>
-            <field name="leaveLine" title="Leave reason" canEdit="false" onSelect="action-timecard-line-attrs-leaveline-domain" hidden="true" showIf="typeSelect == 'absence'" grid-view="leave-line-grid" form-view="leave-line-form"/>
+            <field name="leaveLine" title="Leave reason" canEdit="false" onSelect="action-timecard-line-attrs-leaveline-domain" hidden="true" requiredIf="typeSelect == 'absence'" showIf="typeSelect == 'absence'" grid-view="leave-line-grid" form-view="leave-line-form"/>
             <field name="leaveRequest" showIf="leaveRequest &amp;&amp; typeSelect == 'absence'" grid-view="leave-request-grid" form-view="leave-request-form"/>
             <field name="comments" colSpan="12" widget="html"/>
             <spacer/>
-            <panel title="Substitutions" showIf="isSubstitution || typeSelect == 'absence'" colSpan="12">
+            <panel title="Substitutions" showIf="isSubstitution || typeSelect == 'absence'" colSpan="12" readonlyIf="id == null">
                 <field name="absenceTimecardLine" showIf="isSubstitution" grid-view="timecard-line-grid" form-view="timecard-line-form"/>
                 <spacer/>
                 <field name="totalSubstitutionHours" showIf="typeSelect == 'absence'"/>
