@@ -82,5 +82,6 @@ public interface TimecardLineService {
   String getTypeSelectCode(String typeSelect);
 
   /** Returns a set of {@link EmployeeSuggestion}s for given arguments. */
-  Set<EmployeeSuggestion> suggestEmployee(Long projectId, Long employeeToReplaceId, @Nullable LocalDate date);
+  Set<EmployeeSuggestion> suggestEmployee(
+      Long projectId, Long employeeToReplaceId, @Nullable LocalDate date);
 }
