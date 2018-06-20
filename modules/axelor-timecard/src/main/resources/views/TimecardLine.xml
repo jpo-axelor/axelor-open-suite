@@ -25,7 +25,7 @@
           onLoad="action-timecard-line-record-update-durations"
           onSave="action-timecard-line-record-update-type-select">
         <panel readonlyIf="typeSelect == 'contractual'">
-            <field name="typeSelect" selection-in="['extra', 'absence']"/>
+            <field name="typeSelect" selection-in="['extra', 'absence']" required="true"/>
             <field name="isContractual" showIf="typeSelect == 'extra' &amp;&amp; isSubstitution" onChange="action-timecard-line-attrs-type-select-readonly"/>
             <field name="project" domain="self.statusSelect = 2" canEdit="false"/>
             <panel stacked="true">
