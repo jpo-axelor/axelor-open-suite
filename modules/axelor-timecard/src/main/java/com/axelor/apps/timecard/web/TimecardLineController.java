@@ -101,6 +101,19 @@ public class TimecardLineController {
     }
 
     Integer employeeId = (Integer) request.getContext().get("_employeeId");
+    if (employeeId == null) {
+      // from 'New' in Timecard O2M
+      Context parentContext = request.getContext().getParent();
+      if (parentContext != null) {
+        Timecard timecard = parentContext.asType(Timecard.class);
+        if (timecard != null) {
+          Employee employee = timecard.getEmployee();
+          if (employee != null) {
+            employeeId = employee.getId().intValue();
+          }
+        }
+      }
+    }
     if (employeeId != null) {
       response.setValue(
           "employee", Beans.get(EmployeeRepository.class).find(Long.valueOf(employeeId)));
