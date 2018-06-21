@@ -19,7 +19,11 @@ package com.axelor.apps.timecard.db.repo;
 
 import com.axelor.apps.timecard.db.Timecard;
 import com.axelor.apps.timecard.db.TimecardLine;
+import com.axelor.exception.AxelorException;
+import com.axelor.exception.db.repo.TraceBackRepository;
+import com.axelor.i18n.I18n;
 import com.axelor.inject.Beans;
+import javax.persistence.PersistenceException;
 
 public class TimecardTimecardRepository extends TimecardRepository {
 
@@ -29,6 +33,19 @@ public class TimecardTimecardRepository extends TimecardRepository {
       for (TimecardLine timecardLine : timecard.getTimecardLineList()) {
         Beans.get(TimecardLineRepository.class).save(timecardLine);
       }
+    }
+
+    if (timecard.getEmployee().getMainEmploymentContract() == null) {
+      throw new PersistenceException(
+          I18n.get(
+              "Please configure a main employement contract for employee "
+                  + timecard.getEmployee().getName()),
+          new AxelorException(
+              timecard,
+              TraceBackRepository.CATEGORY_MISSING_FIELD,
+              I18n.get(
+                  "Please configure a main employement contract for employee "
+                      + timecard.getEmployee().getName())));
     }
 
     return super.save(timecard);
