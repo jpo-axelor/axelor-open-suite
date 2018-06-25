@@ -31,7 +31,10 @@ public interface TimecardService {
   /** Attaches previously (orphan) generated {@link TimecardLine}s to given {@link Timecard}. */
   void attachScheduledTimecardLines(Timecard timecard);
 
-  /** Computes hours in given {@link Timecard}. */
+  /** Computes hours and weekly hours for given {@link Timecard}. */
+  void computeAll(Timecard timecard) throws AxelorException;
+
+  /** Computes hours for given {@link Timecard}. */
   void computeHours(Timecard timecard) throws AxelorException;
 
   /** Computes weekly hours for given {@link Timecard}. */

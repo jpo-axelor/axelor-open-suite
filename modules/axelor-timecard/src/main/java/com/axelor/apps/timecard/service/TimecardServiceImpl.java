@@ -140,6 +140,12 @@ public class TimecardServiceImpl implements TimecardService {
   }
 
   @Override
+  public void computeAll(Timecard timecard) throws AxelorException {
+    this.computeHours(timecard);
+    this.computeWeeklyHours(timecard);
+  }
+
+  @Override
   @Transactional(rollbackOn = {AxelorException.class, Exception.class})
   public void computeHours(Timecard timecard) throws AxelorException {
     /* * *
@@ -368,20 +374,32 @@ public class TimecardServiceImpl implements TimecardService {
   @Override
   @Transactional(rollbackOn = {AxelorException.class, Exception.class})
   public void validate(Timecard timecard) throws AxelorException {
-    List<TimecardLine> timecardLinesAbsence =
+    if (timecard.getEmployee().getDailyWorkHours().compareTo(BigDecimal.ZERO) == 0) {
+      throw new AxelorException(
+          TraceBackRepository.CATEGORY_MISSING_FIELD,
+          I18n.get("Please configure how many hours employee %s works a day."),
+          timecard.getEmployee().getName());
+    }
+
+    List<TimecardLine> abscenceTimecardLines =
         timecard
             .getTimecardLineList()
             .stream()
             .filter(e -> e.getTypeSelect().equals(TimecardLineRepository.TYPE_ABSENCE))
             .collect(Collectors.toList());
 
-    for (TimecardLine absence : timecardLinesAbsence) {
+    for (TimecardLine absence : abscenceTimecardLines) {
       LeaveRequest leaveRequest = absence.getLeaveRequest();
+      if (leaveRequest == null) {
+        continue;
+      }
 
       BigDecimal absenceHours = leaveRequest.getTotalAbsenceHours();
       BigDecimal leaveRequestDuration =
           absenceHours.divide(
-              new BigDecimal(7), absenceHours.scale(), RoundingMode.CEILING); // 7 hours in a day
+              leaveRequest.getUser().getEmployee().getDailyWorkHours(),
+              absenceHours.scale(),
+              RoundingMode.HALF_UP);
 
       Employee employee = leaveRequest.getUser().getEmployee();
       if (employee == null) {

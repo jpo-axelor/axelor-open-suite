@@ -55,8 +55,7 @@ public class TimecardController {
             .find(request.getContext().asType(Timecard.class).getId());
 
     try {
-      Beans.get(TimecardService.class).computeHours(timecard);
-      Beans.get(TimecardService.class).computeWeeklyHours(timecard);
+      Beans.get(TimecardService.class).computeAll(timecard);
     } catch (AxelorException e) {
       TraceBackService.trace(e, "Timecard");
       response.setError(e.getMessage());
