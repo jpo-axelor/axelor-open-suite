@@ -26,7 +26,10 @@
           onSave="action-timecard-line-record-update-type-select">
         <panel readonlyIf="typeSelect == 'contractual'">
             <field name="typeSelect" selection-in="['extra', 'absence']" required="true"/>
-            <field name="isContractual" showIf="typeSelect == 'extra' &amp;&amp; isSubstitution" onChange="action-timecard-line-attrs-type-select-readonly"/>
+            <panel stacked="true">
+                <field name="isContractual" showIf="typeSelect == 'extra' &amp;&amp; isSubstitution" onChange="action-timecard-line-attrs-type-select-readonly"/>
+                <field name="contractualTimecardLine" showIf="typeSelect == 'absence'" requiredIf="typeSelect == 'absence'" onSelect="action-timecard-line-attrs-contractual-tcl-domain"/>
+            </panel>
             <field name="project" domain="self.statusSelect = 2" canEdit="false"/>
             <panel stacked="true">
                 <panel name="suggestionOffPanel">
@@ -166,6 +169,10 @@
     <action-attrs name="action-timecard-line-attrs-set-employee-replacing">
         <attribute for="employee" name="value" expr="eval: employeeSuggestion"/>
         <attribute for="$employeeReplacing" name="value" expr="eval: employeeSuggestion"/>
+    </action-attrs>
+
+    <action-attrs name="action-timecard-line-attrs-contractual-tcl-domain">
+        <attribute for="contractualTimecardLine" name="domain" expr="eval: &quot;self.typeSelect = '${com.axelor.apps.timecard.db.repo.TimecardLineRepository.TYPE_CONTRACTUAL}' AND self.date = :date AND self.employee.id = ${employee?.id}&quot;"/>
     </action-attrs>
 
 </object-views>

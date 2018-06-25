@@ -28,12 +28,15 @@
 
         <boolean name="isDeletable" hidden="true" default="false"/>
 
-        <!-- Remplacements -->
+        <!-- Substitutions -->
         <decimal name="totalSubstitutionHours" title="Substitution duration (hours)" readonly="true"/>
         <one-to-many name="substitutionTimecardLineList" title="Substitution lines" ref="com.axelor.apps.timecard.db.TimecardLine" mappedBy="absenceTimecardLine"/>
         <many-to-one name="absenceTimecardLine" title="Replaces" ref="com.axelor.apps.timecard.db.TimecardLine" readonly="true"/>
         <boolean name="isSubstitution" hidden="true" default="false"/>
         <boolean name="isContractual" title="Contractual"/>
+
+        <!-- Absence -->
+        <many-to-one name="contractualTimecardLine" title="Contractual line" ref="com.axelor.apps.timecard.db.TimecardLine"/>
 
         <finder-method name="findByEmployee" using="employee" all="true"/>
         <finder-method name="findByProject" using="project" all="true"/>
