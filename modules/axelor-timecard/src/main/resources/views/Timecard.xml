@@ -36,11 +36,13 @@
         </panel>
 
         <panel>
-            <field name="company" grid-view="company-grid" form-view="company-form"/>
-            <field name="employee" grid-view="employee-grid" form-view="employee-form" colSpan="4"/>
-            <field name="employee.mainEmploymentContract.monthlyWage" colSpan="2" readonly="true"/>
-            <field name="fromDate"/>
-            <field name="toDate"/>
+            <field name="company" colSpan="4" grid-view="company-grid" form-view="company-form"/>
+            <field name="employee" colSpan="4" grid-view="employee-grid" form-view="employee-form"/>
+            <field name="employee.mainEmploymentContract.monthlyWage" readonly="true" colSpan="4"/>
+
+            <field name="period" onChange="action-timecard-record-set-dates" domain="self.year.company = :company AND self.year.typeSelect = 2 AND self.statusSelect = 1" colSpan="4"/>
+            <field name="fromDate" readonly="true" colSpan="4"/>
+            <field name="toDate" readonly="true" colSpan="4"/>
         </panel>
 
         <panel>
@@ -56,12 +58,12 @@
         <panel-related field="timecardLineList" grid-view="timecard-line-grid" form-view="timecard-line-form"/>
 
         <panel>
-            <field name="payrollPreparationComment" colSpan="12"/>
-            <field name="validatedBy"/>
-            <field name="validationDate"/>
-            <field name="refusedBy"/>
-            <field name="refusalDate"/>
+            <field name="validatedBy" colSpan="3"/>
+            <field name="validationDate" colSpan="3"/>
+            <field name="refusedBy" colSpan="3"/>
+            <field name="refusalDate" colSpan="3"/>
             <field name="groundForRefusal"/>
+            <field name="payrollPreparationComment"/>
         </panel>
 
         <panel-mail>
@@ -142,6 +144,11 @@
 
     <action-record name="action-timecard-record-close" model="com.axelor.apps.timecard.db.Timecard">
         <field name="statusSelect" expr="eval: 4"/>
+    </action-record>
+
+    <action-record name="action-timecard-record-set-dates" model="com.axelor.apps.timecard.db.Timecard">
+        <field name="fromDate" expr="eval: period?.fromDate"/>
+        <field name="toDate" expr="eval: period?.toDate"/>
     </action-record>
 
 </object-views>

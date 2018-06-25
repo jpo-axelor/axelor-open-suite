@@ -8,6 +8,7 @@
     <entity name="Timecard">
 
         <integer name="statusSelect" selection="timecard.timecard.status.select" default="1" readonly="true"/>
+        <many-to-one name="period" title="Period" ref="com.axelor.apps.base.db.Period" required="true"/>
         <many-to-one name="employee" ref="com.axelor.apps.hr.db.Employee" title="Employee" required="true"/>
         <one-to-many name="timecardLineList" ref="com.axelor.apps.timecard.db.TimecardLine" title="Timecard lines" mappedBy="timecard" orphanRemoval="true"/>
         <date name="fromDate" title="From"/>
