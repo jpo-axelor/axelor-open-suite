@@ -8,6 +8,7 @@
     <entity name="AppTimecard" cachable="true" extends="App">
 
         <boolean name="deductLeavesFromTimecard" title="Deduct leaves from timecard"/>
+        <decimal name="thresholdForSupplementaryHours50" title="Threshold for supplementary hours to be counted at 50%" min="0"/>
 
     </entity>
 

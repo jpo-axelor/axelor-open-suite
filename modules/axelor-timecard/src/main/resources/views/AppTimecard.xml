@@ -6,6 +6,7 @@
     <form name="app-timecard-config-form" title="App timecard" model="com.axelor.apps.base.db.AppTimecard" canDelete="false" canNew="false" width="large">
         <panel>
             <field name="deductLeavesFromTimecard" widget="BooleanSwitch"/>
+            <field name="thresholdForSupplementaryHours50"/>
         </panel>
     </form>
 
