@@ -1,0 +1,35 @@
+<?xml version="1.0" ?>
+<domain-models xmlns="http://axelor.com/xml/ns/domain-models"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:schemaLocation="http://axelor.com/xml/ns/domain-models http://axelor.com/xml/ns/domain-models/domain-models_5.0.xsd">
+
+  <module name="human-resource" package="com.axelor.apps.hr.db"/>
+
+  <entity name="PayrollPreparation">
+
+    <string name="statusSelect" selection="payrollpreparation.timecard.status.select" default="1_inprogress"/>
+
+    <decimal name="monthlyWage" title="Monthly wage (hours)"/>
+    <decimal name="complementOfHours" title="Complement of hours"/>
+    <decimal name="complementaryHours" title="Complementary hours"/>
+    <decimal name="complementaryHours25" title="Complementary hours (25%)"/>
+    <decimal name="differential" title="Differential"/>
+
+    <decimal name="supplementaryHours25" title="Supplementary hours (25%)"/>
+    <decimal name="supplementaryHours50" title="Supplementary hours (50%)"/>
+
+    <one-to-many name="leaveSummaryPayrollPrepList" title="Leaves summary" ref="com.axelor.apps.timecard.db.LeaveSummaryPayrollPrep" mappedBy="payrollPreparation"/>
+
+    <decimal name="publicHolidayScheduled" title="Public holiday scheduled (hours)"/>
+    <decimal name="publicHolidayExceptional" title="Public holiday exceptional (hours)"/>
+    <decimal name="nightHoursScheduled" title="Night hours scheduled"/>
+    <decimal name="nightHoursExceptional" title="Night hours exceptional"/>
+    <decimal name="sundayScheduled" title="Sunday scheduled (hours)"/>
+    <decimal name="sundayExceptional" title="Sunday exceptional (hours)"/>
+
+    <decimal name="numberOfBaskets" title="Number of baskets"/>
+
+
+  </entity>
+
+</domain-models>

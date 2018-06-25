@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<domain-models xmlns="http://axelor.com/xml/ns/domain-models"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:schemaLocation="http://axelor.com/xml/ns/domain-models http://axelor.com/xml/ns/domain-models/domain-models_5.0.xsd">
+
+    <module name="timecard" package="com.axelor.apps.timecard.db"/>
+
+    <entity name="LeaveSummaryPayrollPrep">
+
+        <many-to-one name="leaveLine" title="Leave line" ref="com.axelor.apps.hr.db.LeaveLine"/>
+        <date name="fromDate" title="From"/>
+        <date name="toDate" title="To"/>
+        <decimal name="numberOfDays" title="Number of days"/>
+        <decimal name="numberOfHours" title="Number of hours"/>
+
+        <many-to-one name="payrollPreparation" title="Payroll preparation" ref="com.axelor.apps.hr.db.PayrollPreparation"/>
+
+    </entity>
+
+</domain-models>

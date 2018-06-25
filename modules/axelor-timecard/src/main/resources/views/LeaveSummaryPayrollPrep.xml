@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.0.xsd">
+
+  <grid name="leave-summary-payroll-prep-grid" title="Leaves summary" model="com.axelor.apps.timecard.db.LeaveSummaryPayrollPrep">
+    <field name="leaveLine" title="Leave reason"/>
+    <field name="fromDate"/>
+    <field name="toDate"/>
+    <field name="numberOfDays" title="Days"/>
+    <field name="numberOfHours" title="Hours"/>
+  </grid>
+
+  <form name="leave-summary-payroll-prep-form" title="Leave summary" model="com.axelor.apps.timecard.db.LeaveSummaryPayrollPrep">
+    <panel>
+      <field name="leaveLine" title="Leave reason"/>
+      <spacer/>
+      <field name="fromDate" colSpan="3"/>
+      <field name="toDate" colSpan="3"/>
+      <field name="numberOfDays" title="Days" colSpan="3"/>
+      <field name="numberOfHours" title="Hours" colSpan="3"/>
+    </panel>
+  </form>
+
+</object-views>

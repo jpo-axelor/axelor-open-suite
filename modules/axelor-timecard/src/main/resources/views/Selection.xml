@@ -33,6 +33,12 @@
         <option value="absence">Absence</option>
     </selection>
 
+    <selection name="payrollpreparation.timecard.status.select">
+        <option value="1_inprogress">In progress</option>
+        <option value="2_finished">Finished</option>
+        <option value="3_closed">Closed</option>
+    </selection>
+
     <selection name="ihr.batch.action.select" id="timecard.ihr.batch.action.select">
         <option value="6">Timecards generation</option>
     </selection>

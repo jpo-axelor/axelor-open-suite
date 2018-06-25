@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.0.xsd">
+
+  <form name="payroll-preparation-form" id="timecard-payroll-preparation-form" title="Payroll preparation" model="com.axelor.apps.hr.db.PayrollPreparation" width="large">
+    <menubar>
+      <menu title="Tools" icon="fa-wrench" showTitle="true">
+        <item title="Calculate" action="save,action-payroll-preparation-method-calculate"/>
+        <item title="Export payroll preparation" showIf="[2, 3].indexOf($number(statusSelect.split('_')[0])) >= 0" action="save,action-payroll-preparation-method-export"/>
+      </menu>
+    </menubar>
+
+    <panel>
+      <panel colSpan="9">
+        <field name="statusSelect" showTitle="false" widget="NavSelect" selection="payrollpreparation.timecard.status.select" readonly="true" colSpan="12"/>
+
+        <field name="company" onChange="action-payroll-preparation-record-company-onchange" canEdit="false" colSpan="3" grid-view="company-grid" form-view="company-form"/>
+        <field name="period" canEdit="false" canView="false" domain="self.year.typeSelect = 2 AND self.statusSelect = 1 AND self.year.company = :company" colSpan="3" grid-view="period-hr-grid" form-view="period-hr-form"/>
+        <field name="employee" onChange="action-payroll-preparation-record-fill-contract" canNew="false" canEdit="false" colSpan="3" grid-view="employee-grid" form-view="employee-form"/>
+        <field name="employmentContract" domain="self.employee = :employee" canEdit="false" colSpan="3" grid-view="employment-contract-grid" form-view="employment-contract-form"/>
+      </panel>
+      <panel colSpan="3" stacked="true">
+        <button name="finishBtn" title="Finish"/>
+        <button name="closeBtn" title="Close"/>
+      </panel>
+    </panel>
+
+    <panel-tabs>
+      <panel title="Contractual">
+        <field name="monthlyWage"/>
+        <field name="differential"/>
+
+        <field name="complementOfHours" colSpan="3"/>
+        <field name="complementaryHours" colSpan="3"/>
+        <field name="complementaryHours25" colSpan="3"/>
+      </panel>
+
+      <panel title="Supplement">
+        <field name="publicHolidayScheduled" colSpan="4"/>
+        <field name="nightHoursScheduled" colSpan="4"/>
+        <field name="sundayScheduled" colSpan="4"/>
+
+        <field name="publicHolidayExceptional" colSpan="4"/>
+        <field name="nightHoursExceptional" colSpan="4"/>
+        <field name="sundayExceptional" colSpan="4"/>
+      </panel>
+
+      <panel title="Bonuses">
+        <field name="employeeBonusAmount" colSpan="4"/>
+        <field name="supplementaryHours25" colSpan="4"/>
+        <field name="supplementaryHours50" colSpan="4"/>
+
+        <panel-related field="employeeBonusMgtLineList" colSpan="12" canEdit="false" canNew="false" grid-view="employee-bonus-mgt-line-employee-grid"/>
+      </panel>
+
+      <panel title="Leaves">
+        <field name="leaveDuration"/>
+
+        <panel-related field="leaveSummaryPayrollPrepList" colSpan="12" grid-view="leave-summary-payroll-prep-grid" form-view="leave-summary-payroll-prep-form"/>
+      </panel>
+
+      <panel title="Expenses">
+        <field name="expenseAmount"/>
+
+        <panel-related field="expenseList" colSpan="12" canEdit="false" canNew="false" grid-view="expense-payroll-preparation-grid" form-view="expense-form"/>
+
+        <panel-related field="otherCostsEmployeeSet" colSpan="12" canEdit="false"/>
+      </panel>
+
+      <panel title="Miscellaneous">
+        <field name="lunchVoucherNumber" colSpan="3"/>
+        <field name="numberOfBaskets" colSpan="3"/>
+
+        <panel-related field="lunchVoucherMgtLineList" colSpan="12" canEdit="false" canNew="false" grid-view="lunch-voucher-mgt-line-payroll-grid" form-view="lunch-voucher-mgt-line-form"/>
+
+        <field name="comments" colSpan="12"/>
+      </panel>
+
+      <panel title="Export">
+        <field name="exportTypeSelect" readonlyIf="exported" colSpan="3"/>
+        <field name="exported" colSpan="3"/>
+        <field name="exportDate" hidden="true" showIf="exported" colSpan="3"/>
+      </panel>
+    </panel-tabs>
+  </form>
+  
+  <action-method name="action-payroll-preparation-method-calculate">
+    <call class="com.axelor.apps.timecard.web.PayrollPreparationTimecardController" method="calculate"/>
+  </action-method>
+
+</object-views>
