@@ -72,6 +72,13 @@ public class TimecardServiceImpl implements TimecardService {
   }
 
   @Override
+  @Transactional
+  public void close(Timecard timecard) {
+    timecard.setStatusSelect(TimecardRepository.STATUS_CLOSED);
+    timecardRepo.save(timecard);
+  }
+
+  @Override
   @Transactional(rollbackOn = {AxelorException.class, Exception.class})
   public void generateTimecardLines(Timecard timecard) {
     timecardLineRepo

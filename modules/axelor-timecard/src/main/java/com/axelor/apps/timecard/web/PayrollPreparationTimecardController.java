@@ -24,4 +24,14 @@ public class PayrollPreparationTimecardController {
 
     response.setReload(true);
   }
+  
+  public void close(ActionRequest request, ActionResponse response) {
+    PayrollPreparation payrollPrep =
+        Beans.get(PayrollPreparationRepository.class)
+            .find(request.getContext().asType(PayrollPreparation.class).getId());
+
+    Beans.get(PayrollPreparationTimecardServiceImpl.class).close(payrollPrep);
+
+    response.setReload(true);
+  }
 }

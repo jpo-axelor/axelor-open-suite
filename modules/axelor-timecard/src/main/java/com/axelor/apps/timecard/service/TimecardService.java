@@ -25,6 +25,9 @@ import java.math.BigDecimal;
 
 public interface TimecardService {
 
+  /** Closes given {@link Timecard} */
+  void close(Timecard timecard);
+
   /** Generates {@link TimecardLine}s for given {@link Timecard}, after deleting existing ones. */
   void generateTimecardLines(Timecard timecard);
 

@@ -22,7 +22,7 @@
       </panel>
       <panel colSpan="3" stacked="true">
         <button name="finishBtn" title="Finish" onClick="action-payroll-preparation-record-finish,save" showIf="statusSelect == '1_inprogress'"/>
-        <button name="closeBtn" title="Close" onClick="action-payroll-preparation-record-close,save" showIf="statusSelect == '2_finished'"/>
+        <button name="closeBtn" title="Close" onClick="save,action-payroll-preparation-method-close" showIf="statusSelect == '2_finished'"/>
       </panel>
     </panel>
 
@@ -84,7 +84,7 @@
       </panel>
     </panel-tabs>
   </form>
-  
+
   <action-method name="action-payroll-preparation-method-calculate">
     <call class="com.axelor.apps.timecard.web.PayrollPreparationTimecardController" method="calculate"/>
   </action-method>
@@ -93,8 +93,8 @@
     <field name="statusSelect" expr="eval: com.axelor.apps.hr.db.repo.PayrollPreparationRepository.STATUS_FINISHED"/>
   </action-record>
 
-  <action-record name="action-payroll-preparation-record-close" model="com.axelor.apps.hr.db.PayrollPreparation">
-    <field name="statusSelect" expr="eval: com.axelor.apps.hr.db.repo.PayrollPreparationRepository.STATUS_CLOSED"/>
-  </action-record>
+  <action-method name="action-payroll-preparation-method-close">
+    <call class="com.axelor.apps.timecard.web.PayrollPreparationTimecardController" method="close"/>
+  </action-method>
 
 </object-views>

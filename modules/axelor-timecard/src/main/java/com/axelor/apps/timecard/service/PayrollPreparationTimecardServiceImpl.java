@@ -297,4 +297,22 @@ public class PayrollPreparationTimecardServiceImpl extends PayrollPreparationSer
     leaveSummary.setNumberOfDays(
         leaveSummary.getNumberOfHours().divide(dailyWorkHours, RoundingMode.HALF_UP));
   }
+
+  public void close(PayrollPreparation payrollPreparation) {
+    List<Timecard> timecards =
+        Beans.get(TimecardRepository.class)
+            .all()
+            .filter(
+                "self.employee.id = ? AND self.period.id = ?",
+                payrollPreparation.getEmployee().getId(),
+                payrollPreparation.getPeriod().getId())
+            .fetch();
+
+    for (Timecard timecard : timecards) {
+      timecardService.close(timecard);
+    }
+
+    payrollPreparation.setStatusSelect(PayrollPreparationRepository.STATUS_CLOSED);
+    payrollPreparationRepo.save(payrollPreparation);
+  }
 }
