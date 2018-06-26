@@ -7,7 +7,7 @@
     <menubar>
       <menu title="Tools" icon="fa-wrench" showTitle="true">
         <item title="Calculate" action="save,action-payroll-preparation-method-calculate"/>
-        <item title="Export payroll preparation" showIf="[2, 3].indexOf($number(statusSelect.split('_')[0])) >= 0" action="save,action-payroll-preparation-method-export"/>
+        <item title="Export payroll preparation" showIf="[2, 3].indexOf($number(statusSelect.split('_')[0])) &gt;= 0" action="save,action-payroll-preparation-method-export"/>
       </menu>
     </menubar>
 
@@ -21,8 +21,8 @@
         <field name="employmentContract" domain="self.employee = :employee" canEdit="false" colSpan="3" grid-view="employment-contract-grid" form-view="employment-contract-form"/>
       </panel>
       <panel colSpan="3" stacked="true">
-        <button name="finishBtn" title="Finish"/>
-        <button name="closeBtn" title="Close"/>
+        <button name="finishBtn" title="Finish" onClick="action-payroll-preparation-record-finish,save" showIf="statusSelect == '1_inprogress'"/>
+        <button name="closeBtn" title="Close" onClick="action-payroll-preparation-record-close,save" showIf="statusSelect == '2_finished'"/>
       </panel>
     </panel>
 
@@ -88,5 +88,13 @@
   <action-method name="action-payroll-preparation-method-calculate">
     <call class="com.axelor.apps.timecard.web.PayrollPreparationTimecardController" method="calculate"/>
   </action-method>
+
+  <action-record name="action-payroll-preparation-record-finish" model="com.axelor.apps.hr.db.PayrollPreparation">
+    <field name="statusSelect" expr="eval: com.axelor.apps.hr.db.repo.PayrollPreparationRepository.STATUS_FINISHED"/>
+  </action-record>
+
+  <action-record name="action-payroll-preparation-record-close" model="com.axelor.apps.hr.db.PayrollPreparation">
+    <field name="statusSelect" expr="eval: com.axelor.apps.hr.db.repo.PayrollPreparationRepository.STATUS_CLOSED"/>
+  </action-record>
 
 </object-views>

@@ -29,6 +29,14 @@
 
     <decimal name="numberOfBaskets" title="Number of baskets"/>
 
+    <extra-code>
+      <![CDATA[
+      // STATUS SELECT
+      public static final String STATUS_IN_PROGRESS = "1_inprogress";
+      public static final String STATUS_FINISHED = "2_finished";
+      public static final String STATUS_CLOSED = "3_closed";
+      ]]>
+    </extra-code>
 
   </entity>
 
