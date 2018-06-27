@@ -46,6 +46,9 @@ public interface TimecardService {
   /** Validates the given {@link Timecard}. */
   void validate(Timecard timecard) throws AxelorException;
 
+  /** Refuses the given {@link Timecard}. */
+  void refuse(Timecard timecard);
+
   /**
    * Computes {@code employee}'s total worked hours for given {@code weekOfYear} of {@code year}.
    */

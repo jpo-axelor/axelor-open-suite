@@ -45,6 +45,14 @@ public class TimecardTimecardRepository extends TimecardRepository {
                       + timecard.getEmployee().getName())));
     }
 
+    // Compute full name
+    timecard.setFullName(
+        I18n.get("Timecard")
+            + " - "
+            + timecard.getEmployee().getName()
+            + " - "
+            + timecard.getPeriod().getName());
+
     return super.save(timecard);
   }
 }

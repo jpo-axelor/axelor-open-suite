@@ -78,4 +78,12 @@ public class TimecardController {
 
     response.setReload(true);
   }
+
+  public void refuse(ActionRequest request, ActionResponse response) {
+    Timecard timecard =
+        Beans.get(TimecardRepository.class)
+            .find(request.getContext().asType(Timecard.class).getId());
+
+    Beans.get(TimecardService.class).refuse(timecard);
+  }
 }

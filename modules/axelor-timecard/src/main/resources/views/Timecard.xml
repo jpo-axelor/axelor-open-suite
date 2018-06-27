@@ -24,25 +24,53 @@
             </menu>
         </menubar>
 
-        <panel>
-            <field name="statusSelect" widget="NavSelect" showTitle="false" colSpan="8"/>
-            <panel colSpan="4" stacked="true">
-                <button name="sendBtn" title="Send" onClick="action-timecard-group-send"/>
-                <button name="validateBtn" title="Validate" onClick="action-timecard-group-validate"/>
-                <button name="cancelBtn" title="Cancel" onClick="action-timecard-group-cancel"/>
-                <button name="refuseBtn" title="Refuse" onClick="action-timecard-group-refuse"/>
-                <button name="closeBtn" title="Close" showIf="statusSelect == 3" onClick="action-timecard-group-close"/>
-            </panel>
+        <panel showIf="groundForRefusal">
+            <field name="groundForRefusal" css="red bold" readonly="true" colSpan="12">
+                <viewer>
+                    <![CDATA[(
+                        <h4>{{record.groundForRefusal}}</h4>
+                    ]]>
+                </viewer>
+            </field>
         </panel>
 
         <panel>
-            <field name="company" colSpan="4" grid-view="company-grid" form-view="company-form"/>
-            <field name="employee" colSpan="4" grid-view="employee-grid" form-view="employee-form"/>
-            <field name="employee.mainEmploymentContract.monthlyWage" readonly="true" colSpan="4"/>
+            <panel colSpan="9">
+                <field name="statusSelect" hidden="true"/>
 
-            <field name="period" onChange="action-timecard-record-set-dates" domain="self.year.company = :company AND self.year.typeSelect = 2 AND self.statusSelect = 1" colSpan="4"/>
-            <field name="fromDate" readonly="true" colSpan="4"/>
-            <field name="toDate" readonly="true" colSpan="4"/>
+                <field name="fullName" showTitle="false" css="label-bold bold large" showIf="id" colSpan="9"/>
+                <field name="$statusSelectTag" showTitle="false" colSpan="3" readonly="true">
+                    <viewer>
+                        <![CDATA[
+                            <h4 class="text-right">
+                                <span class="label label-info" style="margin: 5px 0 !important; display: inline-table; line-height: initial;" ng-show="record.statusSelect == 1" x-translate>Draft</span>
+                                <span class="label label-warning" style="margin: 5px 0 !important; display: inline-table; line-height: initial;" ng-show="record.statusSelect == 2" x-translate>Awaiting validation</span>
+                                <span class="label label-success" style="margin: 5px 0 !important; display: inline-table; line-height: initial;" ng-show="record.statusSelect == 3" x-translate>Validated</span>
+                                <span class="label label-success" style="margin: 5px 0 !important; display: inline-table; line-height: initial;" ng-show="record.statusSelect == 4" x-translate>Closed</span>
+                                <span class="label label-important" style="margin: 5px 0 !important; display: inline-table; line-height: initial;" ng-show="record.statusSelect == 5" x-translate>Refused</span>
+                                <span class="label label-important" style="margin: 5px 0 !important; display: inline-table; line-height: initial;" ng-show="record.statusSelect == 6" x-translate>Canceled</span>
+                            </h4>
+                        ]]>
+                    </viewer>
+                </field>
+
+                <field name="company" colSpan="4" grid-view="company-grid" form-view="company-form"/>
+                <field name="employee" colSpan="4" required="true" grid-view="employee-grid" form-view="employee-form"/>
+                <field name="employee.mainEmploymentContract.monthlyWage" readonly="true" colSpan="4"/>
+
+                <field name="period" required="true" onChange="action-timecard-record-set-dates" domain="self.year.company = :company AND self.year.typeSelect = 2 AND self.statusSelect = 1" colSpan="4"/>
+                <field name="fromDate" readonly="true" colSpan="4"/>
+                <field name="toDate" readonly="true" colSpan="4"/>
+            </panel>
+
+            <panel colSpan="3" stacked="true">
+                <button name="sendBtn" title="Send" showIf="statusSelect == 1" onClick="action-timecard-record-send,save"/>
+                <button name="validateBtn" title="Validate" showIf="statusSelect == 2" onClick="save,action-timecard-method-validate"/>
+                <button name="refuseBtn" title="Refuse" showIf="statusSelect == 2" css="btn-danger" onClick="save,action-timecard-view-refuse"/>
+                <button name="cancelBtn" title="Cancel" showIf="[2, 3].indexOf(statusSelect) &gt;= 0" onClick="action-timecard-record-cancel,save"/>
+                <button name="closeBtn" title="Close" showIf="statusSelect == 3" onClick="action-timecard-record-close,save"/>
+                <button name="draftBtn" title="Draft" showIf="[2, 5, 6].indexOf(statusSelect) &gt;= 0" onClick="action-timecard-record-draft,save"/>
+            </panel>
         </panel>
 
         <panel>
@@ -54,16 +82,14 @@
             <panel-related field="weeklyHoursList" colSpan="12" readonly="true" grid-view="weekly-hours-grid" form-view="weekly-hours-form"/>
         </panel>
 
-
         <panel-related field="timecardLineList" grid-view="timecard-line-grid" form-view="timecard-line-form"/>
 
         <panel>
-            <field name="validatedBy" colSpan="3"/>
-            <field name="validationDate" colSpan="3"/>
-            <field name="refusedBy" colSpan="3"/>
-            <field name="refusalDate" colSpan="3"/>
-            <field name="groundForRefusal"/>
-            <field name="payrollPreparationComment"/>
+            <field name="payrollPreparationComment" colSpan="12"/>
+            <field name="validatedBy" showIf="statusSelect == 3"/>
+            <field name="validationDate" showIf="statusSelect == 3"/>
+            <field name="refusedBy" showIf="statusSelect == 5"/>
+            <field name="refusalDate" showIf="statusSelect == 5"/>
         </panel>
 
         <panel-mail>
@@ -71,6 +97,23 @@
             <mail-followers/>
         </panel-mail>
     </form>
+
+    <form name="popup-timecard-refusal-form" title="Ground for refusal" model="com.axelor.apps.timecard.db.Timecard">
+        <panel>
+            <field name="groundForRefusal" showTitle="false" colSpan="12"/>
+            <button name="refuseBtn" title="Refuse" onClick="save,action-timecard-method-refuse,close" readonlyIf="!groundForRefusal.length" colSpan="4" colOffset="4"/>
+        </panel>
+    </form>
+
+    <action-view name="action-timecard-view-refuse" title="Ground for refusal" model="com.axelor.apps.timecard.db.Timecard">
+        <view type="form" name="popup-timecard-refusal-form"/>
+        <view-param name="popup" value="reload"/>
+        <view-param name="popup-save" value="false"/>
+        <view-param name="show-toolbar" value="false"/>
+        <view-param name="show-confirm" value="false"/>
+        <view-param name="forceEdit" value="true"/>
+        <context name="_showRecord" expr="eval: id"/>
+    </action-view>
 
     <action-method name="action-timecard-method-generate-timecard-lines">
         <call class="com.axelor.apps.timecard.web.TimecardController" method="generateTimecardLines"/>
@@ -97,53 +140,28 @@
         <context name="_timecardId" expr="eval: __self__.id"/>
     </action-view>
 
-
-    <action-group name="action-timecard-group-send">
-        <action name="action-timecard-record-send"/>
-    </action-group>
-
-    <action-record name="action-timecard-record-send" model="com.axelor.apps.timecard.db.Timecard">
-        <field name="statusSelect" expr="eval: 2"/>
+    <action-record name="action-timecard-record-draft" model="com.axelor.apps.timecard.db.Timecard">
+        <field name="statusSelect" expr="eval: com.axelor.apps.timecard.db.repo.TimecardRepository.STATUS_DRAFT"/>
     </action-record>
 
-
-    <action-group name="action-timecard-group-validate">
-        <action name="action-timecard-method-validate"/>
-    </action-group>
+    <action-record name="action-timecard-record-send" model="com.axelor.apps.timecard.db.Timecard">
+        <field name="statusSelect" expr="eval: com.axelor.apps.timecard.db.repo.TimecardRepository.STATUS_AWAITING_VALIDATION"/>
+    </action-record>
 
     <action-method name="action-timecard-method-validate">
         <call class="com.axelor.apps.timecard.web.TimecardController" method="validate"/>
     </action-method>
 
-    <action-record name="action-timecard-record-validate" model="com.axelor.apps.timecard.db.Timecard">
-        <field name="statusSelect" expr="eval: 3"/>
+    <action-record name="action-timecard-record-close" model="com.axelor.apps.timecard.db.Timecard">
+        <field name="statusSelect" expr="eval: com.axelor.apps.timecard.db.repo.TimecardRepository.STATUS_CLOSED"/>
     </action-record>
-
-
-    <action-group name="action-timecard-group-cancel">
-        <action name="action-timecard-record-cancel"/>
-    </action-group>
+    
+    <action-method name="action-timecard-method-refuse">
+        <call class="com.axelor.apps.timecard.web.TimecardController" method="refuse"/>
+    </action-method>
 
     <action-record name="action-timecard-record-cancel" model="com.axelor.apps.timecard.db.Timecard">
-        <field name="statusSelect" expr="eval: 6"/>
-    </action-record>
-
-
-    <action-group name="action-timecard-group-refuse">
-        <action name="action-timecard-record-refuse"/>
-    </action-group>
-
-    <action-record name="action-timecard-record-refuse" model="com.axelor.apps.timecard.db.Timecard">
-        <field name="statusSelect" expr="eval: 5"/>
-    </action-record>
-
-
-    <action-group name="action-timecard-group-close">
-        <action name="action-timecard-record-close"/>
-    </action-group>
-
-    <action-record name="action-timecard-record-close" model="com.axelor.apps.timecard.db.Timecard">
-        <field name="statusSelect" expr="eval: 4"/>
+        <field name="statusSelect" expr="eval: com.axelor.apps.timecard.db.repo.TimecardRepository.STATUS_CANCELED"/>
     </action-record>
 
     <action-record name="action-timecard-record-set-dates" model="com.axelor.apps.timecard.db.Timecard">

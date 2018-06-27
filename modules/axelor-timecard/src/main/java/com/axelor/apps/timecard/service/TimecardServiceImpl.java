@@ -17,6 +17,7 @@
  */
 package com.axelor.apps.timecard.service;
 
+import com.axelor.apps.base.service.app.AppBaseService;
 import com.axelor.apps.hr.db.Employee;
 import com.axelor.apps.hr.db.EmploymentContract;
 import com.axelor.apps.hr.db.LeaveLine;
@@ -32,6 +33,7 @@ import com.axelor.apps.timecard.db.WeeklyHours;
 import com.axelor.apps.timecard.db.repo.PlanningLineRepository;
 import com.axelor.apps.timecard.db.repo.TimecardLineRepository;
 import com.axelor.apps.timecard.db.repo.TimecardRepository;
+import com.axelor.auth.AuthUtils;
 import com.axelor.exception.AxelorException;
 import com.axelor.exception.db.repo.TraceBackRepository;
 import com.axelor.i18n.I18n;
@@ -462,7 +464,19 @@ public class TimecardServiceImpl implements TimecardService {
       Beans.get(LeaveLineRepository.class).save(leaveLine);
     }
 
+    timecard.setValidatedBy(AuthUtils.getUser());
+    timecard.setValidationDate(Beans.get(AppBaseService.class).getTodayDate());
     timecard.setStatusSelect(TimecardRepository.STATUS_VALIDATED);
+    timecard.setGroundForRefusal(null);
+    timecardRepo.save(timecard);
+  }
+
+  @Override
+  @Transactional
+  public void refuse(Timecard timecard) {
+    timecard.setRefusedBy(AuthUtils.getUser());
+    timecard.setRefusalDate(Beans.get(AppBaseService.class).getTodayDate());
+    timecard.setStatusSelect(TimecardRepository.STATUS_REFUSED);
     timecardRepo.save(timecard);
   }
 }
