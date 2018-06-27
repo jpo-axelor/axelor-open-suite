@@ -37,9 +37,6 @@ public class TimecardTimecardRepository extends TimecardRepository {
 
     if (timecard.getEmployee().getMainEmploymentContract() == null) {
       throw new PersistenceException(
-          I18n.get(
-              "Please configure a main employement contract for employee "
-                  + timecard.getEmployee().getName()),
           new AxelorException(
               timecard,
               TraceBackRepository.CATEGORY_MISSING_FIELD,
