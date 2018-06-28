@@ -272,6 +272,7 @@ public class TimecardServiceImpl implements TimecardService {
 
     List<Integer> weeks = new ArrayList<>();
     Calendar cal = Calendar.getInstance();
+    cal.setFirstDayOfWeek(Calendar.MONDAY);
     while (currentSunday.isBefore(lastSundayOfMonth) || currentSunday.equals(lastSundayOfMonth)) {
       cal.set(
           currentSunday.getYear(),

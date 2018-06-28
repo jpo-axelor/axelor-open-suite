@@ -12,14 +12,11 @@
     </grid>
 
     <form name="timecard-form" title="Timecard" model="com.axelor.apps.timecard.db.Timecard" width="large">
-        <toolbar>
-            <button name="computeHours" title="Compute hours" onClick="save,action-timecard-method-compute-hours"/>
-        </toolbar>
-
         <menubar>
             <menu title="Tools" icon="fa-wrench">
-                <item title="Generate substitution lines" action="save,action-timecard-view-open-substitution-wizard" readonlyIf="!id"/>
+                <item title="Compute hours" action="save,action-timecard-method-compute-hours"/>
                 <item title="Generate timecard lines" action="save,action-timecard-method-generate-timecard-lines"/>
+                <item title="Generate substitution lines" action="save,action-timecard-view-open-substitution-wizard" readonlyIf="!id"/>
                 <item title="Show calendar" action="save,action-timecard-view-show-calendar"/>
             </menu>
         </menubar>
@@ -39,7 +36,7 @@
                 <field name="statusSelect" hidden="true"/>
 
                 <field name="fullName" showTitle="false" css="label-bold bold large" showIf="id" colSpan="9"/>
-                <field name="$statusSelectTag" showTitle="false" colSpan="3" readonly="true">
+                <field name="$statusSelectTag" showTitle="false" readonly="true" showIf="id" colSpan="3">
                     <viewer>
                         <![CDATA[
                             <h4 class="text-right">
@@ -54,7 +51,7 @@
                     </viewer>
                 </field>
 
-                <field name="company" colSpan="4" grid-view="company-grid" form-view="company-form"/>
+                <field name="company" colSpan="4" required="true" grid-view="company-grid" form-view="company-form"/>
                 <field name="employee" colSpan="4" required="true" grid-view="employee-grid" form-view="employee-form"/>
                 <field name="employee.mainEmploymentContract.monthlyHours" readonly="true" colSpan="4"/>
 
