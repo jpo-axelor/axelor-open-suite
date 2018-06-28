@@ -5,7 +5,7 @@
 
     <form name="planning-form" title="Planning" model="com.axelor.apps.timecard.db.Planning" width="large" canNew="false" canSave="false"
           onNew="action-planning-method-set-defaults"
-          onLoad="action-planning-attrs-refresh-dashlets,action-planning-method-compute-monthly-wage">
+          onLoad="action-planning-attrs-refresh-dashlets,action-planning-method-compute-monthly-hours">
         <menubar>
             <menu title="Tools" icon="fa-wrench">
                 <item title="Preview" action="action-planning-method-preview" readonlyIf="(!project &amp;&amp; !employee) || !startDate || !endDate"/>
@@ -14,11 +14,11 @@
         </menubar>
 
         <panel>
-            <field name="project" canEdit="false" domain="self.statusSelect = 2" onChange="action-planning-attrs-refresh-dashlets,action-planning-method-compute-monthly-wage" grid-view="project-grid" form-view="project-form"/>
-            <field name="employee" canEdit="false" onChange="action-planning-attrs-refresh-dashlets,action-planning-method-compute-monthly-wage" grid-view="employee-grid" form-view="employee-form"/>
-            <field name="startDate" validIf="startDate &lt; endDate" onChange="action-planning-attrs-refresh-dashlets,action-planning-method-compute-monthly-wage" colSpan="4"/>
-            <field name="endDate" validIf="endDate &gt; startDate" onChange="action-planning-attrs-refresh-dashlets,action-planning-method-compute-monthly-wage" colSpan="4"/>
-            <field name="monthlyWage" colSpan="4"/>
+            <field name="project" canEdit="false" domain="self.statusSelect = 2" onChange="action-planning-attrs-refresh-dashlets,action-planning-method-compute-monthly-hours" grid-view="project-grid" form-view="project-form"/>
+            <field name="employee" canEdit="false" onChange="action-planning-attrs-refresh-dashlets,action-planning-method-compute-monthly-hours" grid-view="employee-grid" form-view="employee-form"/>
+            <field name="startDate" validIf="startDate &lt; endDate" onChange="action-planning-attrs-refresh-dashlets,action-planning-method-compute-monthly-hours" colSpan="4"/>
+            <field name="endDate" validIf="endDate &gt; startDate" onChange="action-planning-attrs-refresh-dashlets,action-planning-method-compute-monthly-hours" colSpan="4"/>
+            <field name="monthlyHours" colSpan="4"/>
         </panel>
 
         <panel itemSpan="12" hidden="true" showIf="(project || employee) &amp;&amp; startDate &amp;&amp; endDate">
@@ -53,8 +53,8 @@
         <attribute for="leaveRequestsDashlet" name="refresh" expr="true"/>
     </action-attrs>
 
-    <action-method name="action-planning-method-compute-monthly-wage">
-        <call class="com.axelor.apps.timecard.web.PlanningController" method="computeMonthlyWage"/>
+    <action-method name="action-planning-method-compute-monthly-hours">
+        <call class="com.axelor.apps.timecard.web.PlanningController" method="computeMonthlyHours"/>
     </action-method>
 
     <action-view name="action-planning-view-planning-lines-dashlet-both" title="Planning lines" model="com.axelor.apps.timecard.db.PlanningLine">

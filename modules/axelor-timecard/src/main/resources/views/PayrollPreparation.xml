@@ -28,7 +28,7 @@
 
     <panel-tabs>
       <panel title="Contractual">
-        <field name="monthlyWage"/>
+        <field name="monthlyHours"/>
         <field name="differential"/>
 
         <field name="complementOfHours" colSpan="3"/>

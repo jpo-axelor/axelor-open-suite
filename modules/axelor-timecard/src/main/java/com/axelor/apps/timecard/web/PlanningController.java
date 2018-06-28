@@ -63,31 +63,26 @@ public class PlanningController {
             cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH)));
   }
 
-  /**
-   * Computes the total monthly wage of the {@code Planning} in context.
-   *
-   * @param request
-   * @param response
-   */
-  public void computeMonthlyWage(ActionRequest request, ActionResponse response) {
+  /** Computes the total monthly hours of the {@code Planning} in context. */
+  public void computeMonthlyHours(ActionRequest request, ActionResponse response) {
     PlanningLineService planningLineService = Beans.get(PlanningLineService.class);
 
     Planning planning = request.getContext().asType(Planning.class);
     Project project = planning.getProject();
     Employee employee = planning.getEmployee();
 
-    BigDecimal monthlyWage = BigDecimal.ZERO;
+    BigDecimal monthlyHours = BigDecimal.ZERO;
 
     List<PlanningLine> planningLines = planningLineService.getPlanningLines(project, employee);
     for (PlanningLine planningLine : planningLines) {
-      // update planning line monthly wage
-      planningLineService.computeMonthlyWage(planningLine);
+      // update planning line monthly hours
+      planningLineService.computeMonthlyHours(planningLine);
 
-      // add the PL monthly wage to the total
-      monthlyWage = monthlyWage.add(planningLine.getMonthlyWage());
+      // add the PL monthly hours to the total
+      monthlyHours = monthlyHours.add(planningLine.getMonthlyHours());
     }
 
-    response.setValue("monthlyWage", monthlyWage);
+    response.setValue("monthlyHours", monthlyHours);
   }
 
   /**

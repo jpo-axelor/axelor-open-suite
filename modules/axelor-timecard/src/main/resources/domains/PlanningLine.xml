@@ -12,7 +12,7 @@
         <time name="startTime" title="Start time" required="true"/>
         <time name="endTime" title="End time" required="true"/>
         <many-to-one name="frequency" title="Frequency" ref="com.axelor.apps.timecard.db.Frequency" required="true"/>
-        <decimal name="monthlyWage" title="Monthly wage (hours)" readonly="true"/>
+        <decimal name="monthlyHours" title="Monthly hours" readonly="true"/>
 
         <finder-method name="findByEmployee" using="employee" all="true"/>
         <finder-method name="findByProject" using="project" all="true"/>

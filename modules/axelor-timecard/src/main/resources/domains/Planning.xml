@@ -11,7 +11,7 @@
         <many-to-one name="employee" title="Employee" ref="com.axelor.apps.hr.db.Employee"/>
         <date name="startDate" title="Start date"/>
         <date name="endDate" title="End date"/>
-        <decimal name="monthlyWage" title="Monthly wage (hours)" readonly="true"/>
+        <decimal name="monthlyHours" title="Monthly hours" readonly="true"/>
 
     </entity>
 

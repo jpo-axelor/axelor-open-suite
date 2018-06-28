@@ -51,14 +51,14 @@ public class PlanningLineServiceImpl implements PlanningLineService {
 
   @Override
   @Transactional(rollbackOn = {AxelorException.class, Exception.class})
-  public void computeMonthlyWage(PlanningLine planningLine) {
+  public void computeMonthlyHours(PlanningLine planningLine) {
     Frequency frequency = planningLine.getFrequency();
 
     List<LocalDate> dates = frequencyService.getDates(frequency, null);
 
     double lineDuration =
         Duration.between(planningLine.getStartTime(), planningLine.getEndTime()).toMinutes() / 60.0;
-    planningLine.setMonthlyWage(BigDecimal.valueOf((dates.size() * lineDuration / 12)));
+    planningLine.setMonthlyHours(BigDecimal.valueOf((dates.size() * lineDuration / 12)));
     planningLineRepo.save(planningLine);
   }
 

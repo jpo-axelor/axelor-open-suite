@@ -193,10 +193,10 @@ public class TimecardServiceImpl implements TimecardService {
      * 3) For the period of the Timecard,
      *      compute complement of hours
      *
-     * Formula : complOfHours = extraHoursPeriod - notPaidLeavesHoursPeriod - suppHours - (10% of monthlyWage)
+     * Formula : complOfHours = extraHoursPeriod - notPaidLeavesHoursPeriod - suppHours - (10% of monthlyHours)
      *
      * NB : if 'complOfHours' is negative return 0.
-     * NB : 'monthlyWage' is found in the employee's main employment contract.
+     * NB : 'monthlyHours' is found in the employee's main employment contract.
      * * */
     BigDecimal complementOfHours = this.computeComplementOfHours(timecard, sumSupplementaryHours);
 
@@ -330,18 +330,18 @@ public class TimecardServiceImpl implements TimecardService {
           I18n.get("Please configure a main employement contract for employee %s"),
           timecard.getEmployee().getName());
     }
-    BigDecimal monthlyWage = employmentContract.getMonthlyWage();
-    if (monthlyWage.compareTo(BigDecimal.ZERO) == 0) {
+    BigDecimal monthlyHours = employmentContract.getMonthlyHours();
+    if (monthlyHours.compareTo(BigDecimal.ZERO) == 0) {
       throw new AxelorException(
           employmentContract,
           TraceBackRepository.CATEGORY_MISSING_FIELD,
-          I18n.get("Please add a monthly wage on the main employement contract for employee %s"),
+          I18n.get("Please configure monthly hours on the main employement contract for employee %s"),
           timecard.getEmployee().getName());
     }
-    BigDecimal tenPercentMonthlyWage = monthlyWage.multiply(BigDecimal.valueOf(0.1));
+    BigDecimal tenPercentMonthlyHours = monthlyHours.multiply(BigDecimal.valueOf(0.1));
 
     BigDecimal total =
-        totalExtra.subtract(totalNotPaidLeaves).subtract(suppHours).subtract(tenPercentMonthlyWage);
+        totalExtra.subtract(totalNotPaidLeaves).subtract(suppHours).subtract(tenPercentMonthlyHours);
 
     return total.compareTo(BigDecimal.ZERO) < 0 ? BigDecimal.ZERO : total;
   }

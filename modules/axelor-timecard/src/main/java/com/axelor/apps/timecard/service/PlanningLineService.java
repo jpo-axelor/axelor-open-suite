@@ -25,12 +25,8 @@ import javax.annotation.Nullable;
 
 public interface PlanningLineService {
 
-  /**
-   * Computes monthly wage of given {@link PlanningLine}
-   *
-   * @param planningLine PlanningLine to compute monthly wage
-   */
-  void computeMonthlyWage(PlanningLine planningLine);
+  /** Computes monthly hours of given {@link PlanningLine} */
+  void computeMonthlyHours(PlanningLine planningLine);
 
   /** Retrieves list of PlanningLine for given {@link Project} and {@link Employee} */
   List<PlanningLine> getPlanningLines(@Nullable Project project, @Nullable Employee employee);

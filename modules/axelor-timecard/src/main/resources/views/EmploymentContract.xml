@@ -54,7 +54,7 @@
                 <field name="minMonthlyRemuneration" colSpan="4"/>
                 <field name="annualGrossSalary" colSpan="4"/>
                 <field name="monthlyGlobalCost" colSpan="4"/>
-                <field name="monthlyWage"/>
+                <field name="monthlyHours"/>
                 <panel-related field="otherCostsEmployeeSet" colSpan="12"/>
             </panel>
         </panel>

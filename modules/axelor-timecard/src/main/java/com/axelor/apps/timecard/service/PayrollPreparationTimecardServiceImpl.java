@@ -210,7 +210,7 @@ public class PayrollPreparationTimecardServiceImpl extends PayrollPreparationSer
     }
 
     // Contractual
-    payrollPrep.setMonthlyWage(mainEmploymentContract.getMonthlyWage());
+    payrollPrep.setMonthlyHours(mainEmploymentContract.getMonthlyHours());
     payrollPrep.setComplementOfHours(complementOfHours);
     payrollPrep.setComplementaryHours(complementaryHours);
 

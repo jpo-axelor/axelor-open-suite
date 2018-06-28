@@ -9,7 +9,7 @@
 
     <string name="statusSelect" selection="payrollpreparation.timecard.status.select" default="1_inprogress"/>
 
-    <decimal name="monthlyWage" title="Monthly wage (hours)"/>
+    <decimal name="monthlyHours" title="Monthly hours"/>
     <decimal name="complementOfHours" title="Complement of hours"/>
     <decimal name="complementaryHours" title="Complementary hours"/>
     <decimal name="complementaryHours25" title="Complementary hours (25%)"/>
