@@ -21,14 +21,14 @@
     </grid>
 
     <form name="timecard-line-form" title="Timecard line" model="com.axelor.apps.timecard.db.TimecardLine" width="large"
-          onNew="action-timecard-line-method-set-defaults,action-timecard-line-record-compute-duration"
-          onLoad="action-timecard-line-record-update-durations"
+          onNew="action-timecard-line-method-set-defaults,action-timecard-line-record-compute-duration,action-timecard-line-attrs-required-contractual-timecard-line"
+          onLoad="action-timecard-line-record-update-durations,action-timecard-line-attrs-required-contractual-timecard-line"
           onSave="action-timecard-line-record-update-type-select">
         <panel readonlyIf="typeSelect == 'contractual'">
             <field name="typeSelect" selection-in="['extra', 'absence']" required="true"/>
             <panel stacked="true">
                 <field name="isContractual" showIf="typeSelect == 'extra' &amp;&amp; isSubstitution" onChange="action-timecard-line-attrs-type-select-readonly"/>
-                <field name="contractualTimecardLine" showIf="typeSelect == 'absence'" requiredIf="typeSelect == 'absence'" onSelect="action-timecard-line-attrs-contractual-tcl-domain"/>
+                <field name="contractualTimecardLine" showIf="typeSelect == 'absence'" onSelect="action-timecard-line-attrs-contractual-tcl-domain"/>
             </panel>
             <field name="project" domain="self.statusSelect = 2" canEdit="false"/>
             <panel stacked="true">
@@ -173,6 +173,10 @@
 
     <action-attrs name="action-timecard-line-attrs-contractual-tcl-domain">
         <attribute for="contractualTimecardLine" name="domain" expr="eval: &quot;self.typeSelect = '${com.axelor.apps.timecard.db.repo.TimecardLineRepository.TYPE_CONTRACTUAL}' AND self.date = :date AND self.employee.id = ${employee?.id}&quot;"/>
+    </action-attrs>
+
+    <action-attrs name="action-timecard-line-attrs-required-contractual-timecard-line">
+        <attribute for="contractualTimecardLine" name="required" expr="eval: typeSelect.equals(com.axelor.apps.timecard.db.repo.TimecardLineRepository.TYPE_ABSENCE) &amp;&amp; __parent__?._model.equals('com.axelor.apps.timecard.db.Timecard')"/>
     </action-attrs>
 
 </object-views>
