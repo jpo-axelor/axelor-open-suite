@@ -21,35 +21,26 @@
             </menu>
         </menubar>
 
-        <panel showIf="groundForRefusal">
-            <field name="groundForRefusal" css="red bold" readonly="true" colSpan="12">
-                <viewer>
-                    <![CDATA[(
-                        <h4>{{record.groundForRefusal}}</h4>
-                    ]]>
-                </viewer>
-            </field>
-        </panel>
-
         <panel>
-            <panel colSpan="9">
-                <field name="statusSelect" hidden="true"/>
+            <panel colSpan="12" readonlyIf="[3, 4, 5, 6].indexOf(statusSelect) &gt;= 0">
+                <panel colSpan="12" showIf="id">
+                    <field name="fullName" showTitle="false" css="label-bold bold large" colSpan="9"/>
 
-                <field name="fullName" showTitle="false" css="label-bold bold large" showIf="id" colSpan="9"/>
-                <field name="$statusSelectTag" showTitle="false" readonly="true" showIf="id" colSpan="3">
-                    <viewer>
-                        <![CDATA[
-                            <h4 class="text-right">
-                                <span class="label label-info" style="margin: 5px 0 !important; display: inline-table; line-height: initial;" ng-show="record.statusSelect == 1" x-translate>Draft</span>
-                                <span class="label label-warning" style="margin: 5px 0 !important; display: inline-table; line-height: initial;" ng-show="record.statusSelect == 2" x-translate>Awaiting validation</span>
-                                <span class="label label-success" style="margin: 5px 0 !important; display: inline-table; line-height: initial;" ng-show="record.statusSelect == 3" x-translate>Validated</span>
-                                <span class="label label-success" style="margin: 5px 0 !important; display: inline-table; line-height: initial;" ng-show="record.statusSelect == 4" x-translate>Closed</span>
-                                <span class="label label-important" style="margin: 5px 0 !important; display: inline-table; line-height: initial;" ng-show="record.statusSelect == 5" x-translate>Refused</span>
-                                <span class="label label-important" style="margin: 5px 0 !important; display: inline-table; line-height: initial;" ng-show="record.statusSelect == 6" x-translate>Canceled</span>
-                            </h4>
-                        ]]>
-                    </viewer>
-                </field>
+                    <field name="$statusSelectTag" showTitle="false" readonly="true" colSpan="3">
+                        <viewer>
+                            <![CDATA[
+                                <h4 class="text-right">
+                                    <span class="label label-info" style="margin: 5px 0 !important; display: inline-table; line-height: initial;" ng-show="record.statusSelect == 1" x-translate>Draft</span>
+                                    <span class="label label-warning" style="margin: 5px 0 !important; display: inline-table; line-height: initial;" ng-show="record.statusSelect == 2" x-translate>Awaiting validation</span>
+                                    <span class="label label-success" style="margin: 5px 0 !important; display: inline-table; line-height: initial;" ng-show="record.statusSelect == 3" x-translate>Validated</span>
+                                    <span class="label label-success" style="margin: 5px 0 !important; display: inline-table; line-height: initial;" ng-show="record.statusSelect == 4" x-translate>Closed</span>
+                                    <span class="label label-important" style="margin: 5px 0 !important; display: inline-table; line-height: initial;" ng-show="record.statusSelect == 5" x-translate>Refused</span>
+                                    <span class="label label-important" style="margin: 5px 0 !important; display: inline-table; line-height: initial;" ng-show="record.statusSelect == 6" x-translate>Canceled</span>
+                                </h4>
+                            ]]>
+                        </viewer>
+                    </field>
+                </panel>
 
                 <field name="company" colSpan="4" required="true" grid-view="company-grid" form-view="company-form"/>
                 <field name="employee" colSpan="4" required="true" grid-view="employee-grid" form-view="employee-form"/>
@@ -59,34 +50,52 @@
                 <field name="fromDate" readonly="true" colSpan="4"/>
                 <field name="toDate" readonly="true" colSpan="4"/>
             </panel>
+        </panel>
 
-            <panel colSpan="3" stacked="true">
-                <button name="sendBtn" title="Send" showIf="statusSelect == 1" onClick="action-timecard-record-send,save"/>
-                <button name="validateBtn" title="Validate" showIf="statusSelect == 2" onClick="save,action-timecard-method-validate"/>
-                <button name="refuseBtn" title="Refuse" showIf="statusSelect == 2" css="btn-danger" onClick="save,action-timecard-view-refuse"/>
-                <button name="cancelBtn" title="Cancel" showIf="[2, 3].indexOf(statusSelect) &gt;= 0" onClick="action-timecard-record-cancel,save"/>
-                <button name="closeBtn" title="Close" showIf="statusSelect == 3" onClick="action-timecard-record-close,save"/>
-                <button name="draftBtn" title="Draft" showIf="[2, 5, 6].indexOf(statusSelect) &gt;= 0" onClick="action-timecard-record-draft,save"/>
+        <panel showIf="groundForRefusal">
+            <field name="groundForRefusal" css="red bold" readonly="true" colSpan="12">
+                <viewer>
+                    <![CDATA[
+                        <h4>{{record.groundForRefusal}}</h4>
+                    ]]>
+                </viewer>
+            </field>
+        </panel>
+
+        <panel-tabs>
+            <panel title="Timecard lines">
+                <panel-related field="timecardLineList" readonlyIf="[3, 4, 5, 6].indexOf(statusSelect) &gt;= 0" colSpan="12" grid-view="timecard-line-grid" form-view="timecard-line-form"/>
+
+                <field name="payrollPreparationComment" colSpan="12"/>
             </panel>
-        </panel>
 
-        <panel>
-            <field name="complementaryHours" colSpan="3"/>
-            <field name="complementOfHours" colSpan="3"/>
-            <field name="supplementaryHours" colSpan="3"/>
-            <field name="nightHours" colSpan="3"/>
+            <panel-related field="weeklyHoursList" colSpan="12" readonly="true" readonlyIf="[3, 4, 5, 6].indexOf(statusSelect) &gt;= 0" canNew="false" canEdit="false" canRemove="false" grid-view="weekly-hours-grid" form-view="weekly-hours-form"/>
+        </panel-tabs>
 
-            <panel-related field="weeklyHoursList" colSpan="12" readonly="true" grid-view="weekly-hours-grid" form-view="weekly-hours-form"/>
-        </panel>
-
-        <panel-related field="timecardLineList" grid-view="timecard-line-grid" form-view="timecard-line-form"/>
-
-        <panel>
-            <field name="payrollPreparationComment" colSpan="12"/>
+        <panel showIf="[3, 5].indexOf(statusSelect) &gt;= 0">
             <field name="validatedBy" showIf="statusSelect == 3"/>
             <field name="validationDate" showIf="statusSelect == 3"/>
             <field name="refusedBy" showIf="statusSelect == 5"/>
             <field name="refusalDate" showIf="statusSelect == 5"/>
+        </panel>
+
+        <panel colSpan="3" stacked="true" sidebar="true">
+            <button name="sendBtn" title="Send" showIf="statusSelect == 1" onClick="action-timecard-record-send,save"/>
+            <button name="validateBtn" title="Validate" showIf="statusSelect == 2" onClick="save,action-timecard-method-validate"/>
+            <button name="refuseBtn" title="Refuse" showIf="statusSelect == 2" css="btn-danger" onClick="save,action-timecard-view-refuse"/>
+            <button name="cancelBtn" title="Cancel" showIf="[2, 3].indexOf(statusSelect) &gt;= 0" onClick="action-timecard-record-cancel,save"/>
+            <button name="closeBtn" title="Close" showIf="statusSelect == 3" onClick="action-timecard-record-close,save"/>
+            <button name="draftBtn" title="Draft" showIf="[2, 5, 6].indexOf(statusSelect) &gt;= 0" onClick="action-timecard-record-draft,save"/>
+
+            <!-- needed for tag and buttons -->
+            <field name="statusSelect" hidden="true"/>
+        </panel>
+
+        <panel title="Characteristics" readonlyIf="[3, 4, 5, 6].indexOf(statusSelect) &gt;= 0" sidebar="true">
+            <field name="complementaryHours" colSpan="6"/>
+            <field name="complementOfHours" colSpan="6"/>
+            <field name="supplementaryHours" colSpan="6"/>
+            <field name="nightHours" colSpan="6"/>
         </panel>
 
         <panel-mail>
