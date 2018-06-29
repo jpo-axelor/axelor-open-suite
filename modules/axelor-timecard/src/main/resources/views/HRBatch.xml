@@ -41,7 +41,7 @@
             </panel>
 
             <panel name="payrollPreparationGenerationPage" title="Payroll preparation generation page" hidden="true" showIf="actionSelect == 3">
-                <field name="period" domain="self.year.company = :company AND self.year.typeSelect = 2" colSpan="4" canEdit="false" canView="false"/>
+                <field name="period" domain="self.year.company = :company AND self.year.typeSelect = 2 AND self.statusSelect = 1" colSpan="4" canEdit="false" canView="false"/>
                 <field name="planningSet" grid-view="weekly-planning-grid" form-view="weekly-planning-form" widget="TagSelect" colSpan="8"/>
                 <field name="comments" colSpan="12"/>
                 <panel-related field="employeeSet" target="com.axelor.apps.hr.db.Employee" grid-view="employee-lite-grid" form-view="employee-form" canNew="false" colSpan="12"/>

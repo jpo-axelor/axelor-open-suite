@@ -45,9 +45,8 @@ public class TimecardTimecardRepository extends TimecardRepository {
           new AxelorException(
               timecard,
               TraceBackRepository.CATEGORY_MISSING_FIELD,
-              I18n.get(
-                  "Please configure a main employement contract for employee "
-                      + timecard.getEmployee().getName())));
+              I18n.get("Please configure a main employement contract for employee %s."),
+              timecard.getEmployee().getName()));
     }
 
     // Compute full name

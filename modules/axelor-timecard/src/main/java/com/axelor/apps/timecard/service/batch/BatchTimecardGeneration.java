@@ -18,7 +18,9 @@
 package com.axelor.apps.timecard.service.batch;
 
 import com.axelor.apps.base.db.Company;
+import com.axelor.apps.base.db.Period;
 import com.axelor.apps.base.db.repo.CompanyRepository;
+import com.axelor.apps.base.db.repo.PeriodRepository;
 import com.axelor.apps.hr.db.Employee;
 import com.axelor.apps.hr.db.HrBatch;
 import com.axelor.apps.hr.service.batch.BatchStrategy;
@@ -29,10 +31,10 @@ import com.axelor.db.JPA;
 import com.axelor.exception.AxelorException;
 import com.axelor.exception.db.repo.TraceBackRepository;
 import com.axelor.exception.service.TraceBackService;
+import com.axelor.i18n.I18n;
 import com.axelor.inject.Beans;
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
-import java.time.LocalDate;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -40,21 +42,23 @@ public class BatchTimecardGeneration extends BatchStrategy {
 
   protected Set<Long> employeeIds;
   protected Long companyId;
-  protected LocalDate startPeriod;
-  protected LocalDate endPeriod;
+  protected Long periodId;
 
   protected TimecardRepository timecardRepo;
   protected TimecardService timecardService;
   protected CompanyRepository companyRepo;
+  protected PeriodRepository periodRepo;
 
   @Inject
   public BatchTimecardGeneration(
       TimecardRepository timecardRepo,
       TimecardService timecardService,
-      CompanyRepository companyRepo) {
+      CompanyRepository companyRepo,
+      PeriodRepository periodRepo) {
     this.timecardRepo = timecardRepo;
     this.timecardService = timecardService;
     this.companyRepo = companyRepo;
+    this.periodRepo = periodRepo;
   }
 
   @Override
@@ -69,12 +73,11 @@ public class BatchTimecardGeneration extends BatchStrategy {
     Company company = hrBatch.getCompany();
     if (company == null) {
       throw new AxelorException(
-          batch, TraceBackRepository.CATEGORY_MISSING_FIELD, "Le champ 'Société' est manquant.");
+          batch, TraceBackRepository.CATEGORY_MISSING_FIELD, I18n.get("Company is not set."));
     }
     companyId = company.getId();
 
-    startPeriod = hrBatch.getPeriod().getFromDate();
-    endPeriod = hrBatch.getPeriod().getToDate();
+    periodId = hrBatch.getPeriod().getId();
   }
 
   @Override
@@ -82,11 +85,13 @@ public class BatchTimecardGeneration extends BatchStrategy {
     for (Long id : employeeIds) {
       Employee employee = employeeRepository.find(id);
       Company company = companyRepo.find(companyId);
+      Period period = periodRepo.find(periodId);
+
       try {
-        generateTimecard(employee, company);
+        generateTimecard(employee, company, period);
         updateEmployee(employee);
       } catch (Exception e) {
-        TraceBackService.trace(e, "Batch Timecard Generation", batch.getId()); // TODO
+        TraceBackService.trace(e, "Batch Timecard Generation", batch.getId());
         incrementAnomaly();
       } finally {
         JPA.clear();
@@ -96,13 +101,15 @@ public class BatchTimecardGeneration extends BatchStrategy {
 
   @Override
   protected void stop() {
-    String comment = String.format("Il y a eu %s pointages générés.\n", batch.getDone());
+    String comment =
+        String.format(I18n.get("There were %s timecards generated.\n"), batch.getDone());
 
     if (batch.getAnomaly() > 0) {
       comment =
           String.format(
-              "Il y a eu %s anomalies et %s pointages générés.\n",
-              batch.getAnomaly(), batch.getDone());
+              I18n.get("There were %s anomalies and %s timecards generated.\n"),
+              batch.getAnomaly(),
+              batch.getDone());
     }
 
     addComment(comment);
@@ -110,29 +117,25 @@ public class BatchTimecardGeneration extends BatchStrategy {
     super.stop();
   }
 
-  /**
-   * Generates (or updates) timecard for given {@code Employee}.
-   *
-   * @param employee
-   * @param company
-   */
+  /** Generates (or updates) timecard for given {@code Employee}. */
   @Transactional(rollbackOn = {AxelorException.class, Exception.class})
-  protected void generateTimecard(Employee employee, Company company) {
+  protected void generateTimecard(Employee employee, Company company, Period period) {
     Timecard timecard =
         timecardRepo
             .all()
             .filter(
-                "self.employee.id = ? AND self.fromDate = ? AND self.toDate = ?",
+                "self.employee.id = ? AND self.period.id = ?",
                 employee.getId(),
-                startPeriod,
-                endPeriod)
+                periodId)
             .fetchOne();
+
     if (timecard == null) {
       timecard = new Timecard();
       timecard.setCompany(company);
       timecard.setEmployee(employee);
-      timecard.setFromDate(startPeriod);
-      timecard.setToDate(endPeriod);
+      timecard.setPeriod(period);
+      timecard.setFromDate(period.getFromDate());
+      timecard.setToDate(period.getToDate());
     }
 
     timecardService.generateTimecardLines(timecard);
