@@ -359,5 +359,10 @@ public class TimecardLineController {
         "$employeeSuggestion",
         "domain",
         "self.id IN (" + StringUtils.join(employeeSuggestionsIds, ",") + ")");
+
+    // Show suggestions
+    response.setAttr("suggestionOffPanel", "hidden", true);
+    response.setAttr("suggestionOnPanel", "hidden", false);
+    response.setAttr("$employeeSuggestionList", "hidden", false);
   }
 }

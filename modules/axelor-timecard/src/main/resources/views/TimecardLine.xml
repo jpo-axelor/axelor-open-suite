@@ -34,7 +34,7 @@
             <panel stacked="true">
                 <panel name="suggestionOffPanel">
                     <field name="employee" canEdit="false" required="true" onChange="action-timecard-line-method-compute-night-hours"/>
-                    <button name="suggestEmployeeBtn" title="Suggest employee" icon="fa-refresh" css="btn-custom" onClick="action-timecard-line-method-show-suggestions,action-timecard-line-attrs-show-suggestions" showIf="isSubstitution &amp;&amp; !$readonly()"/>
+                    <button name="suggestEmployeeBtn" title="Suggest employee" icon="fa-refresh" css="btn-custom" onClick="action-timecard-line-method-show-suggestions" showIf="isSubstitution &amp;&amp; !$readonly()"/>
                 </panel>
                 <panel name="suggestionOnPanel" hidden="true">
                     <field name="$employeeSuggestion" title="Employee suggestion" canEdit="false" widget="ManyToOne" target="com.axelor.apps.hr.db.Employee" onChange="action-timecard-line-attrs-set-employee-replacing,action-timecard-line-attrs-hide-suggestions"/>
@@ -77,7 +77,7 @@
             <panel stacked="true">
                 <panel name="suggestionOffPanel">
                     <field name="$employeeReplacing" title="Employee replacing" required="true" widget="ManyToOne" target="com.axelor.apps.hr.db.Employee" canEdit="false"/>
-                    <button name="suggestEmployeeBtn" title="Suggest employee" icon="fa-refresh" css="btn-custom" onClick="action-timecard-line-method-show-suggestions,action-timecard-line-attrs-show-suggestions"/>
+                    <button name="suggestEmployeeBtn" title="Suggest employee" icon="fa-refresh" css="btn-custom" onClick="action-timecard-line-method-show-suggestions"/>
                 </panel>
                 <panel name="suggestionOnPanel" hidden="true">
                     <field name="$employeeSuggestion" title="Employee suggestion" canEdit="false" widget="ManyToOne" target="com.axelor.apps.hr.db.Employee" onChange="action-timecard-line-attrs-set-employee-replacing,action-timecard-line-attrs-hide-suggestions"/>
@@ -149,12 +149,6 @@
     <action-record name="action-timecard-line-record-update-type-select" model="com.axelor.apps.timecard.db.TimecardLine">
         <field name="typeSelect" expr="eval: com.axelor.apps.timecard.db.repo.TimecardLineRepository.TYPE_CONTRACTUAL" if="isContractual"/>
     </action-record>
-
-    <action-attrs name="action-timecard-line-attrs-show-suggestions">
-        <attribute for="suggestionOffPanel" name="hidden" expr="true"/>
-        <attribute for="suggestionOnPanel" name="hidden" expr="false"/>
-        <attribute for="$employeeSuggestionList" name="hidden" expr="false"/>
-    </action-attrs>
 
     <action-method name="action-timecard-line-method-show-suggestions">
         <call class="com.axelor.apps.timecard.web.TimecardLineController" method="suggestEmployee"/>
