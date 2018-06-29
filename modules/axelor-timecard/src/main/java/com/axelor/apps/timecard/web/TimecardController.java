@@ -28,18 +28,15 @@ import com.axelor.rpc.ActionResponse;
 
 public class TimecardController {
 
-  /**
-   * Generates {@code TimecardLine}s for {@code Timecard} in context.
-   *
-   * @param request
-   * @param response
-   */
+  /** Generates {@code TimecardLine}s for {@code Timecard} in context. */
   public void generateTimecardLines(ActionRequest request, ActionResponse response) {
     Timecard timecard =
         Beans.get(TimecardRepository.class)
             .find(request.getContext().asType(Timecard.class).getId());
+
     Beans.get(TimecardService.class).generateTimecardLines(timecard);
     Beans.get(TimecardService.class).attachScheduledTimecardLines(timecard);
+
     response.setReload(true);
   }
 

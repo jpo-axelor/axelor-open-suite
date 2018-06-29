@@ -141,6 +141,32 @@ public class TimecardServiceImpl implements TimecardService {
       if (date.equals(startDate)
           || date.equals(endDate)
           || date.isAfter(startDate) && date.isBefore(endDate)) {
+        if (orphanTimecardLine.getTypeSelect().equals(TimecardLineRepository.TYPE_ABSENCE)
+            && orphanTimecardLine.getContractualTimecardLine() == null) {
+          // Bind contractual line with absence line for payroll prep
+          List<TimecardLine> contractualTimecardLineList =
+              timecard
+                  .getTimecardLineList()
+                  .stream()
+                  .filter(
+                      timecardLine ->
+                          timecardLine
+                                  .getTypeSelect()
+                                  .equals(TimecardLineRepository.TYPE_CONTRACTUAL)
+                              && timecardLine.getProject().equals(orphanTimecardLine.getProject())
+                              && timecardLine
+                                  .getStartDateTime()
+                                  .equals(orphanTimecardLine.getStartDateTime())
+                              && timecardLine
+                                  .getEndDateTime()
+                                  .equals(orphanTimecardLine.getEndDateTime()))
+                  .collect(Collectors.toList());
+
+          if (!contractualTimecardLineList.isEmpty()) {
+            orphanTimecardLine.setContractualTimecardLine(contractualTimecardLineList.get(0));
+          }
+        }
+
         timecard.addTimecardLineListItem(orphanTimecardLine);
       }
     }
@@ -336,13 +362,17 @@ public class TimecardServiceImpl implements TimecardService {
       throw new AxelorException(
           employmentContract,
           TraceBackRepository.CATEGORY_MISSING_FIELD,
-          I18n.get("Please configure monthly hours on the main employement contract for employee %s"),
+          I18n.get(
+              "Please configure monthly hours on the main employement contract for employee %s"),
           timecard.getEmployee().getName());
     }
     BigDecimal tenPercentMonthlyHours = monthlyHours.multiply(BigDecimal.valueOf(0.1));
 
     BigDecimal total =
-        totalExtra.subtract(totalNotPaidLeaves).subtract(suppHours).subtract(tenPercentMonthlyHours);
+        totalExtra
+            .subtract(totalNotPaidLeaves)
+            .subtract(suppHours)
+            .subtract(tenPercentMonthlyHours);
 
     return total.compareTo(BigDecimal.ZERO) < 0 ? BigDecimal.ZERO : total;
   }
