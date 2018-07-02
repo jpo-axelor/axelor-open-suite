@@ -54,12 +54,7 @@ import org.apache.commons.lang3.StringUtils;
 
 public class TimecardLineController {
 
-  /**
-   * Set defaults of {@code TimecardLine} in context.
-   *
-   * @param request
-   * @param response
-   */
+  /** Set defaults of {@code TimecardLine} in context. */
   public void setDefaults(ActionRequest request, ActionResponse response) {
     LocalDateTime startDateTime;
     LocalDateTime endDateTime;
@@ -92,6 +87,12 @@ public class TimecardLineController {
           response.setValue("endTime", endDateTime.toLocalTime());
         }
       }
+    }
+
+    Integer timecardId = (Integer) request.getContext().get("_timecardId");
+    if (timecardId != null) {
+      response.setValue(
+          "timecard", Beans.get(TimecardRepository.class).find(Long.valueOf(timecardId)));
     }
 
     Integer projectId = (Integer) request.getContext().get("_projectId");
@@ -133,12 +134,7 @@ public class TimecardLineController {
     }
   }
 
-  /**
-   * Set defaults for substitution wizard form.
-   *
-   * @param request
-   * @param response
-   */
+  /** Set defaults for substitution wizard form. */
   public void setWizardDefaults(ActionRequest request, ActionResponse response) {
     response.setAttr("$projects", "domain", "self.statusSelect = 2");
 
@@ -191,12 +187,7 @@ public class TimecardLineController {
     response.setValue("isContractual", false);
   }
 
-  /**
-   * Generates 'extra' TimecardLines.
-   *
-   * @param request
-   * @param response
-   */
+  /** Generates 'extra' TimecardLines. */
   public void generateExtraTCL(ActionRequest request, ActionResponse response) {
     ProjectRepository projectRepo = Beans.get(ProjectRepository.class);
     EmployeeRepository employeeRepo = Beans.get(EmployeeRepository.class);
@@ -234,12 +225,7 @@ public class TimecardLineController {
             "{0} substitution line have been generated.", total));
   }
 
-  /**
-   * Sets night duration in {@code TimecardLine} in context.
-   *
-   * @param request
-   * @param response
-   */
+  /** Sets night duration in {@code TimecardLine} in context. */
   public void computeNightHours(ActionRequest request, ActionResponse response) {
     Context context = request.getContext();
 
@@ -261,7 +247,7 @@ public class TimecardLineController {
       return;
     }
 
-    try{
+    try {
       response.setValue(
           "durationNight",
           Beans.get(TimecardLineService.class)
@@ -274,12 +260,7 @@ public class TimecardLineController {
     }
   }
 
-  /**
-   * Sets total substitution hours in {@code TimecardLine} in context.
-   *
-   * @param request
-   * @param response
-   */
+  /** Sets total substitution hours in {@code TimecardLine} in context. */
   public void computeSubstitutionsDuration(ActionRequest request, ActionResponse response) {
     TimecardLine timecardLine =
         Beans.get(TimecardLineRepository.class)
@@ -288,12 +269,7 @@ public class TimecardLineController {
     response.setValue("totalSubstitutionHours", total);
   }
 
-  /**
-   * Suggest a list of {@link Employee} based on projects of the context.
-   *
-   * @param request
-   * @param response
-   */
+  /** Suggest a list of {@link Employee} based on projects of the context. */
   public void suggestEmployee(ActionRequest request, ActionResponse response) {
     TimecardLineService timecardLineService = Beans.get(TimecardLineService.class);
     Context context = request.getContext();
