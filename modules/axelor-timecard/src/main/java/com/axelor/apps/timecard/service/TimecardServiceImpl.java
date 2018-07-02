@@ -123,7 +123,7 @@ public class TimecardServiceImpl implements TimecardService {
   }
 
   @Override
-  @Transactional(rollbackOn = {AxelorException.class, Exception.class})
+  @Transactional
   public void attachScheduledTimecardLines(Timecard timecard) {
     List<TimecardLine> orphanTimecardLines =
         timecardLineRepo
@@ -312,7 +312,8 @@ public class TimecardServiceImpl implements TimecardService {
   }
 
   @Override
-  public BigDecimal computeWorkedHours(int year, int weekOfYear, Employee employee) {
+  public BigDecimal computeWorkedHours(
+      Long timecardId, int year, int weekOfYear, Employee employee) {
     Calendar cal = Calendar.getInstance();
     cal.set(Calendar.YEAR, year);
     cal.set(Calendar.WEEK_OF_YEAR, weekOfYear);
@@ -324,17 +325,19 @@ public class TimecardServiceImpl implements TimecardService {
     LocalDate endDate = new Date(cal.getTime().getTime()).toLocalDate();
 
     BigDecimal totalContractual =
-        timecardLineService.getTotalContractualHours(employee, startDate, endDate);
-    BigDecimal totalExtra = timecardLineService.getTotalExtraHours(employee, startDate, endDate);
+        timecardLineService.getTotalContractualHours(timecardId, employee, startDate, endDate);
+    BigDecimal totalExtra =
+        timecardLineService.getTotalExtraHours(timecardId, employee, startDate, endDate);
     BigDecimal totalNotPaidLeaves =
-        timecardLineService.getTotalNotPaidLeavesHours(employee, startDate, endDate);
+        timecardLineService.getTotalNotPaidLeavesHours(timecardId, employee, startDate, endDate);
 
     return totalContractual.add(totalExtra).subtract(totalNotPaidLeaves);
   }
 
   protected BigDecimal computeSupplementaryHours(Timecard timecard, int weekOfYear) {
     BigDecimal total =
-        this.computeWorkedHours(timecard.getToDate().getYear(), weekOfYear, timecard.getEmployee());
+        this.computeWorkedHours(
+            timecard.getId(), timecard.getToDate().getYear(), weekOfYear, timecard.getEmployee());
     total = total.subtract(new BigDecimal(35));
 
     return total.compareTo(BigDecimal.ZERO) < 0 ? BigDecimal.ZERO : total;
@@ -344,10 +347,10 @@ public class TimecardServiceImpl implements TimecardService {
       throws AxelorException {
     BigDecimal totalExtra =
         timecardLineService.getTotalExtraHours(
-            timecard.getEmployee(), timecard.getFromDate(), timecard.getToDate());
+            timecard.getId(), timecard.getEmployee(), timecard.getFromDate(), timecard.getToDate());
     BigDecimal totalNotPaidLeaves =
         timecardLineService.getTotalNotPaidLeavesHours(
-            timecard.getEmployee(), timecard.getFromDate(), timecard.getToDate());
+            timecard.getId(), timecard.getEmployee(), timecard.getFromDate(), timecard.getToDate());
 
     EmploymentContract employmentContract = timecard.getEmployee().getMainEmploymentContract();
     if (employmentContract == null) {
@@ -381,10 +384,10 @@ public class TimecardServiceImpl implements TimecardService {
       Timecard timecard, BigDecimal suppHours, BigDecimal complHours) {
     BigDecimal totalExtra =
         timecardLineService.getTotalExtraHours(
-            timecard.getEmployee(), timecard.getFromDate(), timecard.getToDate());
+            timecard.getId(), timecard.getEmployee(), timecard.getFromDate(), timecard.getToDate());
     BigDecimal totalNotPaidLeaves =
         timecardLineService.getTotalNotPaidLeavesHours(
-            timecard.getEmployee(), timecard.getFromDate(), timecard.getToDate());
+            timecard.getId(), timecard.getEmployee(), timecard.getFromDate(), timecard.getToDate());
 
     return totalExtra.subtract(totalNotPaidLeaves).subtract(suppHours).subtract(complHours);
   }
@@ -403,12 +406,14 @@ public class TimecardServiceImpl implements TimecardService {
 
   protected BigDecimal computeContractualHours(
       Timecard timecard, LocalDate startDate, LocalDate endDate) {
-    return timecardLineService.getTotalContractualHours(timecard.getEmployee(), startDate, endDate);
+    return timecardLineService.getTotalContractualHours(
+        timecard.getId(), timecard.getEmployee(), startDate, endDate);
   }
 
   protected BigDecimal computeAbsenceHours(
       Timecard timecard, LocalDate startDate, LocalDate endDate) {
-    return timecardLineService.getTotalAbsenceHours(timecard.getEmployee(), startDate, endDate);
+    return timecardLineService.getTotalAbsenceHours(
+        timecard.getId(), timecard.getEmployee(), startDate, endDate);
   }
 
   @Override

@@ -52,5 +52,5 @@ public interface TimecardService {
   /**
    * Computes {@code employee}'s total worked hours for given {@code weekOfYear} of {@code year}.
    */
-  BigDecimal computeWorkedHours(int year, int weekOfYear, Employee employee);
+  BigDecimal computeWorkedHours(Long timecardId, int year, int weekOfYear, Employee employee);
 }

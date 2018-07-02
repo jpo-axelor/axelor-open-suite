@@ -64,16 +64,20 @@ public interface TimecardLineService {
       throws AxelorException;
 
   /** Computes and returns total contractual hours for given employee within given range. */
-  BigDecimal getTotalContractualHours(Employee employee, LocalDate startDate, LocalDate endDate);
+  BigDecimal getTotalContractualHours(
+      Long timecardId, Employee employee, LocalDate startDate, LocalDate endDate);
 
   /** Computes and returns total extra hours for given employee within given range. */
-  BigDecimal getTotalExtraHours(Employee employee, LocalDate startDate, LocalDate endDate);
+  BigDecimal getTotalExtraHours(
+      Long timecardId, Employee employee, LocalDate startDate, LocalDate endDate);
 
   /** Computes and returns total absence hours for given employee within given range. */
-  BigDecimal getTotalAbsenceHours(Employee employee, LocalDate startDate, LocalDate endDate);
+  BigDecimal getTotalAbsenceHours(
+      Long timecardId, Employee employee, LocalDate startDate, LocalDate endDate);
 
   /** Computes and returns total 'not paid leaves' hours for given employee within given range. */
-  BigDecimal getTotalNotPaidLeavesHours(Employee employee, LocalDate startDate, LocalDate endDate);
+  BigDecimal getTotalNotPaidLeavesHours(
+      Long timecardId, Employee employee, LocalDate startDate, LocalDate endDate);
 
   /** Returns total substitution hours in given {@link TimecardLine}. */
   BigDecimal getSubstitutionsDuration(TimecardLine timecardLine);

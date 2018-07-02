@@ -24,6 +24,7 @@ import com.axelor.apps.hr.db.HRConfig;
 import com.axelor.apps.hr.db.repo.EmploymentContractRepository;
 import com.axelor.apps.project.db.Project;
 import com.axelor.apps.timecard.db.EmployeeSuggestion;
+import com.axelor.apps.timecard.db.Timecard;
 import com.axelor.apps.timecard.db.TimecardLine;
 import com.axelor.apps.timecard.db.repo.EmployeeSuggestionRepository;
 import com.axelor.apps.timecard.db.repo.TimecardLineRepository;
@@ -208,30 +209,38 @@ public class TimecardLineServiceImpl implements TimecardLineService {
 
   @Override
   public BigDecimal getTotalContractualHours(
-      Employee employee, LocalDate startDate, LocalDate endDate) {
+      Long timecardId, Employee employee, LocalDate startDate, LocalDate endDate) {
     return getTotalHours(
-        employee.getId(), startDate, endDate, TimecardLineRepository.TYPE_CONTRACTUAL);
+        timecardId, employee.getId(), startDate, endDate, TimecardLineRepository.TYPE_CONTRACTUAL);
   }
 
   @Override
-  public BigDecimal getTotalExtraHours(Employee employee, LocalDate startDate, LocalDate endDate) {
-    return getTotalHours(employee.getId(), startDate, endDate, TimecardLineRepository.TYPE_EXTRA);
+  public BigDecimal getTotalExtraHours(
+      Long timecardId, Employee employee, LocalDate startDate, LocalDate endDate) {
+    return getTotalHours(
+        timecardId, employee.getId(), startDate, endDate, TimecardLineRepository.TYPE_EXTRA);
   }
 
   @Override
   public BigDecimal getTotalAbsenceHours(
-      Employee employee, LocalDate startDate, LocalDate endDate) {
-    return getTotalHours(employee.getId(), startDate, endDate, TimecardLineRepository.TYPE_ABSENCE);
+      Long timecardId, Employee employee, LocalDate startDate, LocalDate endDate) {
+    return getTotalHours(
+        timecardId, employee.getId(), startDate, endDate, TimecardLineRepository.TYPE_ABSENCE);
   }
 
   @Override
   public BigDecimal getTotalNotPaidLeavesHours(
-      Employee employee, LocalDate startDate, LocalDate endDate) {
+      Long timecardId, Employee employee, LocalDate startDate, LocalDate endDate) {
     List<TimecardLine> timecardLines =
         timecardLineRepo
             .all()
             .filter(
-                "self.typeSelect = ? AND self.employee.id = ? AND self.date >= ? AND self.date <= ?",
+                "self.timecard.id = ? AND "
+                    + "self.typeSelect = ? AND "
+                    + "self.employee.id = ? AND "
+                    + "self.date >= ? AND "
+                    + "self.date <= ?",
+                timecardId,
                 TimecardLineRepository.TYPE_ABSENCE,
                 employee.getId(),
                 startDate,
@@ -249,12 +258,17 @@ public class TimecardLineServiceImpl implements TimecardLineService {
   }
 
   protected BigDecimal getTotalHours(
-      Long employeeId, LocalDate startDate, LocalDate endDate, String typeLine) {
+      Long timecardId, Long employeeId, LocalDate startDate, LocalDate endDate, String typeLine) {
     List<TimecardLine> timecardLines =
         timecardLineRepo
             .all()
             .filter(
-                "self.typeSelect = ? AND self.employee.id = ? AND self.date >= ? AND self.date <= ?",
+                "self.timecard.id = ? AND "
+                    + "self.typeSelect = ? AND "
+                    + "self.employee.id = ? AND "
+                    + "self.date >= ? AND "
+                    + "self.date <= ?",
+                timecardId,
                 typeLine,
                 employeeId,
                 startDate,
@@ -309,7 +323,7 @@ public class TimecardLineServiceImpl implements TimecardLineService {
   }
 
   @Override
-  @Transactional(rollbackOn = {AxelorException.class, Exception.class})
+  @Transactional
   public Set<EmployeeSuggestion> suggestEmployee(
       Long projectId, Long employeeToReplaceId, @Nullable LocalDate date) {
     List<TimecardLine> timecardLines =
@@ -320,6 +334,9 @@ public class TimecardLineServiceImpl implements TimecardLineService {
 
     Set<Employee> employees =
         timecardLines.stream().map(TimecardLine::getEmployee).collect(Collectors.toSet());
+
+    Set<Timecard> timecards =
+        timecardLines.stream().map(TimecardLine::getTimecard).collect(Collectors.toSet());
 
     Set<EmployeeSuggestion> employeeSuggestions = new HashSet<>();
     for (Employee employee : employees) {
@@ -344,9 +361,19 @@ public class TimecardLineServiceImpl implements TimecardLineService {
 
       WeekFields weekFields = WeekFields.of(Locale.getDefault());
       if (date != null) {
-        employeeSuggestion.setTotalHoursWorked(
-            timecardService.computeWorkedHours(
-                date.getYear(), date.get(weekFields.weekOfWeekBasedYear()), employee));
+        BigDecimal totalHoursWorked = BigDecimal.ZERO;
+
+        for (Timecard timecard : timecards) {
+          totalHoursWorked =
+              totalHoursWorked.add(
+                  timecardService.computeWorkedHours(
+                      timecard.getId(),
+                      date.getYear(),
+                      date.get(weekFields.weekOfWeekBasedYear()),
+                      employee));
+        }
+
+        employeeSuggestion.setTotalHoursWorked(totalHoursWorked);
       }
 
       employeeSuggestionRepo.save(employeeSuggestion);
