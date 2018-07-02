@@ -31,7 +31,8 @@ public class TimecardTimecardRepository extends TimecardRepository {
   public Timecard save(Timecard timecard) {
     if (timecard.getTimecardLineList() != null) {
       for (TimecardLine timecardLine : timecard.getTimecardLineList()) {
-        if (timecardLine.getTypeSelect().equals(TimecardLineRepository.TYPE_ABSENCE)
+        if (timecardLine.getTimecard() != null
+            && timecardLine.getTypeSelect().equals(TimecardLineRepository.TYPE_ABSENCE)
             && timecardLine.getContractualTimecardLine() == null) {
           throw new PersistenceException(
               I18n.get("There are still absence lines with no bound contractual line."));

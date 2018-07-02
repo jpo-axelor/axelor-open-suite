@@ -81,6 +81,24 @@ public class TimecardServiceImpl implements TimecardService {
   }
 
   @Override
+  @Transactional
+  public void detachAbsenceTimecardLines(Timecard timecard) {
+    List<TimecardLine> absenceTLs =
+        timecard
+            .getTimecardLineList()
+            .stream()
+            .filter(tl -> tl.getTypeSelect().equals(TimecardLineRepository.TYPE_ABSENCE))
+            .collect(Collectors.toList());
+
+    for (TimecardLine absenceTL : absenceTLs) {
+      absenceTL.setContractualTimecardLine(null);
+      absenceTL.setTimecard(null); // detach absence from Timecard in order to be able to relink it later
+    }
+
+    timecardRepo.save(timecard);
+  }
+
+  @Override
   @Transactional(rollbackOn = {AxelorException.class, Exception.class})
   public void generateTimecardLines(Timecard timecard) {
     timecardLineRepo
@@ -145,14 +163,16 @@ public class TimecardServiceImpl implements TimecardService {
             && orphanTimecardLine.getContractualTimecardLine() == null) {
           // Bind contractual line with absence line for payroll prep
           List<TimecardLine> contractualTimecardLineList =
-              timecard
-                  .getTimecardLineList()
+              timecardLineRepo
+                  .all()
+                  .fetch()
                   .stream()
                   .filter(
                       timecardLine ->
                           timecardLine
                                   .getTypeSelect()
                                   .equals(TimecardLineRepository.TYPE_CONTRACTUAL)
+                              && timecardLine.getTimecard().getId().equals(timecard.getId())
                               && timecardLine.getProject().equals(orphanTimecardLine.getProject())
                               && timecardLine
                                   .getStartDateTime()

@@ -31,6 +31,9 @@ public interface TimecardService {
   /** Generates {@link TimecardLine}s for given {@link Timecard}, after deleting existing ones. */
   void generateTimecardLines(Timecard timecard);
 
+  /** Detaches absence {@link TimecardLine}s of given {@link Timecard}. */
+  void detachAbsenceTimecardLines(Timecard timecard);
+
   /** Attaches previously (orphan) generated {@link TimecardLine}s to given {@link Timecard}. */
   void attachScheduledTimecardLines(Timecard timecard);
 

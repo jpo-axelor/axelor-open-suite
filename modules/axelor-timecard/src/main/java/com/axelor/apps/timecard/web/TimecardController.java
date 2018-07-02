@@ -34,6 +34,7 @@ public class TimecardController {
         Beans.get(TimecardRepository.class)
             .find(request.getContext().asType(Timecard.class).getId());
 
+    Beans.get(TimecardService.class).detachAbsenceTimecardLines(timecard);
     Beans.get(TimecardService.class).generateTimecardLines(timecard);
     Beans.get(TimecardService.class).attachScheduledTimecardLines(timecard);
 
