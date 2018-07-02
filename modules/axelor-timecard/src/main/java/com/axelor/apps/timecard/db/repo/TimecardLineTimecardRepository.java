@@ -21,6 +21,7 @@ import com.axelor.apps.hr.db.Employee;
 import com.axelor.apps.project.db.Project;
 import com.axelor.apps.timecard.db.TimecardLine;
 import com.axelor.apps.timecard.service.TimecardLineService;
+import com.axelor.exception.AxelorException;
 import com.axelor.i18n.I18n;
 import com.axelor.inject.Beans;
 import java.math.BigDecimal;
@@ -71,11 +72,15 @@ public class TimecardLineTimecardRepository extends TimecardLineRepository {
         timecardLine.setDurationNight(
             timecardLineService.getDurationNight(
                 startTime, endTime, employee.getMainEmploymentContract().getPayCompany()));
-      } catch (NullPointerException npe) {
+      } catch (NullPointerException e) {
         throw new PersistenceException(
             I18n.get(
-                "Please configure a main employement contract for employee " + employee.getName()),
-            npe);
+                "Please configure a main employement contract for employee "
+                    + employee.getName()
+                    + "."),
+            e);
+      } catch (AxelorException e) {
+        throw new PersistenceException(e);
       }
     }
 

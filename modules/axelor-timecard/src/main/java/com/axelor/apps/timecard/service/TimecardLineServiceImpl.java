@@ -108,11 +108,18 @@ public class TimecardLineServiceImpl implements TimecardLineService {
   }
 
   @Override
-  public BigDecimal getDurationNight(LocalTime startTime, LocalTime endTime, Company payCompany) {
+  public BigDecimal getDurationNight(LocalTime startTime, LocalTime endTime, Company payCompany) throws AxelorException {
     if (startTime != null && endTime != null) {
       HRConfig hrConfig = payCompany.getHrConfig();
       LocalTime startNight = hrConfig.getStartNightHours();
       LocalTime endNight = hrConfig.getEndNightHours();
+
+      if (startNight == null || endNight == null) {
+        throw new AxelorException(
+            TraceBackRepository.CATEGORY_MISSING_FIELD,
+            I18n.get("Please configure start and end of night hours in HR config of company %s."),
+            payCompany.getName());
+      }
 
       LocalTime start = LocalTime.now();
       LocalTime end = LocalTime.now();

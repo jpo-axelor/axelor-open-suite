@@ -261,13 +261,17 @@ public class TimecardLineController {
       return;
     }
 
-    response.setValue(
-        "durationNight",
-        Beans.get(TimecardLineService.class)
-            .getDurationNight(
-                (LocalTime) context.get("startTime"),
-                (LocalTime) context.get("endTime"),
-                employee.getMainEmploymentContract().getPayCompany()));
+    try{
+      response.setValue(
+          "durationNight",
+          Beans.get(TimecardLineService.class)
+              .getDurationNight(
+                  (LocalTime) context.get("startTime"),
+                  (LocalTime) context.get("endTime"),
+                  employee.getMainEmploymentContract().getPayCompany()));
+    } catch (AxelorException e) {
+      TraceBackService.trace(response, e);
+    }
   }
 
   /**

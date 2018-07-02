@@ -51,7 +51,8 @@ public interface TimecardLineService {
       @Nullable Project project, @Nullable Employee employee);
 
   /** Returns total duration between night hours range. */
-  BigDecimal getDurationNight(LocalTime startTime, LocalTime endTime, Company payCompany);
+  BigDecimal getDurationNight(LocalTime startTime, LocalTime endTime, Company payCompany)
+      throws AxelorException;
 
   /** Generates 'extra' {@link TimecardLine}s with given arguments. */
   int generateExtraTCL(
