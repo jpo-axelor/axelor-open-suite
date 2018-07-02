@@ -76,7 +76,8 @@ public class PayrollPreparationTimecardServiceImpl extends PayrollPreparationSer
         Beans.get(TimecardRepository.class)
             .all()
             .filter(
-                "self.employee.id = ? AND self.period.id = ?",
+                "self.statusSelect = ? AND self.employee.id = ? AND self.period.id = ?",
+                TimecardRepository.STATUS_VALIDATED,
                 payrollPrep.getEmployee().getId(),
                 payrollPrep.getPeriod().getId())
             .fetch();
@@ -115,13 +116,17 @@ public class PayrollPreparationTimecardServiceImpl extends PayrollPreparationSer
         // Supplement: Public holiday & Night hours & Sunday hours
         if (timecardLine.getTypeSelect().equals(TimecardLineRepository.TYPE_CONTRACTUAL)) {
           try {
-            this.doOperations(
+            BigDecimal[] result = this.doOperations(
                 "add",
                 timecardLine,
                 employeePublicHolidays,
                 publicHolidayScheduled,
                 nightHoursScheduled,
                 sundayScheduled);
+
+            publicHolidayScheduled = result[0];
+            nightHoursScheduled = result[1];
+            sundayScheduled = result[2];
           } catch (Exception e) {
             TraceBackService.trace(e);
           }
@@ -134,13 +139,17 @@ public class PayrollPreparationTimecardServiceImpl extends PayrollPreparationSer
 
           for (TimecardLine absenceTimecardLine : absenceTimecardLines) {
             try {
-              this.doOperations(
+              BigDecimal[] result = this.doOperations(
                   "subtract",
                   absenceTimecardLine,
                   employeePublicHolidays,
                   publicHolidayScheduled,
                   nightHoursScheduled,
                   sundayScheduled);
+
+              publicHolidayScheduled = result[0];
+              nightHoursScheduled = result[1];
+              sundayScheduled = result[2];
             } catch (Exception e) {
               TraceBackService.trace(e);
             }
@@ -148,13 +157,17 @@ public class PayrollPreparationTimecardServiceImpl extends PayrollPreparationSer
 
         } else if (timecardLine.getTypeSelect().equals(TimecardLineRepository.TYPE_EXTRA)) {
           try {
-            this.doOperations(
+            BigDecimal[] result = this.doOperations(
                 "add",
                 timecardLine,
                 employeePublicHolidays,
                 publicHolidayExceptional,
                 nightHoursExceptional,
                 sundayExceptional);
+
+            publicHolidayExceptional = result[0];
+            nightHoursExceptional = result[1];
+            sundayExceptional = result[2];
           } catch (Exception e) {
             TraceBackService.trace(e);
           }
@@ -262,7 +275,7 @@ public class PayrollPreparationTimecardServiceImpl extends PayrollPreparationSer
     Beans.get(PayrollPreparationRepository.class).save(payrollPrep);
   }
 
-  protected void doOperations(
+  protected BigDecimal[] doOperations(
       String methodName,
       TimecardLine timecardLine,
       List<LocalDate> employeePublicHolidays,
@@ -281,6 +294,8 @@ public class PayrollPreparationTimecardServiceImpl extends PayrollPreparationSer
     if (timecardLine.getWeekDay().equals(DayOfWeek.SUNDAY.getValue())) {
       sunday = (BigDecimal) method.invoke(sunday, timecardLine.getDuration());
     }
+
+    return new BigDecimal[] {publicHoliday, nightHours, sunday};
   }
 
   protected void fillLeaveSummary(

@@ -141,7 +141,7 @@
 "Please cancel all substitution lines before canceling leave request.","Veuillez annuler toutes les lignes de remplacement avant d'annuler la demande de congés",,
 "Please configure a main employement contract for employee","Veuillez configurer un contrat principal sur l'employé(e)",,
 "Please configure a main employement contract for employee %s","Veuillez configurer un contrat principal sur l'employé(e) %s",,
-"Please configure how many hours employee %s works a day.","Veuillez configurer combien d'heures par jour l'employé %s travaille.",,
+"Please configure how many hours employee %s works a day.","Veuillez configurer le nombre d'heures travaillées quotidiennement par l'employé %s.",,
 "Please configure monthly hours on the main employement contract for employee %s","Veuillez configurer la mensualisation du contrat principal de l'employé(e) %s",,
 "Please select a project.","Veuillez choisir un projet.",,
 "Please select at least one project.","Veuillez choisir au moins un projet.",,
