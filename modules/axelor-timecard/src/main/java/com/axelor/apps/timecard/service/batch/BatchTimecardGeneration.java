@@ -123,10 +123,7 @@ public class BatchTimecardGeneration extends BatchStrategy {
     Timecard timecard =
         timecardRepo
             .all()
-            .filter(
-                "self.employee.id = ? AND self.period.id = ?",
-                employee.getId(),
-                periodId)
+            .filter("self.employee.id = ? AND self.period.id = ?", employee.getId(), periodId)
             .fetchOne();
 
     if (timecard == null) {

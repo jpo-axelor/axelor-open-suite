@@ -67,6 +67,7 @@ public class TimecardModule extends AxelorModule {
     bind(HrBatchService.class).to(HrBatchTimecardService.class);
     bind(PayrollPreparationService.class).to(PayrollPreparationTimecardServiceImpl.class);
     bind(PeriodServiceImpl.class).to(PeriodTimecardServiceImpl.class);
-    bind(BatchPayrollPreparationGeneration.class).to(BatchPayrollPreparationTimecardGeneration.class);
+    bind(BatchPayrollPreparationGeneration.class)
+        .to(BatchPayrollPreparationTimecardGeneration.class);
   }
 }

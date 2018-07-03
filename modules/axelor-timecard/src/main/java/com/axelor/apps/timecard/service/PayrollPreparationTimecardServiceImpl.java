@@ -1,3 +1,20 @@
+/*
+ * Axelor Business Solutions
+ *
+ * Copyright (C) 2018 Axelor (<http://axelor.com>).
+ *
+ * This program is free software: you can redistribute it and/or  modify
+ * it under the terms of the GNU Affero General Public License, version 3,
+ * as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.axelor.apps.timecard.service;
 
 import com.axelor.apps.base.db.EventsPlanningLine;
@@ -116,13 +133,14 @@ public class PayrollPreparationTimecardServiceImpl extends PayrollPreparationSer
         // Supplement: Public holiday & Night hours & Sunday hours
         if (timecardLine.getTypeSelect().equals(TimecardLineRepository.TYPE_CONTRACTUAL)) {
           try {
-            BigDecimal[] result = this.doOperations(
-                "add",
-                timecardLine,
-                employeePublicHolidays,
-                publicHolidayScheduled,
-                nightHoursScheduled,
-                sundayScheduled);
+            BigDecimal[] result =
+                this.doOperations(
+                    "add",
+                    timecardLine,
+                    employeePublicHolidays,
+                    publicHolidayScheduled,
+                    nightHoursScheduled,
+                    sundayScheduled);
 
             publicHolidayScheduled = result[0];
             nightHoursScheduled = result[1];
@@ -139,13 +157,14 @@ public class PayrollPreparationTimecardServiceImpl extends PayrollPreparationSer
 
           for (TimecardLine absenceTimecardLine : absenceTimecardLines) {
             try {
-              BigDecimal[] result = this.doOperations(
-                  "subtract",
-                  absenceTimecardLine,
-                  employeePublicHolidays,
-                  publicHolidayScheduled,
-                  nightHoursScheduled,
-                  sundayScheduled);
+              BigDecimal[] result =
+                  this.doOperations(
+                      "subtract",
+                      absenceTimecardLine,
+                      employeePublicHolidays,
+                      publicHolidayScheduled,
+                      nightHoursScheduled,
+                      sundayScheduled);
 
               publicHolidayScheduled = result[0];
               nightHoursScheduled = result[1];
@@ -157,13 +176,14 @@ public class PayrollPreparationTimecardServiceImpl extends PayrollPreparationSer
 
         } else if (timecardLine.getTypeSelect().equals(TimecardLineRepository.TYPE_EXTRA)) {
           try {
-            BigDecimal[] result = this.doOperations(
-                "add",
-                timecardLine,
-                employeePublicHolidays,
-                publicHolidayExceptional,
-                nightHoursExceptional,
-                sundayExceptional);
+            BigDecimal[] result =
+                this.doOperations(
+                    "add",
+                    timecardLine,
+                    employeePublicHolidays,
+                    publicHolidayExceptional,
+                    nightHoursExceptional,
+                    sundayExceptional);
 
             publicHolidayExceptional = result[0];
             nightHoursExceptional = result[1];

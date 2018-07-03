@@ -92,7 +92,8 @@ public class TimecardServiceImpl implements TimecardService {
 
     for (TimecardLine absenceTL : absenceTLs) {
       absenceTL.setContractualTimecardLine(null);
-      absenceTL.setTimecard(null); // detach absence from Timecard in order to be able to relink it later
+      absenceTL.setTimecard(
+          null); // detach absence from Timecard in order to be able to relink it later
     }
 
     timecardRepo.save(timecard);
