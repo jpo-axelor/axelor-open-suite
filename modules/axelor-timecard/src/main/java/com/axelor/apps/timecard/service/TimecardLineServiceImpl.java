@@ -247,7 +247,8 @@ public class TimecardLineServiceImpl implements TimecardLineService {
                     + "self.typeSelect = ? AND "
                     + "self.employee.id = ? AND "
                     + "self.date >= ? AND "
-                    + "self.date <= ?",
+                    + "self.date <= ? AND "
+                    + "self.leaveLine.leaveReason.paidLeave = false",
                 timecardId,
                 TimecardLineRepository.TYPE_ABSENCE,
                 employee.getId(),
