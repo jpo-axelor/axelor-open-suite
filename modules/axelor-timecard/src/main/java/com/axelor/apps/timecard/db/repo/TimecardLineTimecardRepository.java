@@ -67,6 +67,14 @@ public class TimecardLineTimecardRepository extends TimecardLineRepository {
     timecardLine.setDuration(
         BigDecimal.valueOf(Duration.between(startTime, endTime).toMinutes() / 60.0));
 
+    if (timecardLine.getSubstitutionTimecardLineList() != null) {
+      BigDecimal totalSubstitutionsHours = BigDecimal.ZERO;
+      for (TimecardLine line : timecardLine.getSubstitutionTimecardLineList()) {
+        totalSubstitutionsHours = totalSubstitutionsHours.add(line.getDuration());
+      }
+      timecardLine.setTotalSubstitutionHours(totalSubstitutionsHours);
+    }
+
     if (employee != null) {
       try {
         timecardLine.setDurationNight(

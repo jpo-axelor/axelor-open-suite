@@ -46,6 +46,7 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.annotation.Nullable;
+import org.apache.commons.lang3.StringUtils;
 
 public class TimecardLineServiceImpl implements TimecardLineService {
 
@@ -179,11 +180,17 @@ public class TimecardLineServiceImpl implements TimecardLineService {
         timecardLineRepo
             .all()
             .filter(
-                "employee = ? AND date >= ? AND date <= ? AND typeSelect = ?",
-                oldEmployee,
+                "self.employee.id = ? AND "
+                    + "self.date >= ? AND "
+                    + "self.date <= ? AND "
+                    + "self.typeSelect = ? AND "
+                    + "self.project.id IN (?)",
+                oldEmployee.getId(),
                 startDate,
                 endDate,
-                TimecardLineRepository.TYPE_ABSENCE)
+                TimecardLineRepository.TYPE_ABSENCE,
+                StringUtils.join(
+                    projects.stream().map(Project::getId).collect(Collectors.toList()), ','))
             .fetch();
 
     for (TimecardLine timecardLine : timecardLines) {
