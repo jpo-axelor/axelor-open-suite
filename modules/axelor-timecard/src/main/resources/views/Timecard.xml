@@ -4,11 +4,10 @@
               xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.0.xsd">
 
     <grid name="timecard-grid" title="Timecards" model="com.axelor.apps.timecard.db.Timecard">
-        <field name="statusSelect"/>
         <field name="company"/>
         <field name="employee"/>
-        <field name="fromDate"/>
-        <field name="toDate"/>
+        <field name="period"/>
+        <field name="statusSelect"/>
     </grid>
 
     <form name="timecard-form" title="Timecard" model="com.axelor.apps.timecard.db.Timecard" width="large">
