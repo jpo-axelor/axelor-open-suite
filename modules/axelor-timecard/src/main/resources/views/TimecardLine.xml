@@ -41,7 +41,7 @@
                     <button name="cancelSuggestEmployeeBtn" title="Cancel" icon="fa-times" css="btn-custom" onClick="action-timecard-line-attrs-hide-suggestions"/>
                 </panel>
             </panel>
-            <field name="$employeeSuggestionList" widget="OneToMany" target="com.axelor.apps.timecard.db.EmployeeSuggestion" readonly="true" hidden="true" colSpan="12" grid-view="employee-suggestion-grid" form-view="employee-suggestion-form"/>
+            <field name="$employeeSuggestionList" title="Suggestions" widget="OneToMany" target="com.axelor.apps.timecard.db.EmployeeSuggestion" readonly="true" hidden="true" colSpan="12" grid-view="employee-suggestion-grid" form-view="employee-suggestion-form"/>
             <field name="activity"/>
             <spacer/>
             <field name="weekDay" colSpan="2"/>
@@ -84,7 +84,7 @@
                     <button name="cancelSuggestEmployeeBtn" title="Cancel" icon="fa-times" css="btn-custom" onClick="action-timecard-line-attrs-hide-suggestions"/>
                 </panel>
             </panel>
-            <field name="$employeeSuggestionList" widget="OneToMany" target="com.axelor.apps.timecard.db.EmployeeSuggestion" readonly="true" hidden="true" colSpan="12" grid-view="employee-suggestion-wizard-grid" form-view="employee-suggestion-wizard-form"/>
+            <field name="$employeeSuggestionList" title="Suggestions" widget="OneToMany" target="com.axelor.apps.timecard.db.EmployeeSuggestion" readonly="true" hidden="true" colSpan="12" grid-view="employee-suggestion-wizard-grid" form-view="employee-suggestion-wizard-form"/>
             <field name="$projects" title="Projects" required="true" widget="TagSelect" target="com.axelor.apps.project.db.Project" canEdit="false" canNew="false" colSpan="12"/>
             <button name="validate" title="Validate" readonlyIf="!$employeeReplacing || !$projects" onClick="action-timecard-line-method-generate-extra-tcl" colOffset="3"/>
         </panel>
