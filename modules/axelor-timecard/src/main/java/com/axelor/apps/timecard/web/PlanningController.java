@@ -33,6 +33,7 @@ import com.axelor.rpc.ActionResponse;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.List;
 
 public class PlanningController {
@@ -100,10 +101,13 @@ public class PlanningController {
         Beans.get(TempTimecardLineService.class)
             .generateTempTimecardLines(
                 project, employee, planning.getStartDate(), planning.getEndDate());
-    if (tempTimecardLines.size() == 0) {
+    if (tempTimecardLines.isEmpty()) {
       response.setNotify("Pas d'évènements à afficher.");
       return;
     }
+
+    tempTimecardLines.sort(Comparator.comparing(TempTimecardLine::getStartDateTime));
+    LocalDate firstDate = tempTimecardLines.get(0).getStartDateTime().toLocalDate();
 
     ActionViewBuilder actionView = null;
     if (employee != null && project == null) {
@@ -111,20 +115,23 @@ public class PlanningController {
           ActionView.define("Prévisualisation - " + employee.getName())
               .add("calendar", "temp-timecard-line-calendar-by-project")
               .domain("self.employee.id = :_employeeId")
-              .context("_employeeId", employee.getId());
+              .context("_employeeId", employee.getId())
+              .context("calendarDate", firstDate);
     } else if (employee == null && project != null) {
       actionView =
           ActionView.define("Prévisualisation - " + project.getName())
               .add("calendar", "temp-timecard-line-calendar-by-employee")
               .domain("self.project.id = :_projectId")
-              .context("_projectId", project.getId());
+              .context("_projectId", project.getId())
+              .context("calendarDate", firstDate);
     } else if (employee != null && project != null) {
       actionView =
           ActionView.define("Prévisualisation - " + employee.getName())
               .add("calendar", "temp-timecard-line-calendar-by-project")
               .domain("self.employee.id = :_employeeId AND self.project.id = :_projectId")
               .context("_employeeId", employee.getId())
-              .context("_projectId", project.getId());
+              .context("_projectId", project.getId())
+              .context("calendarDate", firstDate);
     }
 
     if (actionView != null) {
