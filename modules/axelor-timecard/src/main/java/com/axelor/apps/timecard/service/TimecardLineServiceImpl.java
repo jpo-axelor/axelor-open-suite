@@ -346,6 +346,7 @@ public class TimecardLineServiceImpl implements TimecardLineService {
 
     Set<Timecard> timecards =
         timecardLines.stream().map(TimecardLine::getTimecard).collect(Collectors.toSet());
+    timecards.remove(null); // remove `null` element
 
     Set<EmployeeSuggestion> employeeSuggestions = new HashSet<>();
     for (Employee employee : employees) {
