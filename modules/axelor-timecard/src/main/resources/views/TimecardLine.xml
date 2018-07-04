@@ -4,8 +4,8 @@
               xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.0.xsd">
 
     <grid name="timecard-line-grid" title="Timecard lines" model="com.axelor.apps.timecard.db.TimecardLine" orderBy="startDateTime">
-        <hilite if="$number(totalSubstitutionHours) &lt; $number(duration) &amp;&amp; typeSelect == 'absence'" color="danger"/>
-        <hilite if="$number(totalSubstitutionHours) &gt;= $number(duration) &amp;&amp; typeSelect == 'absence'" color="warning"/>
+        <hilite if="typeSelect == 'absence' &amp;&amp; $number(totalSubstitutionHours) == 0" color="danger"/>
+        <hilite if="typeSelect == 'absence' &amp;&amp; $number(totalSubstitutionHours) &lt; $number(duration)" color="warning"/>
         <field name="project" readonlyIf="typeSelect == 'contractual'"/>
         <field name="weekDay" readonlyIf="typeSelect == 'contractual'"/>
         <field name="date" readonlyIf="typeSelect == 'contractual'"/>
