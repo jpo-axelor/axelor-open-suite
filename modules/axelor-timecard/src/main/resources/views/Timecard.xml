@@ -62,6 +62,8 @@
         </panel>
 
         <panel-tabs>
+            <panel-dashlet name="planningLinesDashlet" title="Planning lines" action="action-timecard-view-planning-lines-dashlet" showIf="employee" readonly="true"/>
+
             <panel title="Timecard lines">
                 <panel-related field="timecardLineList" readonlyIf="[3, 4, 5, 6].indexOf(statusSelect) &gt;= 0" colSpan="12" grid-view="timecard-line-grid" form-view="timecard-line-form"/>
 
@@ -174,5 +176,14 @@
         <field name="fromDate" expr="eval: period?.fromDate"/>
         <field name="toDate" expr="eval: period?.toDate"/>
     </action-record>
+
+    <action-view name="action-timecard-view-planning-lines-dashlet" title="Planning lines" model="com.axelor.apps.timecard.db.PlanningLine">
+        <view type="grid" name="planning-line-grid"/>
+        <view type="form" name="planning-line-form"/>
+        <view-param name="popup" value="true"/>
+        <view-param name="show-toolbar" value="true"/>
+        <domain>self.employee.id = :_employeeId</domain>
+        <context name="_employeeId" expr="eval: employee.id"/>
+    </action-view>
 
 </object-views>
