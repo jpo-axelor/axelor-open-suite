@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.0.xsd">
+
+    <grid name="project-timecard-grid" title="Sites" model="com.axelor.apps.project.db.Project">
+        <field name="code"/>
+        <field name="name"/>
+        <field name="customer"/>
+        <field name="assignedTo"/>
+        <field name="fromDate"/>
+        <field name="toDate"/>
+    </grid>
+
+    <form name="project-timecard-form" title="Site" model="com.axelor.apps.project.db.Project" width="large"
+          onLoad="action-project-on-load-group"
+          onNew="action-project-group-on-new-project,action-project-record-set-is-chantier">
+
+        <menubar>
+            <menu title="Tools" icon="fa-wrench" showTitle="true">
+                <item title="Gantt" action="action-project-open-gantt" showIf="isProject"/>
+                <item title="Book resource" action="save,action-project-book-resource" showIf="isProject"/>
+                <item title="Planning the project" action="save,action-project-method-create-planning" showIf="!excludePlanning &amp;&amp; isProject"/>
+            </menu>
+        </menubar>
+
+        <panel>
+            <panel colSpan="10">
+                <field name="statusSelect" showTitle="false" readonly="true" colSpan="8" widget="NavSelect"/>
+
+                <panel colSpan="4">
+                    <panel colSpan="12" hidden="true" showIf="!$readonly()">
+                        <field if="__config__.app.isApp('business-project')" if-module="axelor-business-project" name="isProject" colSpan="6" widget="boolean-switch"/>
+                        <field if="__config__.app.isApp('business-project')" if-module="axelor-business-project" name="isBusinessProject" colSpan="6" widget="boolean-switch"/>
+                        <field if="__config__.app.isApp('business-project')" if-module="axelor-business-project" name="$toInvoiceCounter" showTitle="false" colSpan="6" hidden="true"/>
+                    </panel>
+
+                    <panel colSpan="12" hidden="true" showIf="$readonly()">
+                        <field name="$viewerProjectTags" showTitle="false" colSpan="12">
+                            <viewer depends="isBusinessProject,isProject,projectTypeSelect,$toInvoiceCounter">
+                                <![CDATA[
+                                    <h4 style="text-align: right;">
+                                        <span class="label label-default" style="background-color: #FD6217; margin: 5px 0 !important; display: inline-table; line-height: initial; border-top-right-radius: 0; border-bottom-right-radius: 0; padding-right: 0.4em;" ng-show="record.isBusinessProject" x-translate>To Invoice</span><span class="label label-default" style="background-color: #FFAA00; margin: 5px 0 !important; display: inline-table; line-height: initial; border-top-left-radius: 0; border-bottom-left-radius: 0;" ng-show="record.isBusinessProject">{{record.$toInvoiceCounter}}</span>
+                                        <span class="label label-default" style="background-color: #86BC25; margin: 5px 0 !important; display: inline-table; line-height: initial;" ng-show="record.isProject &amp;&amp; record.projectTypeSelect == 1" x-translate>Project</span>
+                                        <span class="label label-default" style="background-color: #86BC25; margin: 5px 0 !important; display: inline-table; line-height: initial;" ng-show="record.isProject &amp;&amp; record.projectTypeSelect == 2" x-translate>Project phase</span>
+                                        <span class="label label-default" style="background-color: #2185D0; margin: 5px 0 !important; display: inline-table; line-height: initial;" ng-show="record.isBusinessProject" x-translate>Business</span>
+                                    </h4>
+                                ]]>
+                            </viewer>
+                        </field>
+                    </panel>
+                </panel>
+
+                <panel colSpan="12">
+                    <field name="fullName" showTitle="false" colSpan="12" css="label-bold bold large">
+                        <editor x-show-titles="false">
+                            <field name="code" showTitle="false" colSpan="3" css="label-bold bold large" x-bind="{{code|unaccent|uppercase}}"/>
+                            <field name="name" showTitle="false" colSpan="9" css="label-bold bold large"/>
+                        </editor>
+                    </field>
+                </panel>
+            </panel>
+
+            <panel colSpan="2" hideIf="statusSelect == 4">
+                <button name="start" title="Start" icon="fa-play" onClick="action-project-record-status-in-progress,save" hidden="true" showIf="statusSelect == 1" colSpan="12"/>
+                <button name="finish" title="Finish" icon="fa-check" onClick="action-project-record-status-finished,save" hidden="true" showIf="statusSelect == 2" colSpan="12"/>
+                <button name="cancel" title="Cancel" icon="fa-times-circle" css="btn-danger" onClick="action-project-record-status-canceled,save" hidden="true" showIf="statusSelect == 2 &#124;&#124; statusSelect == 3" colSpan="12"/>
+            </panel>
+        </panel>
+
+        <panel>
+            <panel colSpan="12">
+                <field name="company" canEdit="false" form-view="company-form" grid-view="company-grid"/>
+                <field name="assignedTo" canNew="false" canEdit="false" canView="false" title="Person In Charge" onChange="action-attrs-project-add-member" form-view="user-form" grid-view="user-grid"/>
+            </panel>
+
+            <panel title="Dates" colSpan="12">
+                <field name="fromDate" colSpan="3"/>
+                <field name="toDate" colSpan="3"/>
+            </panel>
+        </panel>
+
+        <panel-tabs>
+            <panel title="Phases" showIf="isProject &amp;&amp; childProjectList.length > 0">
+                <button name="addPhase" title="New" css="btn-custom text-left" icon="fa-plus" colSpan="2" onClick="save,action-project-view-phase-new"/>
+                <button name="allPhases" title="All phases" css="btn-custom text-left" icon="fa-tasks" colSpan="2" onClick="save,action-project-view-phase-all"/>
+                <button name="allPhaseTasks" title="All phase tasks" css="btn-custom text-left" icon="fa-tasks" colSpan="2" onClick="save,action-project-phase-view-show-phase-task"/>
+                <panel-dashlet title="Phases" colSpan="12" action="tree:project-phase-tree"/>
+            </panel>
+
+            <panel name="description" title="Description">
+                <field name="description" showTitle="false" colSpan="12" widget="html"/>
+                <field name="timeSpent" hidden="true"/>
+                <field name="leadDelay" hidden="true"/>
+            </panel>
+
+            <panel name="configurations" title="Configurations">
+                <field name="productSet" canEdit="false" if-module="axelor-human-resource" if="__config__.app.isApp('employee')" grid-view="product-activity-grid" form-view="product-activity-form" domain="self.isActivity = true" colSpan="12" widget="TagSelect"/>
+                <field name="projectCategorySet" colSpan="12" widget="TagSelect"/>
+                <field name="projectFolderSet" colSpan="12" widget="TagSelect"/>
+                <field name="excludeTimesheetEditor"/>
+                <field name="childProjectList" hidden="true"/>
+                <button name="computeDurationFromChildren" title="Compute duration" showIf="childProjectList.length > 0" colSpan="3" onClick="save,action-method-project-compute-duration-fromchildren,save"/>
+                <field name="sequence" hidden="true"/>
+            </panel>
+        </panel-tabs>
+
+        <panel-mail>
+            <mail-messages limit="4"/>
+            <mail-followers/>
+        </panel-mail>
+    </form>
+
+    <action-attrs name="action-project-attrs-set-address-domain">
+        <attribute name="value" for="address" expr="eval: null"/>
+        <attribute for="address" name="domain" expr="eval: &quot;self.id IN (${(customer?.partnerAddressList?.collect([0], { it.address.id })).join(',')})&quot;" if="customer"/>
+    </action-attrs>
+
+    <action-record name="action-project-record-set-is-chantier" model="com.axelor.apps.project.db.Project">
+        <field name="isChantier" expr="eval: _isChantier"/>
+    </action-record>
+
+</object-views>

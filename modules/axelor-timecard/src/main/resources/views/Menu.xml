@@ -21,11 +21,13 @@
     </action-view>
 
 
-    <!--<menuitem name="timecard-planningline" parent="timecard-root" title="Planning lines" action="timecard.planningline"/>-->
+    <menuitem name="sites-all" parent="menu-project-root" order="9" title="Sites" action="site.all"/>
 
-    <!--<action-view name="timecard.planningline" title="Planning lines" model="com.axelor.apps.timecard.db.PlanningLine">-->
-        <!--<view type="grid" name="planning-line-grid"/>-->
-        <!--<view type="form" name="planning-line-form"/>-->
-    <!--</action-view>-->
+    <action-view name="site.all" title="Sites" model="com.axelor.apps.project.db.Project">
+        <view type="grid" name="project-timecard-grid"/>
+        <view type="form" name="project-timecard-form"/>
+        <domain>self.isSite = true</domain>
+        <context name="_isSite" expr="eval: true"/>
+    </action-view>
 
 </object-views>

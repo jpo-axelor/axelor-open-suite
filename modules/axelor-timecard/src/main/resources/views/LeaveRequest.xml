@@ -63,7 +63,7 @@
             <field name="endOnSelect" onChange="action-leave-request-validate-dates,action-leave-request-methode-compute-duration"/>
             <field name="duration" readonly="true" onChange="action-leave-request-methode-duration"/>
 
-            <field name="projectSet" widget="TagSelect" colSpan="12" canEdit="false" canNew="false"/>
+            <field name="projectSet" domain="self.isSite = true" widget="TagSelect" colSpan="12" canEdit="false" canNew="false"/>
 
             <field name="comments" colSpan="12"/>
         </panel>

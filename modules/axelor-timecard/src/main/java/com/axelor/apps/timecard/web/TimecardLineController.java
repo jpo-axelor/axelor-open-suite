@@ -136,7 +136,7 @@ public class TimecardLineController {
 
   /** Set defaults for substitution wizard form. */
   public void setWizardDefaults(ActionRequest request, ActionResponse response) {
-    response.setAttr("$projects", "domain", "self.statusSelect = 2");
+    response.setAttr("$projects", "domain", "self.statusSelect = 2 AND self.isSite = true");
 
     Integer leaveRequestId = (Integer) request.getContext().get("_leaveRequestId");
     if (leaveRequestId != null) {
@@ -159,7 +159,7 @@ public class TimecardLineController {
       response.setAttr(
           "$projects",
           "domain",
-          "self.statusSelect = 2 AND self.id IN (" + String.join(",", projectsIds) + ")");
+          "self.statusSelect = 2 AND self.isSite = true AND self.id IN (" + String.join(",", projectsIds) + ")");
     }
 
     Integer planningId = (Integer) request.getContext().get("_planningId");

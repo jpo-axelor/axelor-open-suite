@@ -15,7 +15,7 @@
           onNew="action-planning-line-record-set-defaults,action-planning-line-record-default-frequency"
           onSave="save,action-planningline-method-compute-monthly-hours">
         <panel>
-            <field name="project" domain="self.statusSelect = 2" canEdit="false" grid-view="project-grid" form-view="project-form"/>
+            <field name="project" domain="self.statusSelect = 2 AND self.isSite = true" canEdit="false" grid-view="project-grid" form-view="project-form"/>
             <field name="employee" canEdit="false" grid-view="employee-grid" form-view="employee-form"/>
             <field name="startTime" colSpan="3" validIf="startTime &lt; endTime"/>
             <field name="endTime" colSpan="3" validIf="startTime &lt; endTime"/>

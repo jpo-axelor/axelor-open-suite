@@ -30,7 +30,7 @@
                 <field name="isContractual" showIf="typeSelect == 'extra' &amp;&amp; isSubstitution" onChange="action-timecard-line-attrs-type-select-readonly"/>
                 <field name="contractualTimecardLine" showIf="typeSelect == 'absence'" onSelect="action-timecard-line-attrs-contractual-tcl-domain"/>
             </panel>
-            <field name="project" domain="self.statusSelect = 2" canEdit="false"/>
+            <field name="project" domain="self.statusSelect = 2 AND self.isSite = true" canEdit="false"/>
             <panel stacked="true">
                 <panel name="suggestionOffPanel">
                     <field name="employee" canEdit="false" required="true" onChange="action-timecard-line-method-compute-night-hours"/>
