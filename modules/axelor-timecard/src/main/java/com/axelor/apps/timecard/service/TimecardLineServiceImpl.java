@@ -170,7 +170,7 @@ public class TimecardLineServiceImpl implements TimecardLineService {
       throw new AxelorException(
           newEmployee,
           TraceBackRepository.CATEGORY_MISSING_FIELD,
-          I18n.get("Please configure a main employement contract for employee %s"),
+          I18n.get("Please configure a main employement contract for employee %s."),
           newEmployee.getName());
     }
 

@@ -242,7 +242,7 @@ public class TimecardLineController {
           new AxelorException(
               employee,
               TraceBackRepository.CATEGORY_MISSING_FIELD,
-              I18n.get("Please configure a main employement contract for employee %s"),
+              I18n.get("Please configure a main employement contract for employee %s."),
               employee.getName()));
       return;
     }

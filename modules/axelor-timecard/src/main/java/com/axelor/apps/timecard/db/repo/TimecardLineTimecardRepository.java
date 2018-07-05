@@ -82,10 +82,10 @@ public class TimecardLineTimecardRepository extends TimecardLineRepository {
                 startTime, endTime, employee.getMainEmploymentContract().getPayCompany()));
       } catch (NullPointerException e) {
         throw new PersistenceException(
-            I18n.get(
-                "Please configure a main employement contract for employee "
-                    + employee.getName()
-                    + "."),
+            I18n.get("Please configure a main employement contract for employee")
+                + " "
+                + employee.getName()
+                + ".",
             e);
       } catch (AxelorException e) {
         throw new PersistenceException(e);

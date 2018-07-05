@@ -378,7 +378,7 @@ public class TimecardServiceImpl implements TimecardService {
       throw new AxelorException(
           timecard.getEmployee(),
           TraceBackRepository.CATEGORY_MISSING_FIELD,
-          I18n.get("Please configure a main employement contract for employee %s"),
+          I18n.get("Please configure a main employement contract for employee %s."),
           timecard.getEmployee().getName());
     }
     BigDecimal monthlyHours = employmentContract.getMonthlyHours();

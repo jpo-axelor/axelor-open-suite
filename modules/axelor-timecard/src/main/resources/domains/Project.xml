@@ -7,7 +7,7 @@
 
     <entity name="Project">
 
-        <boolean name="isSite" default="false"/> <!-- Site = Chantier -->
+        <boolean name="isSite" title="Site" default="false"/> <!-- Site = Chantier -->
 
     </entity>
 
