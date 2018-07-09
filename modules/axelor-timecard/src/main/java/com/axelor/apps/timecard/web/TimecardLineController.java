@@ -159,7 +159,9 @@ public class TimecardLineController {
       response.setAttr(
           "$projects",
           "domain",
-          "self.statusSelect = 2 AND self.isSite = true AND self.id IN (" + String.join(",", projectsIds) + ")");
+          "self.statusSelect = 2 AND self.isSite = true AND self.id IN ("
+              + String.join(",", projectsIds)
+              + ")");
     }
 
     Integer planningId = (Integer) request.getContext().get("_planningId");
