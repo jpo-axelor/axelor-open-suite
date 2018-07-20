@@ -55,7 +55,7 @@
             <field name="leaveRequest" showIf="leaveRequest &amp;&amp; typeSelect == 'absence'" grid-view="leave-request-grid" form-view="leave-request-form"/>
             <field name="comments" colSpan="12" widget="html"/>
             <spacer/>
-            <panel title="Substitutions" showIf="isSubstitution || typeSelect == 'absence'" colSpan="12" readonlyIf="id == null">
+            <panel title="Substitutions" showIf="isSubstitution || typeSelect == 'absence'" colSpan="12" readonlyIf="id == null || id &lt; 1">
                 <field name="absenceTimecardLine" showIf="isSubstitution" grid-view="timecard-line-grid" form-view="timecard-line-form"/>
                 <spacer/>
                 <field name="totalSubstitutionHours" showIf="typeSelect == 'absence'"/>
