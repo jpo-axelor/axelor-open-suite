@@ -166,7 +166,7 @@
     </action-attrs>
 
     <action-attrs name="action-timecard-line-attrs-contractual-tcl-domain">
-        <attribute for="contractualTimecardLine" name="domain" expr="eval: &quot;self.timecard.id = ${timecard.id} AND self.typeSelect = '${com.axelor.apps.timecard.db.repo.TimecardLineRepository.TYPE_CONTRACTUAL}' AND self.date = :date AND self.employee.id = ${employee?.id}&quot;"/>
+        <attribute for="contractualTimecardLine" name="domain" expr="eval: &quot;self.timecard.id = ${__parent__?.id} AND self.typeSelect = '${com.axelor.apps.timecard.db.repo.TimecardLineRepository.TYPE_CONTRACTUAL}' AND self.date = :date AND self.employee.id = ${employee?.id}&quot;"/>
     </action-attrs>
 
     <action-attrs name="action-timecard-line-attrs-required-contractual-timecard-line">
