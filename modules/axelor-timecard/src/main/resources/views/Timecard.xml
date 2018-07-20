@@ -3,20 +3,23 @@
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.0.xsd">
 
-    <grid name="timecard-grid" title="Timecards" model="com.axelor.apps.timecard.db.Timecard">
+    <grid name="timecard-grid" title="Real timecards" model="com.axelor.apps.timecard.db.Timecard">
         <field name="company"/>
         <field name="employee"/>
         <field name="period"/>
         <field name="statusSelect"/>
     </grid>
 
-    <form name="timecard-form" title="Timecard" model="com.axelor.apps.timecard.db.Timecard" width="large">
+    <form name="timecard-form" title="Real timecard" model="com.axelor.apps.timecard.db.Timecard" width="large">
+        <toolbar>
+            <button name="showCalendarBtn" title="Show calendar" onClick="save,action-timecard-view-show-calendar"/>
+        </toolbar>
+
         <menubar>
             <menu title="Tools" icon="fa-wrench">
                 <item title="Compute hours" action="save,action-timecard-method-compute-hours"/>
                 <item title="Generate timecard lines" action="save,action-timecard-method-generate-timecard-lines"/>
                 <item title="Generate substitution lines" action="save,action-timecard-view-open-substitution-wizard" readonlyIf="!id"/>
-                <item title="Show calendar" action="save,action-timecard-view-show-calendar"/>
             </menu>
         </menubar>
 
