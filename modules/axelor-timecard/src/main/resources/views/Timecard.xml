@@ -18,7 +18,7 @@
         <menubar>
             <menu title="Tools" icon="fa-wrench">
                 <item title="Compute hours" action="save,action-timecard-method-compute-hours"/>
-                <item title="Generate timecard lines" action="save,action-timecard-method-generate-timecard-lines"/>
+                <item title="Generate timecard lines" action="save,action-timecard-method-generate-timecard-lines" readonlyIf="[2, 3, 4, 5, 6].indexOf(statusSelect) &gt;= 0"/>
                 <item title="Generate substitution lines" action="save,action-timecard-view-open-substitution-wizard" readonlyIf="!id"/>
             </menu>
         </menubar>
@@ -68,7 +68,7 @@
             <panel-dashlet name="planningLinesDashlet" title="Planning lines" action="action-timecard-view-planning-lines-dashlet" showIf="employee" readonly="true"/>
 
             <panel title="Timecard lines">
-                <panel-related field="timecardLineList" readonlyIf="[3, 4, 5, 6].indexOf(statusSelect) &gt;= 0" colSpan="12" grid-view="timecard-line-grid" form-view="timecard-line-form"/>
+                <panel-related field="timecardLineList" readonlyIf="[2, 3, 4, 5, 6].indexOf(statusSelect) &gt;= 0" colSpan="12" grid-view="timecard-line-grid" form-view="timecard-line-form"/>
 
                 <field name="payrollPreparationComment" colSpan="12"/>
             </panel>
