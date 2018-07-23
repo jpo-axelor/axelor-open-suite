@@ -62,6 +62,21 @@ public class TimecardController {
     response.setReload(true);
   }
 
+  public void send(ActionRequest request, ActionResponse response) {
+    Timecard timecard =
+        Beans.get(TimecardRepository.class)
+            .find(request.getContext().asType(Timecard.class).getId());
+
+    try {
+      Beans.get(TimecardService.class).send(timecard);
+    } catch (AxelorException e) {
+      TraceBackService.trace(e, "Timecard");
+      response.setError(e.getMessage());
+    }
+
+    response.setReload(true);
+  }
+
   public void validate(ActionRequest request, ActionResponse response) {
     Timecard timecard =
         Beans.get(TimecardRepository.class)

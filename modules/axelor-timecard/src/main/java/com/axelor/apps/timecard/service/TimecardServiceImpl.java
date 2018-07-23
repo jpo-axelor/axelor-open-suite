@@ -173,18 +173,14 @@ public class TimecardServiceImpl implements TimecardService {
                           timecardLine
                                   .getTypeSelect()
                                   .equals(TimecardLineRepository.TYPE_CONTRACTUAL)
-                              && timecardLine.getTimecard().getId().equals(timecard.getId())
+                              && timecardLine.getTimecard().equals(timecard)
                               && timecardLine.getProject().equals(orphanTimecardLine.getProject())
-                              && timecardLine
-                                  .getStartDateTime()
-                                  .equals(orphanTimecardLine.getStartDateTime())
-                              && timecardLine
-                                  .getEndDateTime()
-                                  .equals(orphanTimecardLine.getEndDateTime()))
+                              && timecardLine.getDate().equals(orphanTimecardLine.getDate()))
                   .collect(Collectors.toList());
 
           if (!contractualTimecardLineList.isEmpty()) {
             orphanTimecardLine.setContractualTimecardLine(contractualTimecardLineList.get(0));
+            timecardLineRepo.save(orphanTimecardLine);
           }
         }
 
@@ -435,6 +431,30 @@ public class TimecardServiceImpl implements TimecardService {
       Timecard timecard, LocalDate startDate, LocalDate endDate) {
     return timecardLineService.getTotalAbsenceHours(
         timecard.getId(), timecard.getEmployee(), startDate, endDate);
+  }
+
+  @Override
+  @Transactional(rollbackOn = {AxelorException.class, Exception.class})
+  public void send(Timecard timecard) throws AxelorException {
+    if (timecard.getTimecardLineList() == null || timecard.getTimecardLineList().isEmpty()) {
+      throw new AxelorException(
+          timecard,
+          TraceBackRepository.CATEGORY_MISSING_FIELD,
+          I18n.get("There is no lines in this timecard."));
+    }
+
+    for (TimecardLine timecardLine : timecard.getTimecardLineList()) {
+      if (timecardLine.getTypeSelect().equals(TimecardLineRepository.TYPE_ABSENCE)
+          && timecardLine.getContractualTimecardLine() == null) {
+        throw new AxelorException(
+            timecardLine,
+            TraceBackRepository.CATEGORY_MISSING_FIELD,
+            I18n.get("There are still absence lines with no bound contractual line."));
+      }
+    }
+
+    timecard.setStatusSelect(TimecardRepository.STATUS_AWAITING_VALIDATION);
+    timecardRepo.save(timecard);
   }
 
   @Override

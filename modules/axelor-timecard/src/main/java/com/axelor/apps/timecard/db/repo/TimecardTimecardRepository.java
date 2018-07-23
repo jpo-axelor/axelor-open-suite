@@ -18,29 +18,15 @@
 package com.axelor.apps.timecard.db.repo;
 
 import com.axelor.apps.timecard.db.Timecard;
-import com.axelor.apps.timecard.db.TimecardLine;
 import com.axelor.exception.AxelorException;
 import com.axelor.exception.db.repo.TraceBackRepository;
 import com.axelor.i18n.I18n;
-import com.axelor.inject.Beans;
 import javax.persistence.PersistenceException;
 
 public class TimecardTimecardRepository extends TimecardRepository {
 
   @Override
   public Timecard save(Timecard timecard) {
-    if (timecard.getTimecardLineList() != null) {
-      for (TimecardLine timecardLine : timecard.getTimecardLineList()) {
-        if (timecardLine.getTimecard() != null
-            && timecardLine.getTypeSelect().equals(TimecardLineRepository.TYPE_ABSENCE)
-            && timecardLine.getContractualTimecardLine() == null) {
-          throw new PersistenceException(
-              I18n.get("There are still absence lines with no bound contractual line."));
-        }
-        Beans.get(TimecardLineRepository.class).save(timecardLine);
-      }
-    }
-
     if (timecard.getEmployee().getMainEmploymentContract() == null) {
       throw new PersistenceException(
           new AxelorException(

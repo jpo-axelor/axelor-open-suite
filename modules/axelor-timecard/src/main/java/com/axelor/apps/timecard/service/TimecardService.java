@@ -46,6 +46,9 @@ public interface TimecardService {
   /** Computes weekly hours for given {@link Timecard}. */
   void computeWeeklyHours(Timecard timecard);
 
+  /** Sends the given {@link Timecard}. */
+  void send(Timecard timecard) throws AxelorException;
+
   /** Validates the given {@link Timecard}. */
   void validate(Timecard timecard) throws AxelorException;
 

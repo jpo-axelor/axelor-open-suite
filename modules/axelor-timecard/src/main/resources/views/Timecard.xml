@@ -84,7 +84,7 @@
         </panel>
 
         <panel colSpan="3" stacked="true" sidebar="true">
-            <button name="sendBtn" title="Send" showIf="statusSelect == 1" onClick="action-timecard-record-send,save"/>
+            <button name="sendBtn" title="Send" showIf="statusSelect == 1" onClick="save,action-timecard-method-send"/>
             <button name="validateBtn" title="Validate" showIf="statusSelect == 2" onClick="save,action-timecard-method-validate"/>
             <button name="refuseBtn" title="Refuse" showIf="statusSelect == 2" css="btn-danger" onClick="save,action-timecard-view-refuse"/>
             <button name="cancelBtn" title="Cancel" showIf="[2, 3].indexOf(statusSelect) &gt;= 0" onClick="action-timecard-record-cancel,save"/>
@@ -155,9 +155,9 @@
         <field name="statusSelect" expr="eval: com.axelor.apps.timecard.db.repo.TimecardRepository.STATUS_DRAFT"/>
     </action-record>
 
-    <action-record name="action-timecard-record-send" model="com.axelor.apps.timecard.db.Timecard">
-        <field name="statusSelect" expr="eval: com.axelor.apps.timecard.db.repo.TimecardRepository.STATUS_AWAITING_VALIDATION"/>
-    </action-record>
+    <action-method name="action-timecard-method-send">
+        <call class="com.axelor.apps.timecard.web.TimecardController" method="send"/>
+    </action-method>
 
     <action-method name="action-timecard-method-validate">
         <call class="com.axelor.apps.timecard.web.TimecardController" method="validate"/>
