@@ -23,7 +23,7 @@ def modules = new File('modules/abs').listFiles().findAll { dir ->
 }
 
 modules.addAll(new File('modules').listFiles().findAll {
-    dir -> new File(dir, 'build.gradle').exists() && !dir.name.startsWith('traversier')
+    dir -> new File(dir, 'build.gradle').exists()
 })
 
 modules.each { dir ->
