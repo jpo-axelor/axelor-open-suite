@@ -3,7 +3,7 @@
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.0.xsd">
 
-    <menuitem name="timecard-root" title="Timecard" icon="fa-calendar" icon-background="#84429f" parent="hr-root" order="6"/>
+    <menuitem name="timecard-root" title="Timecard" icon="fa-calendar" icon-background="#84429f" parent="hr-root" order="1"/>
 
 
     <menuitem name="timecard-timecard" parent="timecard-root" title="Real timecards" action="timecard.timecard"/>
