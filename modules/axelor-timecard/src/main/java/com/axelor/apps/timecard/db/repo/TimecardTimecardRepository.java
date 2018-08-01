@@ -18,9 +18,11 @@
 package com.axelor.apps.timecard.db.repo;
 
 import com.axelor.apps.timecard.db.Timecard;
+import com.axelor.apps.timecard.db.TimecardLine;
 import com.axelor.exception.AxelorException;
 import com.axelor.exception.db.repo.TraceBackRepository;
 import com.axelor.i18n.I18n;
+import java.time.LocalDateTime;
 import javax.persistence.PersistenceException;
 
 public class TimecardTimecardRepository extends TimecardRepository {
@@ -37,12 +39,15 @@ public class TimecardTimecardRepository extends TimecardRepository {
     }
 
     // Compute full name
-    timecard.setFullName(
-        I18n.get("Timecard")
-            + " - "
-            + timecard.getEmployee().getName()
-            + " - "
-            + timecard.getPeriod().getName());
+    timecard.setFullName(timecard.getEmployee().getName() + " - " + timecard.getPeriod().getName());
+
+    // Compute start/end dateTime to be able to use 'orderBy' in the TimecardLine list
+    for (TimecardLine timecardLine : timecard.getTimecardLineList()) {
+      timecardLine.setStartDateTime(
+          LocalDateTime.of(timecardLine.getDate(), timecardLine.getStartTime()));
+      timecardLine.setEndDateTime(
+          LocalDateTime.of(timecardLine.getDate(), timecardLine.getEndTime()));
+    }
 
     return super.save(timecard);
   }
