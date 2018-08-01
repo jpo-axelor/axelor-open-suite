@@ -12,7 +12,7 @@
 
     <form name="timecard-form" title="Real timecard" model="com.axelor.apps.timecard.db.Timecard" width="large">
         <toolbar>
-            <button name="showCalendarBtn" title="Show calendar" onClick="save,action-timecard-view-show-calendar"/>
+            <button name="showCalendarBtn" title="Show calendar" onClick="save,action-timecard-view-show-calendar" icon="fa-calendar"/>
         </toolbar>
 
         <menubar>

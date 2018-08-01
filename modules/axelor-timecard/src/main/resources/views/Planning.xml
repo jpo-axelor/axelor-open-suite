@@ -7,7 +7,7 @@
           onNew="action-planning-method-set-defaults"
           onLoad="action-planning-attrs-refresh-dashlets,action-planning-method-compute-monthly-hours">
         <toolbar>
-            <button name="previewBtn" title="Preview" onClick="action-planning-method-preview" readonlyIf="(!project &amp;&amp; !employee) || !startDate || !endDate"/>
+            <button name="previewBtn" title="Preview" onClick="action-planning-method-preview" readonlyIf="(!project &amp;&amp; !employee) || !startDate || !endDate" icon="fa-calendar"/>
         </toolbar>
 
         <menubar>
