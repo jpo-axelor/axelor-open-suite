@@ -30,4 +30,16 @@
         <context name="_isSite" expr="eval: true"/>
     </action-view>
 
+
+    <!-- Overrides -->
+    <!-- HR: Leave requests -->
+    <menuitem name="leave-request-root" id="timecard-leave-request-root" parent="hr-root" title="Absences management" order="5"
+              if="__config__.app.isApp('leave')" icon="fa-plane" icon-background="#84429f"/>
+
+    <menuitem name="edit-leave-request" id="timecard-edit-leave-request" parent="leave-request-root" title="Add an absence" action="action-hr-view-add-absence"/>
+
+    <action-view name="action-hr-view-add-absence" title="Absence" model="com.axelor.apps.hr.db.LeaveRequest">
+        <view type="form" name="leave-request-form"/>
+    </action-view>
+
 </object-views>
