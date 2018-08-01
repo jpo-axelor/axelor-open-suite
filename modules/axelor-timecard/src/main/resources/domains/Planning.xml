@@ -7,7 +7,7 @@
 
     <entity name="Planning">
 
-        <many-to-one name="project" title="Project" ref="com.axelor.apps.project.db.Project"/>
+        <many-to-one name="project" title="Site" ref="com.axelor.apps.project.db.Project"/>
         <many-to-one name="employee" title="Employee" ref="com.axelor.apps.hr.db.Employee"/>
         <date name="startDate" title="Start date"/>
         <date name="endDate" title="End date"/>

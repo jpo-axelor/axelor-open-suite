@@ -8,11 +8,12 @@
     <entity name="PlanningLine">
 
         <many-to-one name="employee" title="Employee" ref="com.axelor.apps.hr.db.Employee" required="true"/>
-        <many-to-one name="project" title="Project" ref="com.axelor.apps.project.db.Project" required="true"/>
+        <many-to-one name="project" title="Site" ref="com.axelor.apps.project.db.Project" required="true"/>
         <time name="startTime" title="Start time" required="true"/>
         <time name="endTime" title="End time" required="true"/>
         <many-to-one name="frequency" title="Frequency" ref="com.axelor.apps.timecard.db.Frequency" required="true"/>
         <decimal name="monthlyHours" title="Monthly hours" readonly="true"/>
+        <string name="description" title="Description" large="true"/>
 
         <finder-method name="findByEmployee" using="employee" all="true"/>
         <finder-method name="findByProject" using="project" all="true"/>

@@ -9,6 +9,11 @@
 
         <boolean name="isSite" title="Site" default="false"/> <!-- Site = Chantier -->
 
+        <!-- Information -->
+        <many-to-one name="address" ref="com.axelor.apps.base.db.Address" title="Address"/>
+        <string name="phone" title="Phone"/>
+        <string name="email" title="Email"/>
+
     </entity>
 
 </domain-models>
