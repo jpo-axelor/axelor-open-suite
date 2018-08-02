@@ -31,6 +31,15 @@
     </action-view>
 
 
+    <!-- Print -->
+    <menuitem name="mail-conf-print-templates" parent="mail-conf" order="40" title="Print templates" action="admin.root.templating.print.templates"/>
+
+    <action-view name="admin.root.templating.print.templates" title="Print templates" model="com.axelor.apps.base.db.PrintTemplate">
+        <view type="grid" name="print-template-grid"/>
+        <view type="form" name="print-template-form"/>
+    </action-view>
+
+
     <!-- Overrides -->
     <!-- HR: Leave requests -->
     <menuitem name="leave-request-root" id="timecard-leave-request-root" parent="hr-root" title="Absences management" order="5"

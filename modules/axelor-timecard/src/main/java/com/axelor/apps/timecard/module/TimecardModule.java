@@ -38,6 +38,10 @@ import com.axelor.apps.timecard.service.PayrollPreparationTimecardServiceImpl;
 import com.axelor.apps.timecard.service.PeriodTimecardServiceImpl;
 import com.axelor.apps.timecard.service.PlanningLineService;
 import com.axelor.apps.timecard.service.PlanningLineServiceImpl;
+import com.axelor.apps.timecard.service.PrintService;
+import com.axelor.apps.timecard.service.PrintServiceImpl;
+import com.axelor.apps.timecard.service.PrintTemplateService;
+import com.axelor.apps.timecard.service.PrintTemplateServiceImpl;
 import com.axelor.apps.timecard.service.TempTimecardLineService;
 import com.axelor.apps.timecard.service.TempTimecardLineServiceImpl;
 import com.axelor.apps.timecard.service.TimecardLineService;
@@ -69,5 +73,7 @@ public class TimecardModule extends AxelorModule {
     bind(PeriodServiceImpl.class).to(PeriodTimecardServiceImpl.class);
     bind(BatchPayrollPreparationGeneration.class)
         .to(BatchPayrollPreparationTimecardGeneration.class);
+    bind(PrintService.class).to(PrintServiceImpl.class);
+    bind(PrintTemplateService.class).to(PrintTemplateServiceImpl.class);
   }
 }
