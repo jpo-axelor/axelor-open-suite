@@ -28,6 +28,7 @@ import com.axelor.apps.timecard.db.Timecard;
 import com.axelor.apps.timecard.db.TimecardLine;
 import com.axelor.apps.timecard.db.repo.EmployeeSuggestionRepository;
 import com.axelor.apps.timecard.db.repo.TimecardLineRepository;
+import com.axelor.apps.timecard.db.repo.TimecardRepository;
 import com.axelor.exception.AxelorException;
 import com.axelor.exception.db.repo.TraceBackRepository;
 import com.axelor.i18n.I18n;
@@ -52,15 +53,18 @@ public class TimecardLineServiceImpl implements TimecardLineService {
 
   protected TimecardLineRepository timecardLineRepo;
   protected EmployeeSuggestionRepository employeeSuggestionRepo;
+  protected TimecardRepository timecardRepo;
   protected TimecardService timecardService;
 
   @Inject
   public TimecardLineServiceImpl(
       TimecardLineRepository timecardLineRepo,
       EmployeeSuggestionRepository employeeSuggestionRepo,
+      TimecardRepository timecardRepo,
       TimecardService timecardService) {
     this.timecardLineRepo = timecardLineRepo;
     this.employeeSuggestionRepo = employeeSuggestionRepo;
+    this.timecardRepo = timecardRepo;
     this.timecardService = timecardService;
   }
 
@@ -88,6 +92,30 @@ public class TimecardLineServiceImpl implements TimecardLineService {
     timecardLine.setTypeSelect(lineType);
 
     return timecardLine;
+  }
+
+  @Override
+  @Transactional
+  public TimecardLine createAbsenceFromContractual(TimecardLine contractualTL) {
+    TimecardLine absenceTL =
+        Beans.get(TimecardLineService.class)
+            .generateTimecardLine(
+                contractualTL.getEmployee(),
+                contractualTL.getProject(),
+                contractualTL.getDate(),
+                contractualTL.getStartTime(),
+                contractualTL.getEndTime(),
+                TimecardLineRepository.TYPE_ABSENCE,
+                false);
+
+    absenceTL.setContractualTimecardLine(contractualTL);
+
+    Timecard timecard = contractualTL.getTimecard();
+    timecard.addTimecardLineListItem(absenceTL);
+
+    timecardRepo.save(timecard);
+
+    return absenceTL;
   }
 
   @Override

@@ -13,6 +13,9 @@
         <field name="endTime" readonlyIf="typeSelect == 'contractual'"/>
         <field name="typeSelect" readonlyIf="typeSelect == 'contractual'"/>
 
+        <button name="createAbsence" help="Create an absence for this line" icon="fa-user-times" readonlyIf="typeSelect != 'contractual'"
+                onClick="save,com.axelor.apps.timecard.web.TimecardLineController:createAbsence"/>
+
         <!-- used for sorting -->
         <field name="startDateTime" hidden="true"/>
         <!-- used for hilite -->
@@ -24,16 +27,20 @@
           onNew="action-timecard-line-method-set-defaults,action-timecard-line-record-compute-duration,action-timecard-line-attrs-required-contractual-timecard-line"
           onLoad="action-timecard-line-record-update-durations,action-timecard-line-attrs-required-contractual-timecard-line"
           onSave="action-timecard-line-record-update-type-select">
-        <panel readonlyIf="typeSelect == 'contractual'">
-            <field name="typeSelect" selection-in="['extra', 'absence']" required="true"/>
+        <panel>
+            <field name="typeSelect" selection-in="['extra']" required="true" readonlyIf="['contractual', 'absence'].indexOf(typeSelect) &gt;= 0"/>
             <panel stacked="true">
+                <button name="createAbsence" title="Create an absence for this line" icon="fa-user-times" showIf="typeSelect == 'contractual'" css="btn-custom text-left"
+                        onClick="save,com.axelor.apps.timecard.web.TimecardLineController:createAbsence"/>
                 <field name="isContractual" showIf="typeSelect == 'extra' &amp;&amp; isSubstitution" onChange="action-timecard-line-attrs-type-select-readonly"/>
-                <field name="contractualTimecardLine" showIf="typeSelect == 'absence'" onSelect="action-timecard-line-attrs-contractual-tcl-domain"/>
+                <field name="contractualTimecardLine" showIf="typeSelect == 'absence'" readonly="true" onSelect="action-timecard-line-attrs-contractual-tcl-domain"/>
             </panel>
-            <field name="project" domain="self.statusSelect = 2 AND self.isSite = true" canEdit="false"/>
+
+            <field name="project" domain="self.statusSelect = 2 AND self.isSite = true" canEdit="false" readonlyIf="typeSelect == 'contractual'"/>
             <panel stacked="true">
                 <panel name="suggestionOffPanel">
-                    <field name="employee" canEdit="false" required="true" onChange="action-timecard-line-method-compute-night-hours"/>
+                    <field name="employee" canEdit="false" required="true" readonlyIf="typeSelect == 'contractual'"
+                           onChange="action-timecard-line-method-compute-night-hours"/>
                     <button name="suggestEmployeeBtn" title="Suggest employee" icon="fa-refresh" css="btn-custom" onClick="action-timecard-line-method-show-suggestions" showIf="isSubstitution &amp;&amp; !$readonly()"/>
                 </panel>
                 <panel name="suggestionOnPanel" hidden="true">
@@ -41,20 +48,27 @@
                     <button name="cancelSuggestEmployeeBtn" title="Cancel" icon="fa-times" css="btn-custom" onClick="action-timecard-line-attrs-hide-suggestions"/>
                 </panel>
             </panel>
+
             <field name="$employeeSuggestionList" title="Suggestions" widget="OneToMany" target="com.axelor.apps.timecard.db.EmployeeSuggestion" readonly="true" hidden="true" colSpan="12" grid-view="employee-suggestion-grid" form-view="employee-suggestion-form"/>
-            <field name="activity"/>
+
+            <field name="activity" readonlyIf="typeSelect == 'contractual'"/>
             <spacer/>
-            <field name="weekDay" colSpan="2"/>
-            <field name="date" onChange="action-timecard-line-record-get-week-day" colSpan="2" required="true"/>
-            <field name="startTime" colSpan="2" onChange="action-timecard-line-record-compute-duration,action-timecard-line-method-compute-night-hours" validIf="startTime &lt; endTime"/>
-            <field name="endTime" colSpan="2" onChange="action-timecard-line-record-compute-duration,action-timecard-line-method-compute-night-hours" validIf="startTime &lt; endTime"/>
-            <field name="duration" colSpan="2"/>
-            <field name="durationNight" colSpan="2"/>
-            <spacer/>
-            <field name="leaveLine" title="Leave reason" canEdit="false" onSelect="action-timecard-line-attrs-leaveline-domain" hidden="true" requiredIf="typeSelect == 'absence'" showIf="typeSelect == 'absence'" grid-view="leave-line-grid" form-view="leave-line-form"/>
+
+            <panel readonlyIf="typeSelect == 'contractual'" colSpan="12">
+                <field name="weekDay" colSpan="2"/>
+                <field name="date" onChange="action-timecard-line-record-get-week-day" colSpan="2" required="true"/>
+                <field name="startTime" colSpan="2" onChange="action-timecard-line-record-compute-duration,action-timecard-line-method-compute-night-hours" validIf="startTime &lt; endTime"/>
+                <field name="endTime" colSpan="2" onChange="action-timecard-line-record-compute-duration,action-timecard-line-method-compute-night-hours" validIf="startTime &lt; endTime"/>
+                <field name="duration" colSpan="2"/>
+                <field name="durationNight" colSpan="2"/>
+            </panel>
+
+            <field name="leaveLine" title="Leave reason" canEdit="false" onSelect="action-timecard-line-attrs-leaveline-domain" hidden="true"
+                   requiredIf="typeSelect == 'absence'" showIf="typeSelect == 'absence'" grid-view="leave-line-grid" form-view="leave-line-form"/>
             <field name="leaveRequest" showIf="leaveRequest &amp;&amp; typeSelect == 'absence'" grid-view="leave-request-grid" form-view="leave-request-form"/>
+
             <field name="comments" colSpan="12" widget="html"/>
-            <spacer/>
+
             <panel title="Substitutions" showIf="isSubstitution || typeSelect == 'absence'" colSpan="12" readonlyIf="id == null || id &lt; 1">
                 <field name="absenceTimecardLine" showIf="isSubstitution" grid-view="timecard-line-grid" form-view="timecard-line-form"/>
                 <spacer/>
@@ -77,7 +91,7 @@
             <panel stacked="true">
                 <panel name="suggestionOffPanel">
                     <field name="$employeeReplacing" title="Employee replacing" required="true" widget="ManyToOne" target="com.axelor.apps.hr.db.Employee" canEdit="false"/>
-                    <button name="suggestEmployeeBtn" title="Suggest employee" icon="fa-refresh" css="btn-custom" onClick="action-timecard-line-method-show-suggestions"/>
+                    <button name="suggestEmployeeBtn" title="Suggest employee" icon="fa-exchange" css="btn-custom" onClick="action-timecard-line-method-show-suggestions"/>
                 </panel>
                 <panel name="suggestionOnPanel" hidden="true">
                     <field name="$employeeSuggestion" title="Employee suggestion" canEdit="false" widget="ManyToOne" target="com.axelor.apps.hr.db.Employee" onChange="action-timecard-line-attrs-set-employee-replacing,action-timecard-line-attrs-hide-suggestions"/>

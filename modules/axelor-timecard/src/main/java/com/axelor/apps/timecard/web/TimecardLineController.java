@@ -37,6 +37,7 @@ import com.axelor.exception.db.repo.TraceBackRepository;
 import com.axelor.exception.service.TraceBackService;
 import com.axelor.i18n.I18n;
 import com.axelor.inject.Beans;
+import com.axelor.meta.schema.actions.ActionView;
 import com.axelor.rpc.ActionRequest;
 import com.axelor.rpc.ActionResponse;
 import com.axelor.rpc.Context;
@@ -346,5 +347,27 @@ public class TimecardLineController {
     response.setAttr("suggestionOffPanel", "hidden", true);
     response.setAttr("suggestionOnPanel", "hidden", false);
     response.setAttr("$employeeSuggestionList", "hidden", false);
+  }
+
+  /** Creates an absence for contractual {@link TimecardLine} in context. */
+  public void createAbsence(ActionRequest request, ActionResponse response) {
+    TimecardLine contractualTL =
+        Beans.get(TimecardLineRepository.class)
+            .find(request.getContext().asType(TimecardLine.class).getId());
+
+    TimecardLine absenceTL =
+        Beans.get(TimecardLineService.class).createAbsenceFromContractual(contractualTL);
+
+    response.setReload(true);
+    response.setView(
+        ActionView.define(I18n.get("Timecard line"))
+            .model(TimecardLine.class.getName())
+            .add("form", "timecard-line-form")
+            .param("popup", "true")
+            .param("popup-save", "true")
+            .param("show-toolbar", "false")
+            .param("forceEdit", "true")
+            .context("_showRecord", absenceTL.getId())
+            .map());
   }
 }

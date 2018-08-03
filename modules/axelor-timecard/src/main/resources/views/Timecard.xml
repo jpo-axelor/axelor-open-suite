@@ -68,7 +68,8 @@
             <panel-dashlet name="planningLinesDashlet" title="Planning lines" action="action-timecard-view-planning-lines-dashlet" showIf="employee" readonly="true"/>
 
             <panel title="Timecard lines">
-                <panel-related field="timecardLineList" readonlyIf="[2, 3, 4, 5, 6].indexOf(statusSelect) &gt;= 0" colSpan="12" grid-view="timecard-line-grid" form-view="timecard-line-form"/>
+                <panel-related field="timecardLineList" readonlyIf="[2, 3, 4, 5, 6].indexOf(statusSelect) &gt;= 0" x-can-reload="true"
+                               colSpan="12" grid-view="timecard-line-grid" form-view="timecard-line-form"/>
 
                 <field name="payrollPreparationComment" colSpan="12"/>
             </panel>

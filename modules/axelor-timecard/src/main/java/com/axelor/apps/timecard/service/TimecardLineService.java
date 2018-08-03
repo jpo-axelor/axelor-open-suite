@@ -43,6 +43,13 @@ public interface TimecardLineService {
       boolean isDeletable);
 
   /**
+   * Creates an absence {@link TimecardLine} from given contractual {@link TimecardLine}
+   *
+   * @return Generated absence {@link TimecardLine}
+   */
+  TimecardLine createAbsenceFromContractual(TimecardLine contractualTimecardLine);
+
+  /**
    * Retrieves list of scheduled TimecardLine for given {@link Project} and {@link Employee}
    *
    * @return List of scheduled TimecardLine for given {@link Project} and {@link Employee}
