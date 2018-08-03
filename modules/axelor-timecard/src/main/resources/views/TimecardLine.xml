@@ -33,7 +33,8 @@
                 <button name="createAbsence" title="Create an absence for this line" icon="fa-user-times" showIf="typeSelect == 'contractual'" css="btn-custom text-left"
                         onClick="save,com.axelor.apps.timecard.web.TimecardLineController:createAbsence"/>
                 <field name="isContractual" showIf="typeSelect == 'extra' &amp;&amp; isSubstitution" onChange="action-timecard-line-attrs-type-select-readonly"/>
-                <field name="contractualTimecardLine" showIf="typeSelect == 'absence'" readonly="true" onSelect="action-timecard-line-attrs-contractual-tcl-domain"/>
+                <field name="contractualTimecardLine" showIf="typeSelect == 'absence'" readonlyIf="contractualTimecardLine"
+                       onSelect="action-timecard-line-attrs-contractual-tcl-domain"/>
             </panel>
 
             <field name="project" domain="self.statusSelect = 2 AND self.isSite = true" canEdit="false" readonlyIf="typeSelect == 'contractual'"/>

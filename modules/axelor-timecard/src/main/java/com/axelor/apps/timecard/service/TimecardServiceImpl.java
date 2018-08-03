@@ -444,12 +444,34 @@ public class TimecardServiceImpl implements TimecardService {
     }
 
     for (TimecardLine timecardLine : timecard.getTimecardLineList()) {
-      if (timecardLine.getTypeSelect().equals(TimecardLineRepository.TYPE_ABSENCE)
-          && timecardLine.getContractualTimecardLine() == null) {
-        throw new AxelorException(
-            timecardLine,
-            TraceBackRepository.CATEGORY_MISSING_FIELD,
-            I18n.get("There are still absence lines with no bound contractual line."));
+      if (timecardLine.getTypeSelect().equals(TimecardLineRepository.TYPE_ABSENCE)) {
+        if (timecardLine.getContractualTimecardLine() == null) {
+          throw new AxelorException(
+              timecardLine,
+              TraceBackRepository.CATEGORY_MISSING_FIELD,
+              I18n.get("There are still absence lines with no bound contractual line."));
+        }
+
+        if (timecardLine.getLeaveLine() == null) {
+          throw new AxelorException(
+              timecardLine,
+              TraceBackRepository.CATEGORY_MISSING_FIELD,
+              I18n.get("The following absence line does not have a leave reason:")
+                  + "<br>"
+                  + timecardLine.getProject().getFullName()
+                  + " "
+                  + I18n.get("on")
+                  + " "
+                  + timecardLine.getDate()
+                  + " "
+                  + I18n.get("FROM_TIME_lowercase")
+                  + " "
+                  + timecardLine.getStartTime()
+                  + " "
+                  + I18n.get("TO_TIME_lowercase")
+                  + " "
+                  + timecardLine.getEndTime());
+        }
       }
     }
 
