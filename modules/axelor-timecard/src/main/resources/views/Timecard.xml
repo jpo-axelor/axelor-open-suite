@@ -42,6 +42,9 @@
                             ]]>
                         </viewer>
                     </field>
+
+                    <!-- needed for tag -->
+                    <field name="statusSelect" hidden="true"/>
                 </panel>
 
                 <field name="company" colSpan="4" required="true" canEdit="false" grid-view="company-grid" form-view="company-form"/>
@@ -92,7 +95,7 @@
             <button name="closeBtn" title="Close" showIf="statusSelect == 3" onClick="action-timecard-record-close,save"/>
             <button name="draftBtn" title="Draft" showIf="[2, 5, 6].indexOf(statusSelect) &gt;= 0" onClick="action-timecard-record-draft,save"/>
 
-            <!-- needed for tag and buttons -->
+            <!-- needed for buttons -->
             <field name="statusSelect" hidden="true"/>
         </panel>
 

@@ -13,6 +13,7 @@
         <field name="endTime" readonlyIf="typeSelect == 'contractual'"/>
         <field name="typeSelect" readonlyIf="typeSelect == 'contractual'"/>
 
+        <!-- TODO: change 'readonlyIf' to 'hideIf' (see ticket #13342) -->
         <button name="createAbsence" help="Create an absence for this line" icon="fa-user-times" readonlyIf="typeSelect != 'contractual'"
                 onClick="save,com.axelor.apps.timecard.web.TimecardLineController:createAbsence"/>
 
@@ -30,7 +31,7 @@
         <panel>
             <field name="typeSelect" selection-in="['extra']" required="true" readonlyIf="['contractual', 'absence'].indexOf(typeSelect) &gt;= 0"/>
             <panel stacked="true">
-                <button name="createAbsence" title="Create an absence for this line" icon="fa-user-times" showIf="typeSelect == 'contractual'" css="btn-custom text-left"
+                <button name="createAbsence" title="Create an absence for this line" icon="fa-user-times" showIf="typeSelect == 'contractual'" css="btn-custom"
                         onClick="save,com.axelor.apps.timecard.web.TimecardLineController:createAbsence"/>
                 <field name="isContractual" showIf="typeSelect == 'extra' &amp;&amp; isSubstitution" onChange="action-timecard-line-attrs-type-select-readonly"/>
                 <field name="contractualTimecardLine" showIf="typeSelect == 'absence'" readonlyIf="contractualTimecardLine"
