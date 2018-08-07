@@ -41,12 +41,14 @@ public class TimecardTimecardRepository extends TimecardRepository {
     // Compute full name
     timecard.setFullName(timecard.getEmployee().getName() + " - " + timecard.getPeriod().getName());
 
-    // Compute start/end dateTime to be able to use 'orderBy' in the TimecardLine list
-    for (TimecardLine timecardLine : timecard.getTimecardLineList()) {
-      timecardLine.setStartDateTime(
-          LocalDateTime.of(timecardLine.getDate(), timecardLine.getStartTime()));
-      timecardLine.setEndDateTime(
-          LocalDateTime.of(timecardLine.getDate(), timecardLine.getEndTime()));
+    if (timecard.getTimecardLineList() != null) {
+      // Compute start/end dateTime to be able to use 'orderBy' in the TimecardLine list
+      for (TimecardLine timecardLine : timecard.getTimecardLineList()) {
+        timecardLine.setStartDateTime(
+            LocalDateTime.of(timecardLine.getDate(), timecardLine.getStartTime()));
+        timecardLine.setEndDateTime(
+            LocalDateTime.of(timecardLine.getDate(), timecardLine.getEndTime()));
+      }
     }
 
     return super.save(timecard);
