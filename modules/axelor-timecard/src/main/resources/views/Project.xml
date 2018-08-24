@@ -125,7 +125,8 @@
     </action-attrs>
 
     <action-record name="action-project-record-set-is-chantier" model="com.axelor.apps.project.db.Project">
-        <field name="isChantier" expr="eval: _isChantier"/>
+        <field name="isSite" expr="eval: _isSite"/>
+        <field name="isProject" expr="eval: false" if="_isSite"/>
     </action-record>
 
 </object-views>
