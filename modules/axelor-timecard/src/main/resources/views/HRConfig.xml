@@ -21,6 +21,9 @@
             </panel>
 
             <panel name="timesheet" title="Timesheet" if="__config__.app.isApp('timesheet')">
+            	<field name="employeesDefaultActivity" domain="self.isActivity = true"/>
+            	<spacer colSpan="6"/>
+            	
                 <field name="useUniqueProductForTimesheet"/>
 
                 <field name="uniqueTimesheetProduct" requiredIf="useUniqueProductForTimesheet" showIf="useUniqueProductForTimesheet" canNew="true" form-view="product-activity-grid"/>

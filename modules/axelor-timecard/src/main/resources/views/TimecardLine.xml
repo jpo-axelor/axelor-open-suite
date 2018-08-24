@@ -42,7 +42,7 @@
             <panel stacked="true">
                 <panel name="suggestionOffPanel">
                     <field name="employee" canEdit="false" required="true" readonlyIf="typeSelect == 'contractual'"
-                           onChange="action-timecard-line-method-compute-night-hours"/>
+                           onChange="action-timecard-line-record-on-change-employee,action-timecard-line-method-compute-night-hours"/>
                     <button name="suggestEmployeeBtn" title="Suggest employee" icon="fa-refresh" css="btn-custom" onClick="action-timecard-line-method-show-suggestions" showIf="isSubstitution &amp;&amp; !$readonly()"/>
                 </panel>
                 <panel name="suggestionOnPanel" hidden="true">
@@ -53,7 +53,7 @@
 
             <field name="$employeeSuggestionList" title="Suggestions" widget="OneToMany" target="com.axelor.apps.timecard.db.EmployeeSuggestion" readonly="true" hidden="true" colSpan="12" grid-view="employee-suggestion-grid" form-view="employee-suggestion-form"/>
 
-            <field name="activity" readonlyIf="typeSelect == 'contractual'"/>
+            <field name="activity" readonlyIf="typeSelect == 'contractual'" domain="self.isActivity = true"/>
             <spacer/>
 
             <panel readonlyIf="typeSelect == 'contractual'" colSpan="12">
@@ -141,6 +141,10 @@
     <action-method name="action-timecard-line-method-compute-night-hours">
         <call class="com.axelor.apps.timecard.web.TimecardLineController" method="computeNightHours"/>
     </action-method>
+
+	<action-record name="action-timecard-line-record-on-change-employee" model="com.axelor.apps.timecard.db.TimecardLine">
+		<field name="activity" expr="eval: employee?.product" if="!activity"/>
+	</action-record>
 
     <action-record name="action-timecard-line-record-get-week-day" model="com.axelor.apps.timecard.db.TimecardLine">
         <field name="weekDay" expr="eval: date.getDayOfWeek().getValue()"/>

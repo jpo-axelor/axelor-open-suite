@@ -80,7 +80,7 @@
                     <field name="dateOfHire" colSpan="4"/>
                     <field name="seniorityDate" colSpan="4"/>
                     <field name="profitSharingBeneficiary" colSpan="4"/>
-                    <field name="mainEmploymentContract" colSpan="4" domain="self.employee.id = :id">
+                    <field name="mainEmploymentContract" colSpan="4" domain="self.employee.id = :id" onChange="action-employee-record-on-change-mainemploymentcontract">
                         <editor x-viewer="true">
                             <field name="payCompany"/>
                             <field name="executiveStatusSelect"/>
@@ -192,6 +192,10 @@
 
     <action-record name="action-hr-record-reset-company-cb-details" model="com.axelor.apps.hr.db.Employee">
         <field name="companyCbDetails" expr="eval: ''"/>
+    </action-record>
+    
+    <action-record name="action-employee-record-on-change-mainemploymentcontract" model="com.axelor.apps.hr.db.Employee">
+    	<field name="product" expr="eval: mainEmploymentContract?.payCompany?.hrConfig?.employeesDefaultActivity" if="!product"/>
     </action-record>
 
     <action-view name="action-employee-user-show-employee" title="Employee"
