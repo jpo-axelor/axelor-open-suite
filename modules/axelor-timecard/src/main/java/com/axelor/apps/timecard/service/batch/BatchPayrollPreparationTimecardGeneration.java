@@ -20,14 +20,20 @@ package com.axelor.apps.timecard.service.batch;
 import com.axelor.apps.base.db.Company;
 import com.axelor.apps.base.db.Period;
 import com.axelor.apps.hr.db.Employee;
+import com.axelor.apps.hr.db.HrBatch;
 import com.axelor.apps.hr.db.PayrollPreparation;
 import com.axelor.apps.hr.exception.IExceptionMessage;
 import com.axelor.apps.hr.service.PayrollPreparationService;
 import com.axelor.apps.hr.service.batch.BatchPayrollPreparationGeneration;
 import com.axelor.apps.timecard.service.PayrollPreparationTimecardServiceImpl;
+import com.axelor.db.JPA;
 import com.axelor.exception.AxelorException;
 import com.axelor.exception.db.repo.TraceBackRepository;
 import com.axelor.i18n.I18n;
+import com.beust.jcommander.internal.Lists;
+import com.google.common.base.Function;
+import com.google.common.base.Joiner;
+import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 import java.util.List;
 
@@ -76,5 +82,57 @@ public class BatchPayrollPreparationTimecardGeneration extends BatchPayrollPrepa
 
     payrollPreparationTimecardService.calculate(payrollPreparation);
     updateEmployee(employee);
+  }
+  
+  // Fast bugfix of ABS issue. Delete this code once the ABS version used by the project includes PR#2323 (RM#13588) 
+  @Override
+  public List<Employee> getEmployees(HrBatch hrBatch) {
+
+    List<String> query = Lists.newArrayList();
+
+    if (!hrBatch.getEmployeeSet().isEmpty()) {
+      String employeeIds =
+          Joiner.on(',')
+              .join(
+                  Iterables.transform(
+                      hrBatch.getEmployeeSet(),
+                      new Function<Employee, String>() {
+                        public String apply(Employee obj) {
+                          return obj.getId().toString();
+                        }
+                      }));
+      query.add("self.id IN (" + employeeIds + ")");
+    }
+    if (!hrBatch.getPlanningSet().isEmpty()) {
+      String planningIds =
+          Joiner.on(',')
+              .join(
+                  Iterables.transform(
+                      hrBatch.getPlanningSet(),
+                      new Function<WeeklyPlanning, String>() {
+                        public String apply(WeeklyPlanning obj) {
+                          return obj.getId().toString();
+                        }
+                      }));
+
+      query.add("self.weeklyPlanning.id IN (" + planningIds + ")");
+    }
+
+    List<Employee> employeeList = Lists.newArrayList();
+    String liaison = query.isEmpty() ? "" : " AND";
+    if (hrBatch.getCompany() != null) {
+      employeeList =
+          JPA.all(Employee.class)
+              .filter(
+                  Joiner.on(" AND ").join(query)
+                      + liaison
+                      + " self.mainEmploymentContract.payCompany = :company")
+              .bind("company", hrBatch.getCompany())
+              .fetch();
+    } else {
+      employeeList = JPA.all(Employee.class).filter(Joiner.on(" AND ").join(query)).fetch();
+    }
+
+    return employeeList;
   }
 }
