@@ -22,6 +22,7 @@
 
 
     <menuitem name="sites-all" parent="menu-project-root" order="9" title="Sites" action="site.all"/>
+    <menuitem name="sale-sites-all" parent="sc-root-sale" order="8" title="Sites" action="site.all"/>
 
     <action-view name="site.all" title="Sites" model="com.axelor.apps.project.db.Project">
         <view type="grid" name="project-timecard-grid"/>

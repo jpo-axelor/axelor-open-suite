@@ -19,6 +19,7 @@ package com.axelor.apps.timecard.service.batch;
 
 import com.axelor.apps.base.db.Company;
 import com.axelor.apps.base.db.Period;
+import com.axelor.apps.base.db.WeeklyPlanning;
 import com.axelor.apps.hr.db.Employee;
 import com.axelor.apps.hr.db.HrBatch;
 import com.axelor.apps.hr.db.PayrollPreparation;
