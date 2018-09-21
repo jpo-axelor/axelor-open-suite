@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.0.xsd">
+    
+
+    <form name="contract-line-form" title="Contract Line" id="contract-line-timecard-form"
+          model="com.axelor.apps.contract.db.ContractLine">
+        <panel>
+            <field name="product" canEdit="false"
+                   onChange="action-method-contract-version-change-product,
+                   action-method-contract-line-compute-total"/>
+            <field name="productName"/>
+            <field name="qty" readonlyIf="isConsumptionLine"
+                   onChange="action-method-contract-line-compute-total"/>
+            <field name="price"
+                   onChange="action-method-contract-line-compute-total"/>
+            <field name="taxLine" canEdit="false"
+                   onChange="action-method-contract-line-compute-total"/>
+            <field name="unit" canEdit="false"/>
+            <field name="exTaxTotal" readonly="true"/>
+            <field name="inTaxTotal" readonly="true"/>
+            <field name="isConsumptionLine"
+               onChange="action-method-contract-line-change-is-consumption-line,
+               action-method-contract-line-compute-total"/>
+            <field name="isInvoiced" readonly="true" showIf="isInvoiced" />
+            <field name="description" colSpan="12" widget="html"/>
+            <field name="comments" colSpan="12" />
+            <field name="contractVersion" hidden="true"/>
+        </panel>
+    </form>
+
+
+	<form name="additional-contract-line-form" title="Additional benefit" id="additional-contract-line-timecard-form"
+          model="com.axelor.apps.contract.db.ContractLine"
+          readonlyIf="isInvoiced">
+        <panel>
+            <field name="product" canEdit="false"
+                   onChange="action-method-contract-change-product,
+                   action-method-contract-line-compute-total"/>
+            <field name="productName"/>
+            <field name="qty" readonlyIf="isConsumptionLine"
+                   onChange="action-method-contract-line-compute-total"/>
+            <field name="price"
+                   onChange="action-method-contract-line-compute-total"/>
+            <field name="taxLine" canEdit="false"
+                   onChange="action-method-contract-line-compute-total"/>
+            <field name="unit" canEdit="false"/>
+            <field name="exTaxTotal" readonly="true"/>
+            <field name="inTaxTotal" readonly="true"/>
+            <field name="isInvoiced" readonly="true" showIf="isInvoiced" />
+            <field name="description" colSpan="12" widget="html"/>
+            <field name="comments" colSpan="12" />
+        </panel>
+    </form>
+
+
+</object-views>

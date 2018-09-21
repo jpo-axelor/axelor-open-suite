@@ -8,16 +8,16 @@ def modules = new File('modules/abs').listFiles().findAll { dir ->
                     !dir.name.endsWith('-business-project') &&
                     !dir.name.endsWith('-cash-management') &&
                     !dir.name.endsWith('-client-portal') &&
-                    !dir.name.endsWith('-contract') &&
                     !dir.name.endsWith('-fleet') &&
                     !dir.name.endsWith('-helpdesk') &&
                     !dir.name.endsWith('-marketing') &&
                     !dir.name.endsWith('-production') &&
-                    !dir.name.endsWith('-purchase') &&
+                    //!dir.name.endsWith('-purchase') &&
                     !dir.name.endsWith('-quality') &&
-                    !dir.name.endsWith('-stock') &&
+                    //!dir.name.endsWith('-stock') &&
                     !dir.name.endsWith('-supplier-management') &&
-                    !dir.name.endsWith('-supplychain') &&
+                    !dir.name.endsWith('-mobile') &&
+                    //!dir.name.endsWith('-supplychain') &&
                     !dir.name.endsWith('-talent')
     )
 }
