@@ -118,10 +118,10 @@ public class TimecardLineController {
     }
     if (employeeId != null) {
       Employee employee = Beans.get(EmployeeRepository.class).find(Long.valueOf(employeeId));
-      response.setValue(
-          "employee", employee);
-      if (employee != null)
-      response.setValue("activity", employee.getProduct());
+      response.setValue("employee", employee);
+      if (employee != null) {
+        response.setValue("activity", employee.getProduct());
+      }
     }
 
     Boolean isSubstitution = (Boolean) request.getContext().get("_isSubstitution");

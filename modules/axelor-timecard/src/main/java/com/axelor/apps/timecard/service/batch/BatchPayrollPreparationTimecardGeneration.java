@@ -84,8 +84,9 @@ public class BatchPayrollPreparationTimecardGeneration extends BatchPayrollPrepa
     payrollPreparationTimecardService.calculate(payrollPreparation);
     updateEmployee(employee);
   }
-  
-  // Fast bugfix of ABS issue. Delete this code once the ABS version used by the project includes PR#2323 (RM#13588) 
+
+  // Fast bugfix of ABS issue. Delete this code once the ABS version used by the project includes
+  // PR#2323 (RM#13588)
   @Override
   public List<Employee> getEmployees(HrBatch hrBatch) {
 
