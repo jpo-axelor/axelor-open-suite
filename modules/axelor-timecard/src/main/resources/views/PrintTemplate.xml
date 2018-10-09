@@ -43,11 +43,11 @@
     </action-attrs>
 
     <action-method name="action-print-template-wizard-method-generate-print">
-        <call class="com.axelor.apps.base.web.PrintTemplateController" method="generatePrint"/>
+        <call class="com.axelor.apps.timecard.web.PrintTemplateController" method="generatePrint"/>
     </action-method>
 
     <action-method name="action-print-template-method-open-print">
-        <call class="com.axelor.apps.base.web.PrintTemplateController" method="openPrint"/>
+        <call class="com.axelor.apps.timecard.web.PrintTemplateController" method="openPrint"/>
     </action-method>
 
 </object-views>
