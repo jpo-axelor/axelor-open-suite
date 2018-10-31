@@ -17,34 +17,39 @@
  */
 package com.axelor.apps.timecard.service;
 
+import com.axelor.apps.account.db.repo.MoveRepository;
+import com.axelor.apps.account.service.PeriodServiceAccountImpl;
+import com.axelor.apps.account.service.move.MoveValidateService;
 import com.axelor.apps.base.db.Period;
 import com.axelor.apps.base.db.repo.PeriodRepository;
 import com.axelor.apps.base.service.AdjustHistoryService;
-import com.axelor.apps.base.service.PeriodServiceImpl;
 import com.axelor.apps.hr.db.PayrollPreparation;
 import com.axelor.apps.hr.db.repo.PayrollPreparationRepository;
+import com.axelor.exception.AxelorException;
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 import java.util.List;
 
-public class PeriodTimecardServiceImpl extends PeriodServiceImpl {
+public class PeriodTimecardServiceImpl extends PeriodServiceAccountImpl {
 
-  protected PayrollPreparationRepository payrollPreparationRepo;
-  protected PayrollPreparationTimecardServiceImpl payrollPreparationService;
+  protected final PayrollPreparationRepository payrollPreparationRepo;
+  protected final PayrollPreparationTimecardServiceImpl payrollPreparationService;
 
   @Inject
   public PeriodTimecardServiceImpl(
       PeriodRepository periodRepo,
       AdjustHistoryService adjustHistoryService,
+      MoveValidateService moveValidateService,
+      MoveRepository moveRepository,
       PayrollPreparationRepository payrollPreparationRepo,
       PayrollPreparationTimecardServiceImpl payrollPreparationService) {
-    super(periodRepo, adjustHistoryService);
+    super(periodRepo, adjustHistoryService, moveValidateService, moveRepository);
     this.payrollPreparationRepo = payrollPreparationRepo;
     this.payrollPreparationService = payrollPreparationService;
   }
 
   @Override
-  @Transactional
+  @Transactional(rollbackOn = {AxelorException.class, RuntimeException.class})
   public void close(Period period) {
     super.close(period);
 

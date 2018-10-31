@@ -18,7 +18,7 @@
 package com.axelor.apps.timecard.module;
 
 import com.axelor.app.AxelorModule;
-import com.axelor.apps.base.service.PeriodServiceImpl;
+import com.axelor.apps.account.service.PeriodServiceAccountImpl;
 import com.axelor.apps.hr.service.PayrollPreparationService;
 import com.axelor.apps.hr.service.batch.BatchPayrollPreparationGeneration;
 import com.axelor.apps.hr.service.batch.HrBatchService;
@@ -70,7 +70,7 @@ public class TimecardModule extends AxelorModule {
     bind(LeaveServiceImpl.class).to(LeaveServiceTimecardImpl.class);
     bind(HrBatchService.class).to(HrBatchTimecardService.class);
     bind(PayrollPreparationService.class).to(PayrollPreparationTimecardServiceImpl.class);
-    bind(PeriodServiceImpl.class).to(PeriodTimecardServiceImpl.class);
+    bind(PeriodServiceAccountImpl.class).to(PeriodTimecardServiceImpl.class);
     bind(BatchPayrollPreparationGeneration.class)
         .to(BatchPayrollPreparationTimecardGeneration.class);
     bind(PrintService.class).to(PrintServiceImpl.class);
