@@ -62,9 +62,9 @@
             <field name="toDate" onChange="action-leave-request-validate-dates,action-leave-request-methode-compute-duration"/>
             <field name="endOnSelect" onChange="action-leave-request-validate-dates,action-leave-request-methode-compute-duration"/>
             <field name="duration" readonly="true" onChange="action-leave-request-methode-duration"/>
-
-            <field name="projectSet" domain="self.isSite = true" widget="TagSelect" colSpan="12" canEdit="false" canNew="false"/>
-
+			<!-- Traversier -->
+            <field name="projectSet" widget="TagSelect" colSpan="12" canEdit="false" canNew="false" onSelect="action-leave-request-attrs-projectset-select"/>
+			<!-- /Traversier -->
             <field name="comments" colSpan="12"/>
         </panel>
 
@@ -114,6 +114,10 @@
     <action-attrs name="action-leave-request-attrs-hide-duration">
         <attribute for="duration" name="hidden" expr="eval: __config__.app.getApp('timecard').getDeductLeavesFromTimecard()"/>
     </action-attrs>
+
+	<action-attrs name="action-leave-request-attrs-projectset-select">
+  		<attribute name="domain" expr="eval: &quot; self.isSite = true AND self.id IN (${(__repo__(PlanningLine).all().filter('self.employee.id = :employeeId').bind('employeeId', user?.employee?.id).fetch().collect{it -> it?.project?.id ?: null}+[null]).join(',')}) &quot;" for="projectSet"/>
+	</action-attrs>
 
     <action-group name="action-leave-request-group-validate" id="action-timecard-leave-request-group-validate">
         <action name="action-leave-request-validate-dates-on-save"/>
