@@ -17,8 +17,10 @@
  */
 package com.axelor.apps.timecard.db.repo;
 
+import com.axelor.apps.base.db.Company;
 import com.axelor.apps.hr.db.Employee;
 import com.axelor.apps.project.db.Project;
+import com.axelor.apps.timecard.db.Timecard;
 import com.axelor.apps.timecard.db.TimecardLine;
 import com.axelor.apps.timecard.service.TimecardLineService;
 import com.axelor.exception.AxelorException;
@@ -73,6 +75,34 @@ public class TimecardLineTimecardRepository extends TimecardLineRepository {
         totalSubstitutionsHours = totalSubstitutionsHours.add(line.getDuration());
       }
       timecardLine.setTotalSubstitutionHours(totalSubstitutionsHours);
+    }
+
+    if (timecardLine.getIsSubstitution() && timecardLine.getTimecard() == null) {
+      TimecardLine absenceTimeCardLine = timecardLine.getAbsenceTimecardLine();
+
+      Company company = null;
+      if (absenceTimeCardLine != null) {
+        if (absenceTimeCardLine.getTimecard() != null) {
+          company = absenceTimeCardLine.getTimecard().getCompany();
+        } else if (absenceTimeCardLine.getLeaveRequest() != null) {
+          company = absenceTimeCardLine.getLeaveRequest().getCompany();
+        } else if (absenceTimeCardLine.getEmployee().getMainEmploymentContract() != null) {
+          company = absenceTimeCardLine.getEmployee().getMainEmploymentContract().getPayCompany();
+        }
+      }
+
+      Timecard timecard =
+          Beans.get(TimecardRepository.class)
+              .all()
+              .filter(
+                  "company = :company AND employee = :employee AND fromDate <= :date AND toDate >= :date AND statusSelect = :draftStatus")
+              .bind("company", company)
+              .bind("employee", timecardLine.getEmployee())
+              .bind("date", timecardLine.getDate())
+              .bind("draftStatus", TimecardRepository.STATUS_DRAFT)
+              .fetchOne();
+
+      timecardLine.setTimecard(timecard);
     }
 
     if (employee != null) {
