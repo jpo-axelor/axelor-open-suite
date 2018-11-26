@@ -83,7 +83,7 @@
         </panel>
     </form>
 
-    <form name="timecard-line-substitution-wizard-form" title="Substitution assistant" model="com.axelor.apps.base.db.Wizard"
+    <form name="timecard-line-substitution-wizard-form" title="Substitution assistant" model="com.axelor.apps.base.db.Wizard" width="large"
           onNew="action-timecard-line-method-set-wizard-defaults">
         <panel>
             <field name="$startDate" title="Start date" widget="Date" colSpan="4"/>

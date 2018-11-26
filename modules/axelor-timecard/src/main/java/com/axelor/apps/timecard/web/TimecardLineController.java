@@ -41,6 +41,8 @@ import com.axelor.meta.schema.actions.ActionView;
 import com.axelor.rpc.ActionRequest;
 import com.axelor.rpc.ActionResponse;
 import com.axelor.rpc.Context;
+import com.axelor.team.db.Team;
+import com.google.inject.Inject;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -54,6 +56,8 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 
 public class TimecardLineController {
+
+  @Inject protected EmployeeRepository employeeRepo;
 
   /** Set defaults of {@code TimecardLine} in context. */
   public void setDefaults(ActionRequest request, ActionResponse response) {
@@ -130,6 +134,14 @@ public class TimecardLineController {
       response.setValue("absenceTimecardLine", timecardLineParent);
       response.setValue("typeSelect", TimecardLineRepository.TYPE_EXTRA);
       response.setAttr("typeSelect", "readonly", true);
+      response.setAttr(
+          "employee",
+          "domain",
+          "self.id <> "
+              + timecardLineParent.getEmployee().getId()
+              + " AND self.id IN ("
+              + String.join(",", this.extractEmployeeIds(timecardLineParent.getEmployee()))
+              + ")");
     }
 
     Boolean isForecastTCL = (Boolean) request.getContext().get("_isForecastTCL");
@@ -152,7 +164,15 @@ public class TimecardLineController {
 
       Employee employee = leaveRequest.getUser().getEmployee();
       response.setValue("$employeeToReplace", employee);
-      response.setAttr("$employeeReplacing", "domain", "self.id <> " + employee.getId());
+
+      response.setAttr(
+          "$employeeReplacing",
+          "domain",
+          "self.id <> "
+              + employee.getId()
+              + " AND self.id IN ("
+              + String.join(",", this.extractEmployeeIds(employee))
+              + ")");
 
       List<TimecardLine> timecardLines = leaveRequest.getTimecardLineList();
       Set<String> projectsIds = new HashSet<>();
@@ -175,7 +195,14 @@ public class TimecardLineController {
       Employee employee = planning.getEmployee();
       if (employee != null) {
         response.setValue("$employeeToReplace", employee);
-        response.setAttr("$employeeReplacing", "domain", "self.id <> " + employee.getId());
+        response.setAttr(
+            "$employeeReplacing",
+            "domain",
+            "self.id <> "
+                + employee.getId()
+                + " AND self.id IN ("
+                + String.join(",", this.extractEmployeeIds(employee))
+                + ")");
       } else {
         response.setAttr("$employeeToReplace", "readonly", false);
       }
@@ -187,7 +214,14 @@ public class TimecardLineController {
 
       Employee employee = timecard.getEmployee();
       response.setValue("$employeeToReplace", employee);
-      response.setAttr("$employeeReplacing", "domain", "self.id <> " + employee.getId());
+      response.setAttr(
+          "$employeeReplacing",
+          "domain",
+          "self.id <> "
+              + employee.getId()
+              + " AND self.id IN ("
+              + String.join(",", this.extractEmployeeIds(employee))
+              + ")");
     }
 
     response.setValue("isContractual", false);
@@ -372,5 +406,22 @@ public class TimecardLineController {
             .param("forceEdit", "true")
             .context("_showRecord", absenceTL.getId())
             .map());
+  }
+
+  private Set<String> extractEmployeeIds(Employee employee) {
+    Set<Team> teamSet = employee.getTeamSet();
+    Set<String> employeeIds = new HashSet<>();
+    for (Team team : teamSet) {
+      employeeIds.addAll(
+          employeeRepo
+              .all()
+              .filter("?1 MEMBER OF self.teamSet", team.getId())
+              .fetch()
+              .stream()
+              .map(Employee::getId)
+              .map(it -> it.toString())
+              .collect(Collectors.toList()));
+    }
+    return employeeIds;
   }
 }
