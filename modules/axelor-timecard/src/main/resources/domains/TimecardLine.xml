@@ -59,7 +59,11 @@
                 public static final String TYPE_ABSENCE = "absence";
             ]]>
         </extra-code>
-
+			
+		<track>
+			<field name="updatedOn" if="isSubstitution == true"/>
+			<message if="true" on="UPDATE">Record updated</message>
+		</track>
     </entity>
 
 </domain-models>

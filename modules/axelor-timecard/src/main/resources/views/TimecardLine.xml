@@ -81,6 +81,11 @@
                 <field name="isSubstitution" hidden="true"/>
             </panel>
         </panel>
+        
+        <panel-mail>
+    		<mail-messages limit="4" />
+    		<mail-followers />
+  		</panel-mail>
     </form>
 
     <form name="timecard-line-substitution-wizard-form" title="Substitution assistant" model="com.axelor.apps.base.db.Wizard" width="large"

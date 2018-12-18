@@ -51,5 +51,15 @@
     <action-view name="action-hr-view-add-absence" title="Absence" model="com.axelor.apps.hr.db.LeaveRequest">
         <view type="form" name="leave-request-form"/>
     </action-view>
+    
+    <!-- Batch -->
+    <menuitem name="admin-root-batch-timecard" parent="admin-root-batch"
+		title="Timecard monthly hours batchs" action="admin.root.batch.timecard" />
+
+	<action-view name="admin.root.batch.timecard" title="Timecard monthly hours batch"
+		model="com.axelor.apps.timecard.db.TimecardBatch" >
+		<view type="grid" name="timecard-batch-grid"/>
+		<view type="form" name="timecard-batch-form"/>
+	</action-view>
 
 </object-views>

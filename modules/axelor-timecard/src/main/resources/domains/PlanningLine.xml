@@ -19,6 +19,11 @@
         <finder-method name="findByProject" using="project" all="true"/>
         <finder-method name="findByEmployeeAndProject" using="employee,project" all="true"/>
 
+		<track>
+			<field name="createdOn" on="CREATE"/>
+			<field name="updatedOn" on="UPDATE"/>
+			<message if="true" on="UPDATE">Record updated</message>
+		</track>
     </entity>
 
 </domain-models>

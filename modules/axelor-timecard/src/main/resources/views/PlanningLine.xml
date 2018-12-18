@@ -75,6 +75,11 @@
         <panel showIf="$readonly()">
             <field name="monthlyHours"/>
         </panel>
+        
+        <panel-mail>
+    		<mail-messages limit="4" />
+    		<mail-followers />
+  		</panel-mail>
     </form>
 
     <action-record name="action-planning-line-record-set-defaults" model="com.axelor.apps.timecard.db.PlanningLine">

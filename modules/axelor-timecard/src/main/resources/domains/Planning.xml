@@ -12,7 +12,6 @@
         <date name="startDate" title="Start date"/>
         <date name="endDate" title="End date"/>
         <decimal name="monthlyHours" title="Monthly hours" readonly="true"/>
-
     </entity>
 
 </domain-models>

@@ -31,6 +31,8 @@
 
         <one-to-many name="weeklyHoursList" ref="com.axelor.apps.timecard.db.WeeklyHours" title="Weekly hours"/>
 
+		<integer name="nbOfSentMessages" default="0"/>
+		
         <extra-code>
             <![CDATA[
                 // Status select
