@@ -35,6 +35,7 @@ import com.axelor.i18n.I18n;
 import com.axelor.inject.Beans;
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
+import java.lang.invoke.MethodHandles;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDate;
@@ -47,7 +48,8 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.annotation.Nullable;
-import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TimecardLineServiceImpl implements TimecardLineService {
 
@@ -55,6 +57,8 @@ public class TimecardLineServiceImpl implements TimecardLineService {
   protected EmployeeSuggestionRepository employeeSuggestionRepo;
   protected TimecardRepository timecardRepo;
   protected TimecardService timecardService;
+
+  private final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
   @Inject
   public TimecardLineServiceImpl(
@@ -217,8 +221,7 @@ public class TimecardLineServiceImpl implements TimecardLineService {
                 startDate,
                 endDate,
                 TimecardLineRepository.TYPE_ABSENCE,
-                StringUtils.join(
-                    projects.stream().map(Project::getId).collect(Collectors.toList()), ','))
+                projects.stream().map(Project::getId).collect(Collectors.toList()))
             .fetch();
 
     for (TimecardLine timecardLine : timecardLines) {
