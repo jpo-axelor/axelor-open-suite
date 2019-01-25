@@ -50,7 +50,8 @@ def modules = new File('modules/abs').listFiles().findAll { dir ->
     new File(dir, 'build.gradle').exists() && (
             dir.name.startsWith('axelor-') &&
                     !dir.name.endsWith('-business-production') &&
-                    !dir.name.endsWith('-business-project') &&
+                    // !dir.name.endsWith('-business-project') &&
+                    !dir.name.endsWith('-business-support') &&
                     !dir.name.endsWith('-cash-management') &&
                     !dir.name.endsWith('-client-portal') &&
                     !dir.name.endsWith('-fleet') &&
