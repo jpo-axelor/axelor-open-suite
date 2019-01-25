@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.0.xsd">
+
+  <menuitem name="workorder-root" title="Work order" icon="fa-warning" icon-background="#cc8400"/>
+
+
+  <menuitem name="workorder-team-tasks" parent="workorder-root" title="Work orders" action="workorder.team.tasks.all"/>
+
+  <action-view name="workorder.team.tasks.all" model="com.axelor.team.db.TeamTask" title="Work orders">
+    <view name="team-task-grid" type="grid"/>
+    <view name="team-task-calendar" type="calendar"/>
+    <view name="team-task-form" type="form"/>
+    <view-param name="search-filters" value="task-filters"/>
+    <view-param name="details-view" value="true"/>
+    <domain>self.typeSelect = :_typeSelect</domain>
+    <context name="_typeSelect" expr="eval: com.axelor.team.db.repo.TeamTaskRepository.TYPE_WORK_ORDER"/>
+  </action-view>
+
+</object-views>
