@@ -20,6 +20,7 @@ package com.axelor.apps.timecard.service;
 import com.axelor.apps.base.db.ICalendarEvent;
 import com.axelor.apps.base.db.repo.ICalendarEventRepository;
 import com.axelor.apps.base.ical.ICalendarService;
+import com.axelor.apps.base.service.FrequencyService;
 import com.axelor.apps.base.service.app.AppBaseService;
 import com.axelor.apps.base.service.weeklyplanning.WeeklyPlanningService;
 import com.axelor.apps.hr.db.Employee;
@@ -47,7 +48,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -115,11 +115,6 @@ public class LeaveServiceTimecardImpl extends LeaveServiceImpl {
     LocalDate fromDate = leaveRequest.getFromDate();
     LocalDate toDate = leaveRequest.getToDate();
 
-    List<Integer> years = new ArrayList<>();
-    for (int i = fromDate.getYear(); i <= toDate.getYear(); i++) {
-      years.add(i);
-    }
-
     List<PlanningLine> planningLines = planningLineRepo.findByEmployee(employee).fetch();
     for (PlanningLine planningLine : planningLines) {
       Project project = planningLine.getProject();
@@ -128,10 +123,8 @@ public class LeaveServiceTimecardImpl extends LeaveServiceImpl {
         continue;
       }
 
-      List<LocalDate> dates = new ArrayList<>();
-      for (Integer year : years) {
-        dates.addAll(frequencyService.getDates(planningLine.getFrequency(), year));
-      }
+      List<LocalDate> dates =
+          frequencyService.getDates(planningLine.getFrequency(), fromDate, toDate);
 
       for (LocalDate date : dates) {
         if (date.equals(fromDate)

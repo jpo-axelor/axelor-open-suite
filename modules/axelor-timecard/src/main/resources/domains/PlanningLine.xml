@@ -11,7 +11,7 @@
         <many-to-one name="project" title="Site" ref="com.axelor.apps.project.db.Project" required="true"/>
         <time name="startTime" title="Start time" required="true"/>
         <time name="endTime" title="End time" required="true"/>
-        <many-to-one name="frequency" title="Frequency" ref="com.axelor.apps.timecard.db.Frequency" required="true"/>
+        <many-to-one name="frequency" title="Frequency" ref="com.axelor.apps.base.db.Frequency" required="true"/>
         <decimal name="monthlyHours" title="Monthly hours" readonly="true"/>
         <string name="description" title="Description" large="true"/>
 

@@ -17,10 +17,11 @@
  */
 package com.axelor.apps.timecard.service;
 
+import com.axelor.apps.base.db.Frequency;
+import com.axelor.apps.base.service.FrequencyService;
 import com.axelor.apps.base.service.app.AppBaseService;
 import com.axelor.apps.hr.db.Employee;
 import com.axelor.apps.project.db.Project;
-import com.axelor.apps.timecard.db.Frequency;
 import com.axelor.apps.timecard.db.PlanningLine;
 import com.axelor.apps.timecard.db.repo.PlanningLineRepository;
 import com.axelor.exception.AxelorException;
@@ -54,7 +55,9 @@ public class PlanningLineServiceImpl implements PlanningLineService {
   public void computeMonthlyHours(PlanningLine planningLine) {
     Frequency frequency = planningLine.getFrequency();
 
-    List<LocalDate> dates = frequencyService.getDates(frequency, null);
+    LocalDate today = appBaseService.getTodayDate();
+    List<LocalDate> dates =
+        frequencyService.getDates(frequency, today, LocalDate.of(today.getYear(), 12, 31));
 
     double lineDuration =
         Duration.between(planningLine.getStartTime(), planningLine.getEndTime()).toMinutes() / 60.0;

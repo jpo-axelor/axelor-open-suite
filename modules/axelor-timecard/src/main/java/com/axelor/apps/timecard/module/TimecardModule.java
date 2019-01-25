@@ -31,8 +31,6 @@ import com.axelor.apps.timecard.db.repo.TimecardLineRepository;
 import com.axelor.apps.timecard.db.repo.TimecardLineTimecardRepository;
 import com.axelor.apps.timecard.db.repo.TimecardRepository;
 import com.axelor.apps.timecard.db.repo.TimecardTimecardRepository;
-import com.axelor.apps.timecard.service.FrequencyService;
-import com.axelor.apps.timecard.service.FrequencyServiceImpl;
 import com.axelor.apps.timecard.service.LeaveServiceTimecardImpl;
 import com.axelor.apps.timecard.service.PayrollPreparationTimecardServiceImpl;
 import com.axelor.apps.timecard.service.PeriodTimecardServiceImpl;
@@ -59,7 +57,6 @@ public class TimecardModule extends AxelorModule {
   protected void configure() {
     bind(AppTimecardService.class).to(AppTimecardServiceImpl.class);
     bind(PlanningLineRepository.class).to(PlanningLineTimecardRepository.class);
-    bind(FrequencyService.class).to(FrequencyServiceImpl.class);
     bind(PlanningLineService.class).to(PlanningLineServiceImpl.class);
     bind(TimecardService.class).to(TimecardServiceImpl.class);
     bind(TimecardRepository.class).to(TimecardTimecardRepository.class);

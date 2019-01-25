@@ -17,8 +17,8 @@
  */
 package com.axelor.apps.timecard.db.repo;
 
+import com.axelor.apps.base.service.FrequencyService;
 import com.axelor.apps.timecard.db.PlanningLine;
-import com.axelor.apps.timecard.service.FrequencyService;
 import com.axelor.inject.Beans;
 
 public class PlanningLineTimecardRepository extends PlanningLineRepository {

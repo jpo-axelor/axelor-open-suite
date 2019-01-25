@@ -17,6 +17,7 @@
  */
 package com.axelor.apps.timecard.service;
 
+import com.axelor.apps.base.service.FrequencyService;
 import com.axelor.apps.hr.db.Employee;
 import com.axelor.apps.project.db.Project;
 import com.axelor.apps.timecard.db.PlanningLine;
@@ -70,7 +71,8 @@ public class TempTimecardLineServiceImpl implements TempTimecardLineService {
     List<PlanningLine> planningLines = planningLineService.getPlanningLines(project, employee);
     // Generate temp time card lines
     for (PlanningLine planningLine : planningLines) {
-      List<LocalDate> dates = frequencyService.getDates(planningLine.getFrequency(), null);
+      List<LocalDate> dates =
+          frequencyService.getDates(planningLine.getFrequency(), startDate, endDate);
       for (LocalDate date : dates) {
         if (date.equals(startDate)
             || date.equals(endDate)

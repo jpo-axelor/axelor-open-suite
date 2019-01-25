@@ -17,6 +17,7 @@
  */
 package com.axelor.apps.timecard.service;
 
+import com.axelor.apps.base.service.FrequencyService;
 import com.axelor.apps.base.service.app.AppBaseService;
 import com.axelor.apps.hr.db.Employee;
 import com.axelor.apps.hr.db.EmploymentContract;
@@ -118,7 +119,8 @@ public class TimecardServiceImpl implements TimecardService {
       Project project = planningLine.getProject();
 
       List<LocalDate> dates =
-          frequencyService.getDates(planningLine.getFrequency(), timecard.getFromDate().getYear());
+          frequencyService.getDates(
+              planningLine.getFrequency(), fromDate, LocalDate.of(fromDate.getYear(), 12, 31));
       for (LocalDate date : dates) {
         if (date.equals(fromDate)
             || date.isAfter(fromDate) && date.isBefore(toDate)

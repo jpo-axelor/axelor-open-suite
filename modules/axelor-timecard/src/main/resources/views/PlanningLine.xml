@@ -88,7 +88,7 @@
     </action-record>
 
     <action-record name="action-planning-line-record-default-frequency" model="com.axelor.apps.timecard.db.PlanningLine">
-        <field name="frequency" expr="eval: new com.axelor.apps.timecard.db.Frequency()"/>
+        <field name="frequency" expr="eval: new com.axelor.apps.base.db.Frequency()"/>
     </action-record>
 
     <action-method name="action-planningline-method-compute-monthly-hours">
