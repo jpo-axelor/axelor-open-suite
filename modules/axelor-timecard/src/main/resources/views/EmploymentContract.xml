@@ -57,7 +57,9 @@
                 <field name="monthlyGlobalCost" colSpan="4"/>
                 <field name="monthlyHours"/>
                 <panel-related field="otherCostsEmployeeSet" colSpan="12"/>
-            </panel>
+ 	           </panel>
+            <panel-related field="planningLineList" grid-view="planning-line-grid" form="planning-line-form" colSpan="12" showIf="employee"/>
+            <panel-related field="timecardLineList" grid-view="timecard-line-grid" form="timecard-line-form" colSpan="12" showIf="employee"/>
         </panel>
 
         <panel name="endOfContract" title="End of contract">

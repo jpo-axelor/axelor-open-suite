@@ -3,7 +3,7 @@
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.0.xsd">
 
-    <grid name="timecard-line-grid" title="Timecard lines" model="com.axelor.apps.timecard.db.TimecardLine" orderBy="startDateTime">
+    <grid name="timecard-line-grid" title="Timecard lines" model="com.axelor.apps.timecard.db.TimecardLine" orderBy="startDateTime" >
         <hilite if="typeSelect == 'absence' &amp;&amp; $number(totalSubstitutionHours) == 0" color="danger"/>
         <hilite if="typeSelect == 'absence' &amp;&amp; $number(totalSubstitutionHours) &lt; $number(duration)" color="warning"/>
         <field name="project" readonlyIf="typeSelect == 'contractual'"/>
@@ -12,7 +12,7 @@
         <field name="startTime" readonlyIf="typeSelect == 'contractual'"/>
         <field name="endTime" readonlyIf="typeSelect == 'contractual'"/>
         <field name="typeSelect" readonlyIf="typeSelect == 'contractual'"/>
-
+		<field name="employmentContract"/>
         <!-- TODO: change 'readonlyIf' to 'hideIf' (see ticket #13342) -->
         <button name="createAbsence" help="Create an absence for this line" icon="fa-user-times" readonlyIf="typeSelect != 'contractual'"
                 onClick="save,com.axelor.apps.timecard.web.TimecardLineController:createAbsence"/>
@@ -25,7 +25,7 @@
     </grid>
 
     <form name="timecard-line-form" title="Timecard line" model="com.axelor.apps.timecard.db.TimecardLine" width="large"
-          onNew="action-timecard-line-method-set-defaults,action-timecard-line-record-compute-duration,action-timecard-line-attrs-required-contractual-timecard-line"
+          onNew="action-timecard-line-group-onnew"
           onLoad="action-timecard-line-record-update-durations,action-timecard-line-attrs-required-contractual-timecard-line"
           onSave="action-timecard-line-record-update-type-select">
         <panel>
@@ -43,6 +43,7 @@
                 <panel name="suggestionOffPanel">
                     <field name="employee" canEdit="false" required="true" readonlyIf="typeSelect == 'contractual'"
                            onChange="action-timecard-line-record-on-change-employee,action-timecard-line-method-compute-night-hours"/>
+                     <field name="employmentContract" domain="self.employee=:employee"/>
                     <button name="suggestEmployeeBtn" title="Suggest employee" icon="fa-refresh" css="btn-custom" onClick="action-timecard-line-method-show-suggestions" showIf="isSubstitution &amp;&amp; !$readonly()"/>
                 </panel>
                 <panel name="suggestionOnPanel" hidden="true">
@@ -123,6 +124,13 @@
         <field name="typeSelect"/>
     </calendar>
 
+	<action-group name="action-timecard-line-group-onnew">
+		<action name="action-timecard-line-method-set-defaults" if="_parent?._model != 'com.axelor.apps.hr.db.EmploymentContract'"/>
+		<action name="action-timecard-line-attrs-set-defaults" if="_parent?._model == 'com.axelor.apps.hr.db.EmploymentContract'"/>
+		<action name="action-timecard-line-record-compute-duration"/>
+		<action name="action-timecard-line-attrs-required-contractual-timecard-line"/>
+	</action-group>
+
     <action-method name="action-timecard-line-method-set-defaults">
         <call class="com.axelor.apps.timecard.web.TimecardLineController" method="setDefaults"/>
     </action-method>
@@ -197,5 +205,9 @@
     <action-attrs name="action-timecard-line-attrs-required-contractual-timecard-line">
         <attribute for="contractualTimecardLine" name="required" expr="eval: typeSelect.equals(com.axelor.apps.timecard.db.repo.TimecardLineRepository.TYPE_ABSENCE) &amp;&amp; __parent__?._model.equals('com.axelor.apps.timecard.db.Timecard')"/>
     </action-attrs>
-
+	
+	<action-attrs name="action-timecard-line-attrs-set-defaults">
+		<attribute name="value" for="employee" expr="eval:_parent?.employee"/>
+		<attribute name="hidden" for="employmentContract" expr="eval:true"/>
+	</action-attrs>
 </object-views>

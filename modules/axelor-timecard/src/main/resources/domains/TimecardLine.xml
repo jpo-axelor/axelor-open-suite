@@ -31,6 +31,7 @@
         <!-- Substitutions -->
         <decimal name="totalSubstitutionHours" title="Substitution duration (hours)" readonly="true"/>
         <one-to-many name="substitutionTimecardLineList" title="Substitution lines" ref="com.axelor.apps.timecard.db.TimecardLine" mappedBy="absenceTimecardLine"/>
+        <many-to-one name="employmentContract" ref="com.axelor.apps.hr.db.EmploymentContract" title="Employment Contract"/>
         <many-to-one name="absenceTimecardLine" title="Replaces" ref="com.axelor.apps.timecard.db.TimecardLine" readonly="true"/>
         <boolean name="isSubstitution" hidden="true" default="false"/>
         <boolean name="isContractual" title="Contractual"/>

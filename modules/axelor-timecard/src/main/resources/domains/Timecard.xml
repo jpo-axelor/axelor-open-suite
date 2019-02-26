@@ -30,7 +30,7 @@
         <decimal name="nightHours" title="Night hours" readonly="true"/>
 
         <one-to-many name="weeklyHoursList" ref="com.axelor.apps.timecard.db.WeeklyHours" title="Weekly hours"/>
-
+		<many-to-one name="employmentContract" ref="com.axelor.apps.hr.db.EmploymentContract" title="Employment Contract"/>
 		<integer name="nbOfSentMessages" default="0"/>
 		
         <extra-code>

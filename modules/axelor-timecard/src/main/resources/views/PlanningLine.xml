@@ -6,19 +6,21 @@
     <grid name="planning-line-grid" title="Planning lines" model="com.axelor.apps.timecard.db.PlanningLine">
         <field name="project"/>
         <field name="employee"/>
+        <field name="employmentContract"/>
         <field name="startTime"/>
         <field name="endTime"/>
         <field name="frequency"/>
     </grid>
 
     <form name="planning-line-form" title="Planning line" model="com.axelor.apps.timecard.db.PlanningLine" width="large"
-          onNew="action-planning-line-record-set-defaults,action-planning-line-record-default-frequency"
+          onNew="action-planning-line-group-onnew"
           onSave="save,action-planningline-method-compute-monthly-hours">
         <panel>
-            <field name="project" domain="self.statusSelect = 2 AND self.isSite = true" canEdit="false" grid-view="project-grid" form-view="project-form"/>
-            <field name="employee" canEdit="false" grid-view="employee-grid" form-view="employee-form"/>
-            <field name="startTime" colSpan="3" validIf="startTime &lt; endTime"/>
-            <field name="endTime" colSpan="3" validIf="startTime &lt; endTime"/>
+            <field name="project" domain="self.statusSelect = 2 AND self.isSite = true" canEdit="false" grid-view="project-grid" form-view="project-form" colSpan="4"/>
+            <field name="employee" canEdit="false" grid-view="employee-grid" form-view="employee-form" colSpan="4"/>
+            <field name="employmentContract" domain="self.employee=:employee" colSpan="4"/>
+            <field name="startTime" colSpan="4" validIf="startTime &lt; endTime"/>
+            <field name="endTime" colSpan="4" validIf="startTime &lt; endTime"/>
             <field name="frequency" showIf="$readonly()" hidden="true" grid-view="frequency-grid" form-view="frequency-form"/>
             <field name="frequency" canEdit="false" canRemove="false" canSelect="false" canView="false" showTitle="false" showIf="!$readonly()" hidden="true" colSpan="12">
                 <editor>
@@ -82,9 +84,16 @@
   		</panel-mail>
     </form>
 
+	<action-group name="action-planning-line-group-onnew">
+		<action name="action-planning-line-record-set-defaults" if="_parent?._model != 'com.axelor.apps.hr.db.EmploymentContract'"/>
+		<action name="action-planning-line-attrs-set-fields" if="_parent?._model == 'com.axelor.apps.hr.db.EmploymentContract'"/>
+		<action name="action-planning-line-record-default-frequency"/>
+	</action-group>
+
     <action-record name="action-planning-line-record-set-defaults" model="com.axelor.apps.timecard.db.PlanningLine">
         <field name="project" expr="eval: __repo__(Project).find(_projectId)" if="_projectId"/>
         <field name="employee" expr="eval: __repo__(Employee).find(_employeeId)" if="_employeeId"/>
+         <field name="employmentContract" expr="eval:__repo__(EmploymentContract).find(_employmentContractId)"  if="_employmentContractId"/>
     </action-record>
 
     <action-record name="action-planning-line-record-default-frequency" model="com.axelor.apps.timecard.db.PlanningLine">
@@ -94,5 +103,10 @@
     <action-method name="action-planningline-method-compute-monthly-hours">
         <call class="com.axelor.apps.timecard.web.PlanningLineController" method="computeMonthlyHours"/>
     </action-method>
-
+	
+	
+	<action-attrs name="action-planning-line-attrs-set-fields">
+		<attribute name="value" for="employee" expr="eval:_parent?.employee"/>
+		<attribute name="hidden" for="employmentContract" expr="eval:true"/>
+	</action-attrs>
 </object-views>

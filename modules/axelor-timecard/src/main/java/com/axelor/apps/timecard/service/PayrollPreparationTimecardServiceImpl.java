@@ -93,9 +93,9 @@ public class PayrollPreparationTimecardServiceImpl extends PayrollPreparationSer
         Beans.get(TimecardRepository.class)
             .all()
             .filter(
-                "self.statusSelect = ? AND self.employee.id = ? AND self.period.id = ?",
+                "self.statusSelect = ? AND self.employmentContract.id = ? AND self.period.id = ?",
                 TimecardRepository.STATUS_VALIDATED,
-                payrollPrep.getEmployee().getId(),
+                payrollPrep.getEmploymentContract().getId(),
                 payrollPrep.getPeriod().getId())
             .fetch();
 

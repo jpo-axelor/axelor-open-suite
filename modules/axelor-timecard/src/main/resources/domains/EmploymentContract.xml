@@ -8,6 +8,8 @@
     <entity name="EmploymentContract">
 
         <decimal name="monthlyHours" title="Monthly hours"/>
+        <one-to-many name="planningLineList" ref="com.axelor.apps.timecard.db.PlanningLine" title="Planning lines" mappedBy="employmentContract"/>
+        <one-to-many name="timecardLineList" ref="com.axelor.apps.timecard.db.TimecardLine" title="Timecard lines" mappedBy="employmentContract"/>
 
     </entity>
 

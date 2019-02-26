@@ -9,6 +9,7 @@
 
         <many-to-one name="project" title="Site" ref="com.axelor.apps.project.db.Project"/>
         <many-to-one name="employee" title="Employee" ref="com.axelor.apps.hr.db.Employee"/>
+        <many-to-one name="employmentContract" ref="com.axelor.apps.hr.db.EmploymentContract" title="Employment Contract"/>
         <date name="startDate" title="Start date"/>
         <date name="endDate" title="End date"/>
         <decimal name="monthlyHours" title="Monthly hours" readonly="true"/>

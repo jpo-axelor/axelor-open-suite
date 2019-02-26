@@ -19,8 +19,10 @@ package com.axelor.apps.timecard.web;
 
 import com.axelor.apps.base.db.Wizard;
 import com.axelor.apps.hr.db.Employee;
+import com.axelor.apps.hr.db.EmploymentContract;
 import com.axelor.apps.hr.db.LeaveRequest;
 import com.axelor.apps.hr.db.repo.EmployeeRepository;
+import com.axelor.apps.hr.db.repo.EmploymentContractRepository;
 import com.axelor.apps.hr.db.repo.LeaveRequestRepository;
 import com.axelor.apps.project.db.Project;
 import com.axelor.apps.project.db.repo.ProjectRepository;
@@ -114,8 +116,14 @@ public class TimecardLineController {
         Timecard timecard = parentContext.asType(Timecard.class);
         if (timecard != null) {
           Employee employee = timecard.getEmployee();
+          EmploymentContract employmentContract = timecard.getEmploymentContract();
           if (employee != null) {
             employeeId = employee.getId().intValue();
+          }
+          if (employmentContract != null) {
+            response.setValue(
+                "employmentContract",
+                Beans.get(EmploymentContractRepository.class).find(employmentContract.getId()));
           }
         }
       }

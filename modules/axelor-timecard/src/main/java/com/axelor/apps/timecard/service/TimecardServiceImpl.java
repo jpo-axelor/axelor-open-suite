@@ -134,6 +134,7 @@ public class TimecardServiceImpl implements TimecardService {
                   planningLine.getEndTime(),
                   TimecardLineRepository.TYPE_CONTRACTUAL,
                   true);
+          timecardLine.setEmploymentContract((timecard.getEmploymentContract()));
           timecardLineRepo.save(timecardLine);
           timecard.addTimecardLineListItem(timecardLine);
         }
