@@ -127,3 +127,7 @@ task archiveImages(type: Zip) {
     destinationDir = new File("$buildDir/libs")
     includeEmptyDirs = false
 }
+
+war {
+  archiveName 'traversier-erp.war'
+}
