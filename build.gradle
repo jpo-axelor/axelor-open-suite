@@ -8,7 +8,7 @@ buildscript {
     }
     repositories repos
     dependencies {
-        classpath "com.axelor:axelor-gradle:5.0.4"
+        classpath "com.axelor:axelor-gradle:5.0.12"
         classpath "com.diffplug.spotless:spotless-plugin-gradle:3.13.0"
     }
 }
