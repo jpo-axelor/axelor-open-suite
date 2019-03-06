@@ -7,8 +7,7 @@
 
   <entity name="TeamTask">
     <extra-code>
-      // TYPE SELECT
-      public static final String TYPE_WORK_ORDER = "work_order";
+      public static final String TYPE_WORK_ORDER = "workOrder";
     </extra-code>
   </entity>
 

@@ -7,7 +7,6 @@
 
 
   <menuitem name="workorder-team-tasks" parent="workorder-root" title="Work orders" action="workorder.team.tasks.all"/>
-
   <action-view name="workorder.team.tasks.all" model="com.axelor.team.db.TeamTask" title="Work orders">
     <view name="team-task-grid" type="grid"/>
     <view name="team-task-calendar" type="calendar"/>

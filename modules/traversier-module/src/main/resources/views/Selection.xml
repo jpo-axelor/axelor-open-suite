@@ -3,8 +3,8 @@
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.0.xsd">
 
-    <selection name="team.task.workorder.type.select">
-        <option value="work_order">Work order</option>
-    </selection>
+  <selection name="team.task.workorder.type.select">
+    <option value="workOrder">Work order</option>
+  </selection>
 
 </object-views>
