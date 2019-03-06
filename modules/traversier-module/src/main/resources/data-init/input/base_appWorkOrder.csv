@@ -1,0 +1,2 @@
+"name","code","installOrder","description","imagePath","modules","dependsOn","sequence"
+"Work order","workOrder","10","Work order configuration","app-workorder.png","traversier-module","","10"
