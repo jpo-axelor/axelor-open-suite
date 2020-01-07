@@ -4991,6 +4991,16 @@ row["ClientPartFirstName"]
                             </list-property>
                             <header>
                                 <row id="3693">
+                                    <method name="onCreate"><![CDATA[vars["ex_total"] = vars["temp_ex_total"];
+vars["in_total"] = vars["temp_in_total"];
+if(this.getRowData().getColumnValue("is_title_line") == true){
+	vars["temp_ex_total"] = parseFloat(0.00);
+	vars["temp_in_total"] = parseFloat(0.00);
+}else{
+	vars["temp_ex_total"] += parseFloat(this.getRowData().getColumnValue("ex_tax_total"));
+	vars["temp_in_total"] += parseFloat(this.getRowData().getColumnValue("in_tax_total"));
+}
+]]></method>
                                     <cell id="5378">
                                         <property name="colSpan">1</property>
                                         <property name="rowSpan">1</property>
