@@ -58,6 +58,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -71,9 +72,12 @@ import java.util.zip.ZipException;
 import java.util.zip.ZipInputStream;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DataImportServiceImpl implements DataImportService {
 
+  private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
   private static final char CSV_SEPRATOR = ';';
   private static final String INPUT_CALLABLE =
       "com.axelor.csv.script.ImportAdvancedImport:importGeneral";
@@ -214,6 +218,10 @@ public class DataImportServiceImpl implements DataImportService {
       importContext.put("ifConditions" + fileTab.getId(), ifList);
       importContext.put("jsonContextValues" + fileTab.getId(), createJsonContext(fileTab));
       importContext.put("actionsToApply" + fileTab.getId(), fileTab.getActions());
+
+      XStream stream = XStreamUtils.createXStream();
+      stream.processAnnotations(CSVConfig.class);
+      LOG.info("\n" + "CSV Config created :" + "\n" + stream.toXML(csvInput) + "\n");
     }
     return inputList;
   }
@@ -476,12 +484,14 @@ public class DataImportServiceImpl implements DataImportService {
         this.setImportIf(prop, bind, column);
       }
       allBindings.add(bind);
-      this.setSearch(column, prop.getName(), fileField, null);
+      this.setSearch(column, prop.getName(), fileField, null, false);
 
     } else {
       CSVBind parentBind = null;
+      boolean isSameParentExist = false;
       if (parentBindMap.containsKey(prop.getName())) {
         parentBind = parentBindMap.get(prop.getName());
+        isSameParentExist = true;
 
       } else {
         parentBind = this.createCSVBind(null, prop.getName(), null, null, null, true);
@@ -492,7 +502,8 @@ public class DataImportServiceImpl implements DataImportService {
 
       fullFieldName = prop.getName();
       String[] subFields = fileField.getSubImportField().split("\\.");
-      this.createCSVSubBinding(subFields, 0, column, prop, fileField, parentBind, dummyBind);
+      this.createCSVSubBinding(
+          subFields, 0, column, prop, fileField, parentBind, dummyBind, isSameParentExist);
     }
 
     if (!Strings.isNullOrEmpty(fileField.getNoImportIf())) {
@@ -511,7 +522,8 @@ public class DataImportServiceImpl implements DataImportService {
       Property parentProp,
       FileField fileField,
       CSVBind parentBind,
-      CSVBind dummyBind)
+      CSVBind dummyBind,
+      boolean isSameParentExist)
       throws ClassNotFoundException {
 
     if (index < subFields.length) {
@@ -529,14 +541,24 @@ public class DataImportServiceImpl implements DataImportService {
         if (subBindMap.containsKey(fullFieldName)) {
           subBind = subBindMap.get(fullFieldName);
 
-        } else {
-          subBind = this.createCSVBind(null, childProp.getName(), null, null, null, true);
+        } else if (importType != FileFieldRepository.IMPORT_TYPE_FIND) {
+          subBind =
+              this.createCSVBind(null, childProp.getName(), null, null, null, isSameParentExist);
           subBind.setBindings(new ArrayList<>());
           parentBind.getBindings().add(subBind);
           subBindMap.put(fullFieldName, subBind);
         }
         this.createCSVSubBinding(
-            subFields, index + 1, column, childProp, fileField, subBind, dummyBind);
+            subFields,
+            index + 1,
+            column,
+            childProp,
+            fileField,
+            isSameParentExist && importType == FileFieldRepository.IMPORT_TYPE_FIND
+                ? parentBind
+                : subBind,
+            dummyBind,
+            isSameParentExist);
 
       } else {
         String expression = this.setExpression(column, fileField, childProp);
@@ -554,7 +576,11 @@ public class DataImportServiceImpl implements DataImportService {
           this.createBindForMatchWithFile(
               column, importType, expression, adapter, relationship, parentBind, childProp);
         }
-        this.setSearch(column, childProp.getName(), fileField, parentBind);
+        String fieldName =
+            isSameParentExist && importType == FileFieldRepository.IMPORT_TYPE_FIND
+                ? fullFieldName.replaceFirst(fileField.getImportField().getName() + ".", "")
+                : childProp.getName();
+        this.setSearch(column, fieldName, fileField, parentBind, isSameParentExist);
 
         if (importType != FileFieldRepository.IMPORT_TYPE_FIND) {
           parentBind.setUpdate(false);
@@ -613,7 +639,8 @@ public class DataImportServiceImpl implements DataImportService {
     }
   }
 
-  private void setSearch(String column, String field, FileField fileField, CSVBind bind) {
+  private void setSearch(
+      String column, String field, FileField fileField, CSVBind bind, boolean isSameParentExist) {
 
     int importType = fileField.getImportType();
     String relationship = fileField.getRelationship();
@@ -631,7 +658,15 @@ public class DataImportServiceImpl implements DataImportService {
           bind.setSearch("self." + field + " = :" + column);
         }
       } else {
-        bind.setSearch(bind.getSearch() + " AND " + "self." + field + " = :" + column);
+        String cond1 = "";
+        String cond2 = "";
+        int index = field.lastIndexOf(46);
+        if (isSameParentExist && index > 0) {
+          cond1 = " AND (:" + column + " IS NOT NULL";
+          cond2 = " OR self." + field.substring(0, index) + " IS NULL)";
+        }
+        bind.setSearch(
+            bind.getSearch() + cond1 + " AND " + "self." + field + " = :" + column + cond2);
       }
     }
   }
