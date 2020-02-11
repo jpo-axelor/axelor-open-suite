@@ -221,7 +221,7 @@ public class DataImportServiceImpl implements DataImportService {
 
       XStream stream = XStreamUtils.createXStream();
       stream.processAnnotations(CSVConfig.class);
-      LOG.info("\n" + "CSV Config created :" + "\n" + stream.toXML(csvInput) + "\n");
+      LOG.debug("CSV Config created :" + "\n" + stream.toXML(csvInput));
     }
     return inputList;
   }
@@ -282,12 +282,16 @@ public class DataImportServiceImpl implements DataImportService {
     allBindings.add(fileTabBind);
 
     for (Entry<String, Object> entry : searchMap.entrySet()) {
-      if (Strings.isNullOrEmpty(csvInput.getSearch())) {
-        csvInput.setSearch("self." + entry.getKey() + " = :" + entry.getValue());
-      } else {
-        csvInput.setSearch(
-            csvInput.getSearch() + " AND self." + entry.getKey() + " = :" + entry.getValue());
+      String field = entry.getKey(), cond1 = "", cond2 = "", condAnd = "";
+      if (field.contains(".")) {
+        int index = field.lastIndexOf(46);
+        cond1 = " (:" + entry.getValue() + " IS NOT NULL AND";
+        cond2 = " OR self." + field.substring(0, index) + " IS NULL)";
       }
+      if (!Strings.isNullOrEmpty(csvInput.getSearch())) {
+        condAnd = csvInput.getSearch() + " AND";
+      }
+      csvInput.setSearch(condAnd + cond1 + " self." + field + " = :" + entry.getValue() + cond2);
     }
     csvInput.setBindings(allBindings);
 
@@ -484,7 +488,6 @@ public class DataImportServiceImpl implements DataImportService {
         this.setImportIf(prop, bind, column);
       }
       allBindings.add(bind);
-      this.setSearch(column, prop.getName(), fileField, null, false);
 
     } else {
       CSVBind parentBind = null;
@@ -542,11 +545,19 @@ public class DataImportServiceImpl implements DataImportService {
           subBind = subBindMap.get(fullFieldName);
 
         } else if (importType != FileFieldRepository.IMPORT_TYPE_FIND) {
-          subBind =
-              this.createCSVBind(null, childProp.getName(), null, null, null, isSameParentExist);
+          subBind = this.createCSVBind(null, childProp.getName(), null, null, null, true);
           subBind.setBindings(new ArrayList<>());
           parentBind.getBindings().add(subBind);
           subBindMap.put(fullFieldName, subBind);
+        }
+        if (importType == FileFieldRepository.IMPORT_TYPE_FIND_NEW && subBind != null) {
+          String fieldName =
+              (isSameParentExist
+                      ? fullFieldName.replaceFirst(fileField.getImportField().getName() + ".", "")
+                      : fullFieldName)
+                  + "."
+                  + subFields[index + 1];
+          this.setSearch(column, fieldName, fileField, parentBind, isSameParentExist);
         }
         this.createCSVSubBinding(
             subFields,
@@ -645,28 +656,28 @@ public class DataImportServiceImpl implements DataImportService {
     int importType = fileField.getImportType();
     String relationship = fileField.getRelationship();
     String splitBy = fileField.getSplitBy();
+    String cond = "";
+    String cond1 = "";
+    String cond2 = "";
 
     if (importType == FileFieldRepository.IMPORT_TYPE_FIND
         || importType == FileFieldRepository.IMPORT_TYPE_FIND_NEW) {
 
-      if (Strings.isNullOrEmpty(bind.getSearch())) {
-        if (!Strings.isNullOrEmpty(relationship)
-            && relationship.equals(MANY_TO_MANY)
-            && !Strings.isNullOrEmpty(splitBy)) {
-          bind.setSearch("self." + field + " in :" + column);
-        } else {
-          bind.setSearch("self." + field + " = :" + column);
-        }
+      if (!Strings.isNullOrEmpty(bind.getSearch())) {
+        cond = bind.getSearch() + " AND ";
+      }
+
+      if (!Strings.isNullOrEmpty(relationship)
+          && relationship.equals(MANY_TO_MANY)
+          && !Strings.isNullOrEmpty(splitBy)) {
+        bind.setSearch(cond + "self." + field + " in :" + column);
       } else {
-        String cond1 = "";
-        String cond2 = "";
         int index = field.lastIndexOf(46);
         if (isSameParentExist && index > 0) {
-          cond1 = " AND (:" + column + " IS NOT NULL";
-          cond2 = " OR self." + field.substring(0, index) + " IS NULL)";
+          cond1 = " (:" + column + " IS NOT NULL AND ";
+          cond2 = " OR self." + field.substring(0, index) + " IS NULL) ";
         }
-        bind.setSearch(
-            bind.getSearch() + cond1 + " AND " + "self." + field + " = :" + column + cond2);
+        bind.setSearch(cond + cond1 + "self." + field + " = :" + column + cond2);
       }
     }
   }
