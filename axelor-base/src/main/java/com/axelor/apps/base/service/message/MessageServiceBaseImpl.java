@@ -129,11 +129,11 @@ public class MessageServiceBaseImpl extends MessageServiceImpl {
     logger.debug("Default BirtTemplate : {}", birtTemplate);
 
     Templates templates = new StringTemplates('$', '$');
-    Map<String, Object> _map = Maps.newHashMap();
+    Map<String, Object> templatesContext = Maps.newHashMap();
     try {
-      Class<? extends Model> myClass =
+      Class<? extends Model> className =
           (Class<? extends Model>) Class.forName(message.getClass().getName());
-      _map.put("Message", JPA.find(myClass, message.getId()));
+      templatesContext.put("Message", JPA.find(className, message.getId()));
     } catch (ClassNotFoundException e) {
       TraceBackService.trace(e);
     }
@@ -147,11 +147,11 @@ public class MessageServiceBaseImpl extends MessageServiceImpl {
     return Beans.get(TemplateMessageServiceBaseImpl.class)
         .generateBirtTemplateLink(
             templates,
+            templatesContext,
             fileName,
             birtTemplate.getTemplateLink(),
             birtTemplate.getFormat(),
-            birtTemplate.getBirtTemplateParameterList(),
-            _map);
+            birtTemplate.getBirtTemplateParameterList());
   }
 
   @Override

@@ -61,21 +61,25 @@ public class TemplateMessageServiceBaseImpl extends TemplateMessageServiceImpl {
   }
 
   @Override
-  public Set<MetaFile> getMetaFiles(Template template) throws AxelorException, IOException {
+  public Set<MetaFile> getMetaFiles(
+      Template template, Templates templates, Map<String, Object> templatesContext)
+      throws AxelorException, IOException {
 
-    Set<MetaFile> metaFiles = super.getMetaFiles(template);
+    Set<MetaFile> metaFiles = super.getMetaFiles(template, templates, templatesContext);
     if (template.getBirtTemplate() == null) {
       return metaFiles;
     }
 
-    metaFiles.add(createMetaFileUsingBirtTemplate(templates, template.getBirtTemplate()));
+    metaFiles.add(
+        createMetaFileUsingBirtTemplate(templates, templatesContext, template.getBirtTemplate()));
 
     logger.debug("Metafile to attach: {}", metaFiles);
 
     return metaFiles;
   }
 
-  public MetaFile createMetaFileUsingBirtTemplate(Templates templates, BirtTemplate birtTemplate)
+  public MetaFile createMetaFileUsingBirtTemplate(
+      Templates templates, Map<String, Object> templatesContext, BirtTemplate birtTemplate)
       throws AxelorException, IOException {
 
     logger.debug("Generate birt metafile: {}", birtTemplate.getName());
@@ -87,6 +91,7 @@ public class TemplateMessageServiceBaseImpl extends TemplateMessageServiceImpl {
     File file =
         generateBirtTemplate(
             templates,
+            templatesContext,
             fileName,
             birtTemplate.getTemplateLink(),
             birtTemplate.getFormat(),
@@ -99,6 +104,7 @@ public class TemplateMessageServiceBaseImpl extends TemplateMessageServiceImpl {
 
   public File generateBirtTemplate(
       Templates templates,
+      Map<String, Object> templatesContext,
       String fileName,
       String modelPath,
       String format,
@@ -108,7 +114,8 @@ public class TemplateMessageServiceBaseImpl extends TemplateMessageServiceImpl {
     File birtTemplate = null;
 
     ReportSettings reportSettings =
-        generateTemplate(templates, fileName, modelPath, format, birtTemplateParameterList);
+        generateTemplate(
+            templates, templatesContext, fileName, modelPath, format, birtTemplateParameterList);
 
     if (reportSettings != null) {
       birtTemplate = reportSettings.getFile();
@@ -119,18 +126,18 @@ public class TemplateMessageServiceBaseImpl extends TemplateMessageServiceImpl {
 
   public String generateBirtTemplateLink(
       Templates templates,
+      Map<String, Object> templatesContext,
       String fileName,
       String modelPath,
       String format,
-      List<BirtTemplateParameter> birtTemplateParameterList,
-      Map<String, Object> map)
+      List<BirtTemplateParameter> birtTemplateParameterList)
       throws AxelorException {
 
     String birtTemplateFileLink = null;
-    _map = map;
 
     ReportSettings reportSettings =
-        generateTemplate(templates, fileName, modelPath, format, birtTemplateParameterList);
+        generateTemplate(
+            templates, templatesContext, fileName, modelPath, format, birtTemplateParameterList);
 
     if (reportSettings != null) {
       birtTemplateFileLink = reportSettings.getFileLink();
@@ -141,6 +148,7 @@ public class TemplateMessageServiceBaseImpl extends TemplateMessageServiceImpl {
 
   private ReportSettings generateTemplate(
       Templates templates,
+      Map<String, Object> templatesContext,
       String fileName,
       String modelPath,
       String format,
@@ -158,7 +166,7 @@ public class TemplateMessageServiceBaseImpl extends TemplateMessageServiceImpl {
 
       try {
         String parseValue =
-            templates.fromText(birtTemplateParameter.getValue()).make(_map).render();
+            templates.fromText(birtTemplateParameter.getValue()).make(templatesContext).render();
         reportSettings.addParam(
             birtTemplateParameter.getName(),
             convertValue(birtTemplateParameter.getType(), parseValue));
