@@ -31,8 +31,10 @@ public class ImportConfiguratorCreator {
   @Transactional
   public Object importConfiguratorCreator(Object bean, Map values)
       throws AxelorException, IOException {
-    configuratorCreatorImportService.importConfiguratorCreators(
-        "./production_configuratorCreator.xml");
+    System.err.println("values = " + values.entrySet());
+    String path = String.valueOf(values.get("path"));
+    path = this.getClass().getResource(path).getPath();
+    configuratorCreatorImportService.importConfiguratorCreators(path);
     return null;
   }
 }
