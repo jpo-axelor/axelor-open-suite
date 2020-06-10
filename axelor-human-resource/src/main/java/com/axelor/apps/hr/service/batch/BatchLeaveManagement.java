@@ -17,6 +17,7 @@
  */
 package com.axelor.apps.hr.service.batch;
 
+import com.axelor.apps.base.service.app.AppBaseService;
 import com.axelor.apps.hr.db.Employee;
 import com.axelor.apps.hr.db.HrBatch;
 import com.axelor.apps.hr.db.LeaveLine;
@@ -29,11 +30,13 @@ import com.axelor.apps.hr.service.leave.LeaveService;
 import com.axelor.apps.hr.service.leave.management.LeaveManagementService;
 import com.axelor.auth.AuthUtils;
 import com.axelor.db.JPA;
+import com.axelor.db.Query;
 import com.axelor.exception.AxelorException;
 import com.axelor.exception.db.repo.ExceptionOriginRepository;
 import com.axelor.exception.db.repo.TraceBackRepository;
 import com.axelor.exception.service.TraceBackService;
 import com.axelor.i18n.I18n;
+import com.axelor.inject.Beans;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -91,13 +94,25 @@ public class BatchLeaveManagement extends BatchStrategy {
   @Override
   protected void process() {
 
-    List<Employee> employeeList = this.getEmployees(batch.getHrBatch());
-    generateLeaveManagementLines(employeeList);
+    List<Employee> employeeList = null;
+    int fetchLimit =
+        (batch.getHrBatch().getBatchFetchLimit() != 0)
+            ? batch.getHrBatch().getBatchFetchLimit()
+            : (Beans.get(AppBaseService.class).getAppBase().getBatchFetchLimit() != 0)
+                ? Beans.get(AppBaseService.class).getAppBase().getBatchFetchLimit()
+                : 1;
+    Query<Employee> query = this.getEmployees(batch.getHrBatch());
+    int offset = 0;
+    while (!(employeeList = query.fetch(fetchLimit, offset)).isEmpty()) {
+      generateLeaveManagementLines(employeeList);
+      offset += employeeList.size();
+    }
   }
 
-  public List<Employee> getEmployees(HrBatch hrBatch) {
+  public Query<Employee> getEmployees(HrBatch hrBatch) {
 
     List<String> query = Lists.newArrayList();
+    Query<Employee> employeeQuery;
 
     if (hrBatch.getEmployeeSet() != null && !hrBatch.getEmployeeSet().isEmpty()) {
       String employeeIds =
@@ -113,22 +128,20 @@ public class BatchLeaveManagement extends BatchStrategy {
       query.add("self.weeklyPlanning.id IN (" + planningIds + ")");
     }
 
-    List<Employee> employeeList;
     String liaison = query.isEmpty() ? "" : " AND";
     if (hrBatch.getCompany() != null) {
-      employeeList =
+      employeeQuery =
           JPA.all(Employee.class)
               .filter(
                   Joiner.on(" AND ").join(query)
                       + liaison
                       + " self.mainEmploymentContract.payCompany = :company")
-              .bind("company", hrBatch.getCompany())
-              .fetch();
+              .bind("company", hrBatch.getCompany());
     } else {
-      employeeList = JPA.all(Employee.class).filter(Joiner.on(" AND ").join(query)).fetch();
+      employeeQuery = JPA.all(Employee.class).filter(Joiner.on(" AND ").join(query));
     }
 
-    return employeeList;
+    return employeeQuery;
   }
 
   public void generateLeaveManagementLines(List<Employee> employeeList) {

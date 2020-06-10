@@ -27,7 +27,9 @@ import com.axelor.apps.bankpayment.exception.IExceptionMessage;
 import com.axelor.apps.bankpayment.service.bankstatement.BankStatementService;
 import com.axelor.apps.base.db.Batch;
 import com.axelor.apps.base.service.administration.AbstractBatch;
+import com.axelor.apps.base.service.app.AppBaseService;
 import com.axelor.db.JPA;
+import com.axelor.db.Query;
 import com.axelor.exception.AxelorException;
 import com.axelor.exception.db.repo.ExceptionOriginRepository;
 import com.axelor.exception.db.repo.TraceBackRepository;
@@ -59,9 +61,30 @@ public class BatchBankStatement extends AbstractBatch {
     // Retrieve all active EBICS partners if there is no configured EBICS partners
     // on the batch.
     if (ebicsPartners == null || ebicsPartners.isEmpty()) {
-      ebicsPartners = getAllActiveEbicsPartners();
-    }
+      int fetchLimit =
+          (batch.getBankPaymentBatch().getBatchFetchLimit() != 0)
+              ? batch.getBankPaymentBatch().getBatchFetchLimit()
+              : (Beans.get(AppBaseService.class).getAppBase().getBatchFetchLimit() != 0)
+                  ? Beans.get(AppBaseService.class).getAppBase().getBatchFetchLimit()
+                  : 1;
+      Query<EbicsPartner> query =
+          Beans.get(EbicsPartnerRepository.class)
+              .all()
+              .filter("self.transportEbicsUser.statusSelect = :statusSelect")
+              .bind("statusSelect", EbicsUserRepository.STATUS_ACTIVE_CONNECTION);
 
+      int offset = 0;
+      while (!(ebicsPartners = query.fetch(fetchLimit, offset)).isEmpty()) {
+        offset += ebicsPartners.size();
+        processActiveEbicsPartnersBankStatement(ebicsPartners, bankPaymentBatch);
+      }
+    } else {
+      processActiveEbicsPartnersBankStatement(ebicsPartners, bankPaymentBatch);
+    }
+  }
+
+  private int processActiveEbicsPartnersBankStatement(
+      Collection<EbicsPartner> ebicsPartners, BankPaymentBatch bankPaymentBatch) {
     for (EbicsPartner ebicsPartner : ebicsPartners) {
       try {
         List<BankStatement> bankStatementList =
@@ -90,6 +113,7 @@ public class BatchBankStatement extends AbstractBatch {
         processError(e, TraceBackRepository.CATEGORY_CONFIGURATION_ERROR, ebicsPartner);
       }
     }
+    return 0;
   }
 
   protected void processError(Exception cause, int category, EbicsPartner ebicsPartner) {
@@ -133,14 +157,6 @@ public class BatchBankStatement extends AbstractBatch {
             bankStatementCount));
     addComment(sb.toString());
     super.stop();
-  }
-
-  private Collection<EbicsPartner> getAllActiveEbicsPartners() {
-    return Beans.get(EbicsPartnerRepository.class)
-        .all()
-        .filter("self.transportEbicsUser.statusSelect = :statusSelect")
-        .bind("statusSelect", EbicsUserRepository.STATUS_ACTIVE_CONNECTION)
-        .fetch();
   }
 
   public Batch bankStatement(BankPaymentBatch bankPaymentBatch) {

@@ -17,6 +17,7 @@
  */
 package com.axelor.apps.hr.service.batch;
 
+import com.axelor.apps.base.service.app.AppBaseService;
 import com.axelor.apps.hr.db.Employee;
 import com.axelor.apps.hr.db.LeaveLine;
 import com.axelor.apps.hr.db.LeaveReason;
@@ -25,10 +26,12 @@ import com.axelor.apps.hr.db.repo.LeaveManagementRepository;
 import com.axelor.apps.hr.service.leave.management.LeaveManagementService;
 import com.axelor.auth.AuthUtils;
 import com.axelor.db.JPA;
+import com.axelor.db.Query;
 import com.axelor.exception.AxelorException;
 import com.axelor.exception.db.repo.ExceptionOriginRepository;
 import com.axelor.exception.db.repo.TraceBackRepository;
 import com.axelor.exception.service.TraceBackService;
+import com.axelor.inject.Beans;
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 import java.util.List;
@@ -45,8 +48,19 @@ public class BatchLeaveManagementReset extends BatchLeaveManagement {
 
   @Override
   protected void process() {
-    List<Employee> employeeList = getEmployees(batch.getHrBatch());
-    resetLeaveManagementLines(employeeList);
+    List<Employee> employeeList = null;
+    int fetchLimit =
+        (batch.getHrBatch().getBatchFetchLimit() != 0)
+            ? batch.getHrBatch().getBatchFetchLimit()
+            : (Beans.get(AppBaseService.class).getAppBase().getBatchFetchLimit() != 0)
+                ? Beans.get(AppBaseService.class).getAppBase().getBatchFetchLimit()
+                : 1;
+    Query<Employee> query = getEmployees(batch.getHrBatch());
+    int offset = 0;
+    while (!(employeeList = query.fetch(fetchLimit, offset)).isEmpty()) {
+      resetLeaveManagementLines(employeeList);
+      offset += employeeList.size();
+    }
   }
 
   public void resetLeaveManagementLines(List<Employee> employeeList) {

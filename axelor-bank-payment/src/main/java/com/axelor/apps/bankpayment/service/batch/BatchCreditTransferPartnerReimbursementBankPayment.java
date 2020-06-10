@@ -32,6 +32,7 @@ import com.axelor.apps.bankpayment.service.bankorder.BankOrderLineService;
 import com.axelor.apps.bankpayment.service.bankorder.BankOrderService;
 import com.axelor.apps.base.db.repo.PartnerRepository;
 import com.axelor.apps.base.service.PartnerService;
+import com.axelor.apps.base.service.app.AppBaseService;
 import com.axelor.db.Query;
 import com.axelor.exception.AxelorException;
 import com.axelor.exception.service.TraceBackService;
@@ -95,19 +96,29 @@ public class BatchCreditTransferPartnerReimbursementBankPayment
             .filter("self.statusSelect = :statusSelect AND self.company = :company");
     query.bind("statusSelect", ReimbursementRepository.STATUS_VALIDATED);
     query.bind("company", accountingBatch.getCompany());
-    List<Reimbursement> reimbursementList = query.fetch();
+    List<Reimbursement> reimbursementList = null;
+    int fetchLimit =
+        (accountingBatch.getBatchFetchLimit() != 0)
+            ? accountingBatch.getBatchFetchLimit()
+            : (Beans.get(AppBaseService.class).getAppBase().getBatchFetchLimit() != 0)
+                ? Beans.get(AppBaseService.class).getAppBase().getBatchFetchLimit()
+                : 1;
 
-    if (reimbursementList.isEmpty()) {
-      return;
-    }
+    int offset = 0;
+    while (!(reimbursementList = query.fetch(fetchLimit, offset)).isEmpty()) {
+      if (reimbursementList.isEmpty()) {
+        return;
+      }
 
-    accountingBatch = Beans.get(AccountingBatchRepository.class).find(accountingBatch.getId());
+      accountingBatch = Beans.get(AccountingBatchRepository.class).find(accountingBatch.getId());
 
-    try {
-      createBankOrder(accountingBatch, reimbursementList);
-    } catch (Exception ex) {
-      TraceBackService.trace(ex);
-      logger.error(ex.getLocalizedMessage());
+      try {
+        createBankOrder(accountingBatch, reimbursementList);
+      } catch (Exception ex) {
+        TraceBackService.trace(ex);
+        logger.error(ex.getLocalizedMessage());
+      }
+      offset += reimbursementList.size();
     }
   }
 

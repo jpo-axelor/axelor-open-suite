@@ -18,14 +18,17 @@
 package com.axelor.apps.businessproject.service.batch;
 
 import com.axelor.apps.base.service.administration.AbstractBatch;
+import com.axelor.apps.base.service.app.AppBaseService;
 import com.axelor.apps.businessproject.db.InvoicingProject;
 import com.axelor.apps.businessproject.exception.IExceptionMessage;
 import com.axelor.apps.businessproject.service.InvoicingProjectService;
 import com.axelor.apps.project.db.Project;
 import com.axelor.apps.project.db.repo.ProjectRepository;
+import com.axelor.db.Query;
 import com.axelor.exception.db.repo.ExceptionOriginRepository;
 import com.axelor.exception.service.TraceBackService;
 import com.axelor.i18n.I18n;
+import com.axelor.inject.Beans;
 import com.google.inject.Inject;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,6 +52,12 @@ public class BatchInvoicingProjectService extends AbstractBatch {
   protected void process() {
 
     Map<String, Object> contextValues = null;
+    int fetchLimit =
+        (batch.getProjectInvoicingAssistantBatch().getBatchFetchLimit() != 0)
+            ? batch.getProjectInvoicingAssistantBatch().getBatchFetchLimit()
+            : (Beans.get(AppBaseService.class).getAppBase().getBatchFetchLimit() != 0)
+                ? Beans.get(AppBaseService.class).getAppBase().getBatchFetchLimit()
+                : 1;
     try {
       contextValues = ProjectInvoicingAssistantBatchService.createJsonContext(batch);
     } catch (Exception e) {
@@ -57,7 +66,8 @@ public class BatchInvoicingProjectService extends AbstractBatch {
 
     List<Object> generatedInvoicingProjectList = new ArrayList<Object>();
 
-    List<Project> projectList =
+    List<Project> projectList = null;
+    Query<Project> query =
         projectRepo
             .all()
             .filter(
@@ -67,31 +77,34 @@ public class BatchInvoicingProjectService extends AbstractBatch {
             .bind("isBusinessProject", true)
             .bind("toInvoice", true)
             .bind("statusCanceled", ProjectRepository.STATE_CANCELED)
-            .bind("statusFinished", ProjectRepository.STATE_FINISHED)
-            .fetch();
+            .bind("statusFinished", ProjectRepository.STATE_FINISHED);
 
-    for (Project project : projectList) {
-      try {
-        InvoicingProject invoicingProject =
-            invoicingProjectService.generateInvoicingProject(
-                project, batch.getProjectInvoicingAssistantBatch().getConsolidatePhaseSelect());
+    int offset = 0;
+    while (!(projectList = query.fetch(fetchLimit, offset)).isEmpty()) {
+      for (Project project : projectList) {
+        try {
+          ++offset;
+          InvoicingProject invoicingProject =
+              invoicingProjectService.generateInvoicingProject(
+                  project, batch.getProjectInvoicingAssistantBatch().getConsolidatePhaseSelect());
 
-        if (invoicingProject != null && invoicingProject.getId() != null) {
-          incrementDone();
+          if (invoicingProject != null && invoicingProject.getId() != null) {
+            incrementDone();
 
-          Map<String, Object> map = new HashMap<String, Object>();
-          map.put("id", invoicingProject.getId());
-          generatedInvoicingProjectList.add(map);
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("id", invoicingProject.getId());
+            generatedInvoicingProjectList.add(map);
+          }
+        } catch (Exception e) {
+          incrementAnomaly();
+          TraceBackService.trace(
+              new Exception(
+                  String.format(
+                      I18n.get(IExceptionMessage.BATCH_INVOICING_PROJECT_1), project.getId()),
+                  e),
+              ExceptionOriginRepository.INVOICE_ORIGIN,
+              batch.getId());
         }
-      } catch (Exception e) {
-        incrementAnomaly();
-        TraceBackService.trace(
-            new Exception(
-                String.format(
-                    I18n.get(IExceptionMessage.BATCH_INVOICING_PROJECT_1), project.getId()),
-                e),
-            ExceptionOriginRepository.INVOICE_ORIGIN,
-            batch.getId());
       }
     }
     ProjectInvoicingAssistantBatchService.updateJsonObject(

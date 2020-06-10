@@ -27,6 +27,7 @@ import com.axelor.apps.base.db.Partner;
 import com.axelor.apps.base.db.repo.BlockingRepository;
 import com.axelor.apps.base.db.repo.PartnerRepository;
 import com.axelor.apps.base.service.BlockingService;
+import com.axelor.apps.base.service.app.AppBaseService;
 import com.axelor.apps.message.db.repo.MessageRepository;
 import com.axelor.db.EntityHelper;
 import com.axelor.db.JPA;
@@ -90,12 +91,19 @@ public class BatchDebtRecovery extends BatchStrategy {
   @Override
   protected void process() {
 
+    int fetchLimit =
+        (batch.getAccountingBatch().getBatchFetchLimit() != 0)
+            ? batch.getAccountingBatch().getBatchFetchLimit()
+            : (Beans.get(AppBaseService.class).getAppBase().getBatchFetchLimit() != 0)
+                ? Beans.get(AppBaseService.class).getAppBase().getBatchFetchLimit()
+                : 1;
+
     if (!stopping) {
-      this.debtRecoveryPartner();
+      this.debtRecoveryPartner(fetchLimit);
     }
   }
 
-  public void debtRecoveryPartner() {
+  public void debtRecoveryPartner(int fetchLimit) {
     Company company = batch.getAccountingBatch().getCompany();
 
     Query<Partner> query =
@@ -116,7 +124,7 @@ public class BatchDebtRecovery extends BatchStrategy {
     int offset = 0;
     List<Partner> partnerList;
 
-    while (!(partnerList = query.fetch(FETCH_LIMIT, offset)).isEmpty()) {
+    while (!(partnerList = query.fetch(fetchLimit, offset)).isEmpty()) {
       findBatch();
 
       for (Partner partner : partnerList) {

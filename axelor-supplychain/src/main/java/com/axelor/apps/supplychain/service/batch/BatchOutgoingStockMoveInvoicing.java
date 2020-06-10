@@ -20,6 +20,7 @@ package com.axelor.apps.supplychain.service.batch;
 import com.axelor.apps.account.db.repo.InvoiceRepository;
 import com.axelor.apps.base.db.repo.BlockingRepository;
 import com.axelor.apps.base.service.BlockingService;
+import com.axelor.apps.base.service.app.AppBaseService;
 import com.axelor.apps.sale.db.repo.SaleOrderRepository;
 import com.axelor.apps.stock.db.StockMove;
 import com.axelor.apps.stock.db.repo.StockMoveRepository;
@@ -48,6 +49,12 @@ public class BatchOutgoingStockMoveInvoicing extends BatchStrategy {
   @Override
   protected void process() {
     SupplychainBatch supplychainBatch = batch.getSupplychainBatch();
+    int fetchLimit =
+        (supplychainBatch.getBatchFetchLimit() != 0)
+            ? supplychainBatch.getBatchFetchLimit()
+            : (Beans.get(AppBaseService.class).getAppBase().getBatchFetchLimit() != 0)
+                ? Beans.get(AppBaseService.class).getAppBase().getBatchFetchLimit()
+                : 1;
     List<Long> anomalyList = Lists.newArrayList(0L);
     SaleOrderRepository saleRepo = Beans.get(SaleOrderRepository.class);
 
@@ -72,10 +79,12 @@ public class BatchOutgoingStockMoveInvoicing extends BatchStrategy {
             .setParameter("invoiceStatusCanceled", InvoiceRepository.STATUS_CANCELED)
             .setParameter("anomalyList", anomalyList)
             .setParameter("batch", batch)
-            .setMaxResults(FETCH_LIMIT);
+            .setMaxResults(fetchLimit);
 
-    List<StockMove> stockMoveList;
-    while (!(stockMoveList = query.getResultList()).isEmpty()) {
+    int start = 0;
+    for (List<StockMove> stockMoveList;
+        !(stockMoveList = query.getResultList()).isEmpty();
+        JPA.clear(), start += stockMoveList.size(), query.setFirstResult(start)) {
       for (StockMove stockMove : stockMoveList) {
         try {
           stockMoveInvoiceService.createInvoiceFromSaleOrder(

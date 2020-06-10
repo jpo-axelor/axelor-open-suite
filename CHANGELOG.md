@@ -35,4 +35,5 @@
 ## Bug Fixes
 - HR : A leave-line cannot be saved whitout employee or leave-reason.
 - Lead: Fix city name and state name issue in report printing.
+- BATCH : add batch fetch limit to every batchs.
 - EMPLOYEE : add translation of "Employee PhoneBook".

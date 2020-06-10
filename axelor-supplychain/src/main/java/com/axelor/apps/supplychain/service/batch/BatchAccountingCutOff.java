@@ -19,6 +19,7 @@ package com.axelor.apps.supplychain.service.batch;
 
 import com.axelor.apps.account.db.Move;
 import com.axelor.apps.base.db.Company;
+import com.axelor.apps.base.service.app.AppBaseService;
 import com.axelor.apps.stock.db.StockMove;
 import com.axelor.apps.stock.db.repo.StockMoveRepository;
 import com.axelor.apps.supplychain.db.SupplychainBatch;
@@ -29,6 +30,7 @@ import com.axelor.exception.AxelorException;
 import com.axelor.exception.db.repo.ExceptionOriginRepository;
 import com.axelor.exception.service.TraceBackService;
 import com.axelor.i18n.I18n;
+import com.axelor.inject.Beans;
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 import java.lang.invoke.MethodHandles;
@@ -40,8 +42,6 @@ import org.slf4j.LoggerFactory;
 public class BatchAccountingCutOff extends BatchStrategy {
 
   private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-
-  protected static final int FETCH_LIMIT = 1;
 
   protected AccountingCutOffService cutOffService;
   protected StockMoveRepository stockMoveRepository;
@@ -69,6 +69,12 @@ public class BatchAccountingCutOff extends BatchStrategy {
     updateBatch(moveDate, accountingCutOffTypeSelect);
     Company company = supplychainBatch.getCompany();
     boolean includeNotStockManagedProduct = supplychainBatch.getIncludeNotStockManagedProduct();
+    int fetchLimit =
+        (supplychainBatch.getBatchFetchLimit() != 0)
+            ? supplychainBatch.getBatchFetchLimit()
+            : (Beans.get(AppBaseService.class).getAppBase().getBatchFetchLimit() != 0)
+                ? Beans.get(AppBaseService.class).getAppBase().getBatchFetchLimit()
+                : 1;
 
     if (accountingCutOffTypeSelect == 0) {
       return;
@@ -78,7 +84,7 @@ public class BatchAccountingCutOff extends BatchStrategy {
 
     while (!(stockMoveList =
             cutOffService.getStockMoves(
-                company, accountingCutOffTypeSelect, moveDate, FETCH_LIMIT, offset))
+                company, accountingCutOffTypeSelect, moveDate, fetchLimit, offset))
         .isEmpty()) {
 
       findBatch();

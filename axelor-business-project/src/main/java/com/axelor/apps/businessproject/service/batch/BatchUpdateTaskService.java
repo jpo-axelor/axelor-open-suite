@@ -19,6 +19,7 @@ package com.axelor.apps.businessproject.service.batch;
 
 import com.axelor.apps.base.db.AppBusinessProject;
 import com.axelor.apps.base.service.administration.AbstractBatch;
+import com.axelor.apps.base.service.app.AppBaseService;
 import com.axelor.apps.businessproject.exception.IExceptionMessage;
 import com.axelor.apps.businessproject.service.TeamTaskBusinessProjectService;
 import com.axelor.apps.businessproject.service.TimesheetLineBusinessService;
@@ -30,6 +31,7 @@ import com.axelor.db.Query;
 import com.axelor.exception.db.repo.ExceptionOriginRepository;
 import com.axelor.exception.service.TraceBackService;
 import com.axelor.i18n.I18n;
+import com.axelor.inject.Beans;
 import com.axelor.team.db.TeamTask;
 import com.axelor.team.db.repo.TeamTaskRepository;
 import com.google.common.base.Strings;
@@ -64,17 +66,23 @@ public class BatchUpdateTaskService extends AbstractBatch {
   @Override
   protected void process() {
     Map<String, Object> contextValues = null;
+    int fetchLimit =
+        (batch.getProjectInvoicingAssistantBatch().getBatchFetchLimit() != 0)
+            ? batch.getProjectInvoicingAssistantBatch().getBatchFetchLimit()
+            : (Beans.get(AppBaseService.class).getAppBase().getBatchFetchLimit() != 0)
+                ? Beans.get(AppBaseService.class).getAppBase().getBatchFetchLimit()
+                : 1;
     try {
       contextValues = ProjectInvoicingAssistantBatchService.createJsonContext(batch);
     } catch (Exception e) {
       TraceBackService.trace(e);
     }
 
-    this.updateTasks(contextValues);
-    this.updateTimesheetLines(contextValues);
+    this.updateTasks(contextValues, fetchLimit);
+    this.updateTimesheetLines(contextValues, fetchLimit);
   }
 
-  private void updateTasks(Map<String, Object> contextValues) {
+  private void updateTasks(Map<String, Object> contextValues, int fetchLimit) {
     AppBusinessProject appBusinessProject = appBusinessProjectService.getAppBusinessProject();
     List<Object> updatedTaskList = new ArrayList<Object>();
 
@@ -101,7 +109,7 @@ public class BatchUpdateTaskService extends AbstractBatch {
     int offset = 0;
     List<TeamTask> taskList;
 
-    while (!(taskList = taskQuery.fetch(FETCH_LIMIT, offset)).isEmpty()) {
+    while (!(taskList = taskQuery.fetch(fetchLimit, offset)).isEmpty()) {
       findBatch();
       offset += taskList.size();
       for (TeamTask teamTask : taskList) {
@@ -132,7 +140,7 @@ public class BatchUpdateTaskService extends AbstractBatch {
         batch, updatedTaskList, "updatedTaskSet", contextValues);
   }
 
-  private void updateTimesheetLines(Map<String, Object> contextValues) {
+  private void updateTimesheetLines(Map<String, Object> contextValues, int fetchLimit) {
 
     List<Object> updatedTimesheetLineList = new ArrayList<Object>();
 
@@ -152,7 +160,7 @@ public class BatchUpdateTaskService extends AbstractBatch {
     int offset = 0;
     List<TimesheetLine> timesheetLineList;
 
-    while (!(timesheetLineList = timesheetLineQuery.fetch(FETCH_LIMIT, offset)).isEmpty()) {
+    while (!(timesheetLineList = timesheetLineQuery.fetch(fetchLimit, offset)).isEmpty()) {
       findBatch();
       offset += timesheetLineList.size();
       for (TimesheetLine timesheetLine : timesheetLineList) {

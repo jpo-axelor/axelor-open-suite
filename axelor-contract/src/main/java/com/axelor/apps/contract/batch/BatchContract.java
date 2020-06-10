@@ -17,6 +17,7 @@
  */
 package com.axelor.apps.contract.batch;
 
+import com.axelor.apps.base.service.app.AppBaseService;
 import com.axelor.apps.base.service.batch.BatchStrategy;
 import com.axelor.apps.contract.db.Contract;
 import com.axelor.apps.contract.db.repo.ContractBatchRepository;
@@ -57,6 +58,12 @@ public class BatchContract extends BatchStrategy {
   @Override
   protected void process() {
     try {
+      int fetchLimit =
+          (batch.getContractBatch().getBatchFetchLimit() != 0)
+              ? batch.getContractBatch().getBatchFetchLimit()
+              : (Beans.get(AppBaseService.class).getAppBase().getBatchFetchLimit() != 0)
+                  ? Beans.get(AppBaseService.class).getAppBase().getBatchFetchLimit()
+                  : 1;
       BatchContractFactory factory = getFactory(batch.getContractBatch().getActionSelect());
       Preconditions.checkNotNull(
           factory,
@@ -67,10 +74,12 @@ public class BatchContract extends BatchStrategy {
       Query<Contract> query = factory.prepare(batch);
       List<Contract> contracts;
 
-      while (!(contracts = query.fetch(FETCH_LIMIT)).isEmpty()) {
+      int offset = 0;
+      while (!(contracts = query.fetch(fetchLimit, offset)).isEmpty()) {
         findBatch();
         for (Contract contract : contracts) {
           try {
+            ++offset;
             factory.process(contract);
             incrementDone(contract);
           } catch (Exception e) {

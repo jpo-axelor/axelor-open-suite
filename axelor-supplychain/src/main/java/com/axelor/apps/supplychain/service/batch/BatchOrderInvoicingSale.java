@@ -20,6 +20,7 @@ package com.axelor.apps.supplychain.service.batch;
 import com.axelor.apps.account.db.repo.InvoiceRepository;
 import com.axelor.apps.base.db.repo.BlockingRepository;
 import com.axelor.apps.base.service.BlockingService;
+import com.axelor.apps.base.service.app.AppBaseService;
 import com.axelor.apps.sale.db.SaleOrder;
 import com.axelor.apps.sale.db.repo.SaleOrderRepository;
 import com.axelor.apps.supplychain.db.SupplychainBatch;
@@ -43,6 +44,12 @@ public class BatchOrderInvoicingSale extends BatchOrderInvoicing {
   @Override
   protected void process() {
     SupplychainBatch supplychainBatch = batch.getSupplychainBatch();
+    int fetchLimit =
+        (supplychainBatch.getBatchFetchLimit() != 0)
+            ? supplychainBatch.getBatchFetchLimit()
+            : (Beans.get(AppBaseService.class).getAppBase().getBatchFetchLimit() != 0)
+                ? Beans.get(AppBaseService.class).getAppBase().getBatchFetchLimit()
+                : 1;
     List<String> filterList = new ArrayList<>();
     Query<SaleOrder> query = Beans.get(SaleOrderRepository.class).all();
 
@@ -113,10 +120,12 @@ public class BatchOrderInvoicingSale extends BatchOrderInvoicing {
     SaleOrderInvoiceService saleOrderInvoiceService = Beans.get(SaleOrderInvoiceService.class);
     Set<Long> treatedSet = new HashSet<>();
 
+    int offset = 0;
     for (List<SaleOrder> saleOrderList;
-        !(saleOrderList = query.fetch(FETCH_LIMIT)).isEmpty();
+        !(saleOrderList = query.fetch(fetchLimit, offset)).isEmpty();
         JPA.clear()) {
       for (SaleOrder saleOrder : saleOrderList) {
+        ++offset;
         if (treatedSet.contains(saleOrder.getId())) {
           throw new IllegalArgumentException("Invoice generation error");
         }

@@ -20,6 +20,7 @@ package com.axelor.apps.supplychain.service.batch;
 import com.axelor.apps.account.db.repo.InvoiceRepository;
 import com.axelor.apps.base.db.repo.BlockingRepository;
 import com.axelor.apps.base.service.BlockingService;
+import com.axelor.apps.base.service.app.AppBaseService;
 import com.axelor.apps.purchase.db.PurchaseOrder;
 import com.axelor.apps.purchase.db.repo.PurchaseOrderRepository;
 import com.axelor.apps.supplychain.db.SupplychainBatch;
@@ -43,6 +44,12 @@ public class BatchOrderInvoicingPurchase extends BatchOrderInvoicing {
   @Override
   protected void process() {
     SupplychainBatch supplychainBatch = batch.getSupplychainBatch();
+    int fetchLimit =
+        (supplychainBatch.getBatchFetchLimit() != 0)
+            ? supplychainBatch.getBatchFetchLimit()
+            : (Beans.get(AppBaseService.class).getAppBase().getBatchFetchLimit() != 0)
+                ? Beans.get(AppBaseService.class).getAppBase().getBatchFetchLimit()
+                : 1;
     List<String> filterList = new ArrayList<>();
     Query<PurchaseOrder> query = Beans.get(PurchaseOrderRepository.class).all();
 
@@ -112,9 +119,11 @@ public class BatchOrderInvoicingPurchase extends BatchOrderInvoicing {
         Beans.get(PurchaseOrderInvoiceService.class);
     Set<Long> treatedSet = new HashSet<>();
 
+    int offset = 0;
     for (List<PurchaseOrder> purchaseOrderList;
-        !(purchaseOrderList = query.fetch(FETCH_LIMIT)).isEmpty();
+        !(purchaseOrderList = query.fetch(fetchLimit, offset)).isEmpty();
         JPA.clear()) {
+      offset += purchaseOrderList.size();
       for (PurchaseOrder purchaseOrder : purchaseOrderList) {
         if (treatedSet.contains(purchaseOrder.getId())) {
           throw new IllegalArgumentException("Invoice generation error");

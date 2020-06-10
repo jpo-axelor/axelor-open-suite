@@ -23,12 +23,14 @@ import com.axelor.apps.account.db.repo.AccountingReportRepository;
 import com.axelor.apps.account.exception.IExceptionMessage;
 import com.axelor.apps.account.service.MoveLineExportService;
 import com.axelor.apps.base.db.Company;
+import com.axelor.apps.base.service.app.AppBaseService;
 import com.axelor.db.JPA;
 import com.axelor.exception.AxelorException;
 import com.axelor.exception.db.repo.ExceptionOriginRepository;
 import com.axelor.exception.db.repo.TraceBackRepository;
 import com.axelor.exception.service.TraceBackService;
 import com.axelor.i18n.I18n;
+import com.axelor.inject.Beans;
 import com.google.inject.Inject;
 import java.lang.invoke.MethodHandles;
 import java.math.BigDecimal;
@@ -87,15 +89,22 @@ public class BatchMoveLineExport extends BatchStrategy {
 
     if (!stop) {
       try {
-        Company company = batch.getAccountingBatch().getCompany();
-        LocalDate startDate = batch.getAccountingBatch().getStartDate();
-        LocalDate endDate = batch.getAccountingBatch().getEndDate();
-        int exportTypeSelect = batch.getAccountingBatch().getMoveLineExportTypeSelect();
+        AccountingBatch accountingBatch = batch.getAccountingBatch();
+        Company company = accountingBatch.getCompany();
+        LocalDate startDate = accountingBatch.getStartDate();
+        LocalDate endDate = accountingBatch.getEndDate();
+        int exportTypeSelect = accountingBatch.getMoveLineExportTypeSelect();
+        int fetchLimit =
+            (accountingBatch.getBatchFetchLimit() != 0)
+                ? accountingBatch.getBatchFetchLimit()
+                : (Beans.get(AppBaseService.class).getAppBase().getBatchFetchLimit() != 0)
+                    ? Beans.get(AppBaseService.class).getAppBase().getBatchFetchLimit()
+                    : 1;
 
         AccountingReport accountingReport =
             moveLineExportService.createAccountingReport(
                 company, exportTypeSelect, startDate, endDate);
-        moveLineExportService.exportMoveLine(accountingReport);
+        moveLineExportService.exportMoveLine(accountingReport, fetchLimit);
 
         JPA.clear();
 

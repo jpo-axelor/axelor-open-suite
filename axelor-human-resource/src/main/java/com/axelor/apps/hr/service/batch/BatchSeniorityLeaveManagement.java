@@ -32,6 +32,7 @@
  */
 package com.axelor.apps.hr.service.batch;
 
+import com.axelor.apps.base.service.app.AppBaseService;
 import com.axelor.apps.hr.db.Employee;
 import com.axelor.apps.hr.db.EmploymentContract;
 import com.axelor.apps.hr.db.HRConfig;
@@ -47,6 +48,7 @@ import com.axelor.apps.hr.service.employee.EmployeeService;
 import com.axelor.apps.hr.service.leave.management.LeaveManagementService;
 import com.axelor.auth.AuthUtils;
 import com.axelor.db.JPA;
+import com.axelor.db.Query;
 import com.axelor.exception.AxelorException;
 import com.axelor.exception.db.repo.ExceptionOriginRepository;
 import com.axelor.exception.db.repo.TraceBackRepository;
@@ -117,23 +119,33 @@ public class BatchSeniorityLeaveManagement extends BatchStrategy {
   @Override
   protected void process() {
 
-    List<Employee> employeeList = this.getEmployees(batch.getHrBatch());
-    generateLeaveManagementLines(employeeList);
+    List<Employee> employeeList = null;
+    int fetchLimit =
+        (batch.getHrBatch().getBatchFetchLimit() != 0)
+            ? batch.getHrBatch().getBatchFetchLimit()
+            : (Beans.get(AppBaseService.class).getAppBase().getBatchFetchLimit() != 0)
+                ? Beans.get(AppBaseService.class).getAppBase().getBatchFetchLimit()
+                : 1;
+    Query<Employee> query = this.getEmployees(batch.getHrBatch());
+    int offset = 0;
+    while (!(employeeList = query.fetch(fetchLimit, offset)).isEmpty()) {
+      generateLeaveManagementLines(employeeList);
+      offset += employeeList.size();
+    }
   }
 
-  public List<Employee> getEmployees(HrBatch hrBatch) {
+  public Query<Employee> getEmployees(HrBatch hrBatch) {
 
-    List<Employee> employeeList;
+    Query<Employee> query;
     if (hrBatch.getCompany() != null) {
-      employeeList =
+      query =
           JPA.all(Employee.class)
               .filter("self.mainEmploymentContract.payCompany = :company")
-              .bind("company", hrBatch.getCompany())
-              .fetch();
+              .bind("company", hrBatch.getCompany());
     } else {
-      employeeList = JPA.all(Employee.class).fetch();
+      query = JPA.all(Employee.class);
     }
-    return employeeList;
+    return query;
   }
 
   public void generateLeaveManagementLines(List<Employee> employeeList) {

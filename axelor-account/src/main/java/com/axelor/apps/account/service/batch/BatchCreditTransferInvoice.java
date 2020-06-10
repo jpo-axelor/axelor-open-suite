@@ -27,6 +27,7 @@ import com.axelor.apps.account.service.app.AppAccountService;
 import com.axelor.apps.account.service.payment.invoice.payment.InvoicePaymentCreateService;
 import com.axelor.apps.base.db.BankDetails;
 import com.axelor.apps.base.db.repo.BankDetailsRepository;
+import com.axelor.apps.base.service.app.AppBaseService;
 import com.axelor.db.JPA;
 import com.axelor.db.Query;
 import com.axelor.exception.db.repo.ExceptionOriginRepository;
@@ -121,14 +122,22 @@ public abstract class BatchCreditTransferInvoice extends BatchStrategy {
     BankDetailsRepository bankDetailsRepo = Beans.get(BankDetailsRepository.class);
     BankDetails companyBankDetails = accountingBatch.getBankDetails();
 
+    int fetchLimit =
+        (accountingBatch.getBatchFetchLimit() != 0)
+            ? accountingBatch.getBatchFetchLimit()
+            : (Beans.get(AppBaseService.class).getAppBase().getBatchFetchLimit() != 0)
+                ? Beans.get(AppBaseService.class).getAppBase().getBatchFetchLimit()
+                : 1;
+    int offset = 0;
     for (List<Invoice> invoiceList;
-        !(invoiceList = query.fetch(FETCH_LIMIT)).isEmpty();
+        !(invoiceList = query.fetch(fetchLimit, offset)).isEmpty();
         JPA.clear()) {
       if (!JPA.em().contains(companyBankDetails)) {
         companyBankDetails = bankDetailsRepo.find(companyBankDetails.getId());
       }
 
       for (Invoice invoice : invoiceList) {
+        ++offset;
         try {
           doneList.add(
               invoicePaymentCreateService.createInvoicePayment(invoice, companyBankDetails));

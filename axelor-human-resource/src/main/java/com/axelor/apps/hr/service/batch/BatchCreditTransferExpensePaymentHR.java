@@ -25,6 +25,7 @@ import com.axelor.apps.account.service.batch.BatchCreditTransferExpensePayment;
 import com.axelor.apps.bankpayment.db.BankOrder;
 import com.axelor.apps.bankpayment.service.bankorder.BankOrderMergeService;
 import com.axelor.apps.base.db.BankDetails;
+import com.axelor.apps.base.service.app.AppBaseService;
 import com.axelor.apps.hr.db.Expense;
 import com.axelor.apps.hr.db.repo.ExpenseRepository;
 import com.axelor.apps.hr.service.expense.ExpenseService;
@@ -34,6 +35,7 @@ import com.axelor.exception.AxelorException;
 import com.axelor.exception.db.repo.ExceptionOriginRepository;
 import com.axelor.exception.service.TraceBackService;
 import com.axelor.i18n.I18n;
+import com.axelor.inject.Beans;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
@@ -142,10 +144,18 @@ public class BatchCreditTransferExpensePaymentHR extends BatchCreditTransferExpe
       query.bind("bankDetailsSet", bankDetailsSet);
     }
 
+    int fetchLimit =
+        (accountingBatch.getBatchFetchLimit() != 0)
+            ? accountingBatch.getBatchFetchLimit()
+            : (Beans.get(AppBaseService.class).getAppBase().getBatchFetchLimit() != 0)
+                ? Beans.get(AppBaseService.class).getAppBase().getBatchFetchLimit()
+                : 1;
+    int offset = 0;
     for (List<Expense> expenseList;
-        !(expenseList = query.fetch(FETCH_LIMIT)).isEmpty();
+        !(expenseList = query.fetch(fetchLimit, offset)).isEmpty();
         JPA.clear()) {
       for (Expense expense : expenseList) {
+        ++offset;
         try {
           addPayment(expense, accountingBatch.getBankDetails());
           doneList.add(expense);

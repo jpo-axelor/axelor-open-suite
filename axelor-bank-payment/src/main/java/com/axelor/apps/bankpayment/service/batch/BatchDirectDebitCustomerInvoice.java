@@ -149,12 +149,20 @@ public class BatchDirectDebitCustomerInvoice extends BatchDirectDebit {
     BankDetailsRepository bankDetailsRepo = Beans.get(BankDetailsRepository.class);
     BankDetails companyBankDetails = getCompanyBankDetails(batch.getAccountingBatch());
 
-    while (!(invoiceList = query.fetch(FETCH_LIMIT)).isEmpty()) {
+    int fetchLimit =
+        (batch.getAccountingBatch().getBatchFetchLimit() != 0)
+            ? batch.getAccountingBatch().getBatchFetchLimit()
+            : (Beans.get(AppBaseService.class).getAppBase().getBatchFetchLimit() != 0)
+                ? Beans.get(AppBaseService.class).getAppBase().getBatchFetchLimit()
+                : 1;
+    int offset = 0;
+    while (!(invoiceList = query.fetch(fetchLimit, offset)).isEmpty()) {
       if (!JPA.em().contains(companyBankDetails)) {
         companyBankDetails = bankDetailsRepo.find(companyBankDetails.getId());
       }
 
       for (Invoice invoice : invoiceList) {
+        ++offset;
         if (treatedSet.contains(invoice.getId())) {
           throw new IllegalArgumentException("Invoice payment generation error");
         }

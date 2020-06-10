@@ -17,15 +17,18 @@
  */
 package com.axelor.apps.supplychain.service.batch;
 
+import com.axelor.apps.base.service.app.AppBaseService;
 import com.axelor.apps.sale.db.SaleOrder;
 import com.axelor.apps.supplychain.exception.IExceptionMessage;
 import com.axelor.apps.supplychain.service.SaleOrderInvoiceService;
 import com.axelor.apps.supplychain.service.invoice.SubscriptionInvoiceService;
 import com.axelor.db.JPA;
+import com.axelor.db.Query;
 import com.axelor.exception.AxelorException;
 import com.axelor.exception.db.repo.ExceptionOriginRepository;
 import com.axelor.exception.service.TraceBackService;
 import com.axelor.i18n.I18n;
+import com.axelor.inject.Beans;
 import com.google.inject.Inject;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
@@ -47,11 +50,20 @@ public class BatchInvoicing extends BatchStrategy {
   @Override
   protected void process() {
 
-    List<SaleOrder> saleOrders = subscriptionInvoiceService.getSubscriptionOrders(FETCH_LIMIT);
+    int fetchLimit =
+        (batch.getSaleBatch().getBatchFetchLimit() != 0)
+            ? batch.getSaleBatch().getBatchFetchLimit()
+            : (Beans.get(AppBaseService.class).getAppBase().getBatchFetchLimit() != 0)
+                ? Beans.get(AppBaseService.class).getAppBase().getBatchFetchLimit()
+                : 1;
+    List<SaleOrder> saleOrders = null;
+    Query<SaleOrder> query = subscriptionInvoiceService.getSubscriptionOrders();
 
-    while (!saleOrders.isEmpty()) {
+    int offset = 0;
+    while (!(saleOrders = query.fetch(fetchLimit, offset)).isEmpty()) {
       for (SaleOrder saleOrder : saleOrders) {
         try {
+          ++offset;
           subscriptionInvoiceService.generateSubscriptionInvoice(saleOrder);
           updateSaleOrder(saleOrder);
         } catch (AxelorException e) {
@@ -72,7 +84,6 @@ public class BatchInvoicing extends BatchStrategy {
         }
       }
       JPA.clear();
-      saleOrders = subscriptionInvoiceService.getSubscriptionOrders(FETCH_LIMIT);
     }
   }
 
