@@ -21,7 +21,6 @@ import com.axelor.apps.base.db.Company;
 import com.axelor.apps.base.db.Period;
 import com.axelor.apps.base.db.repo.CompanyRepository;
 import com.axelor.apps.base.db.repo.PeriodRepository;
-import com.axelor.apps.base.service.app.AppBaseService;
 import com.axelor.apps.hr.db.Employee;
 import com.axelor.apps.hr.db.HrBatch;
 import com.axelor.apps.hr.db.PayrollPreparation;
@@ -91,12 +90,7 @@ public class BatchPayrollPreparationGeneration extends BatchStrategy {
   protected void process() {
 
     List<Employee> employeeList = null;
-    int fetchLimit =
-        (batch.getHrBatch().getBatchFetchLimit() != 0)
-            ? batch.getHrBatch().getBatchFetchLimit()
-            : (Beans.get(AppBaseService.class).getAppBase().getBatchFetchLimit() != 0)
-                ? Beans.get(AppBaseService.class).getAppBase().getBatchFetchLimit()
-                : 1;
+    int fetchLimit = this.getFetchLimit();
     Query<Employee> query = this.getEmployees(hrBatch);
     int offset = 0;
     while (!(employeeList = query.fetch(fetchLimit, offset)).isEmpty()) {
