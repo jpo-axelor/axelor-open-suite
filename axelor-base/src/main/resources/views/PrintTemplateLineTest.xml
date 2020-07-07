@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.2.xsd">
+
+    <form name="print-template-line-test-form2" title="Print template line test" model="com.axelor.apps.base.db.PrintTemplateLineTest"
+		onNew="action-print-template-line-test-attrs-onnew">
+		<panel>
+			<field name="reference" colSpan="6" widget="RefSelect" selection="print.template.line.test.reference.select" x-related="referenceId" />
+			<field name="$metaModel" title="Model" type="many-to-one" target="com.axelor.meta.db.MetaModel" x-target-name="name" colSpan="3" />
+			<button name="addToSelectBtn" title="Add to reference selection" onClick="action-print-template-line-method-add-item-to-ref-select" colSpan="3"/>
+			<field name="contentResult" widget="html" colSpan="12" />
+			<field name="conditionsResult" colSpan="4" />
+			<button name="checkBtn" title="Check" onClick="save,action-print-template-line-method-check-expression" showIf="referenceId" colSpan="4" />
+			<field name="printTemplateLine" hidden="true"/>
+		</panel>
+	</form>
+
+	<action-method name="action-print-template-line-method-add-item-to-ref-select">
+		<call class="com.axelor.apps.base.web.PrintTemplateLineController" method="addItemToReferenceSelection" />
+	</action-method>
+	
+	<action-method name="action-print-template-line-method-check-expression">
+		<call class="com.axelor.apps.base.web.PrintTemplateLineController" method="checkTemplateLineExpression" />
+	</action-method>
+
+	<action-attrs name="action-print-template-line-test-attrs-onnew">
+		<attribute name="value" for="printTemplateLine" expr="eval: _printTemplateLine"/>
+		<attribute if="_metaModel != null" name="value" expr="eval:__repo__(MetaModel).all().filter('self.id=?',_metaModel?.id).fetchOne().fullName" for="reference"/>
+	</action-attrs>
+
+	<action-view name="action-print-template-line-view-open-test-line" title="Print Test" model="com.axelor.apps.base.db.PrintTemplateLineTest">
+		<view type="form" name="print-template-line-test-form2" />
+		<view-param name="popup" value="reload" />
+		<view-param name="popup-save" value="true" />
+		<view-param name="show-toolbar" value="false" />
+		<view-param name="show-confirm" value="false" />
+		<view-param name="forceEdit" value="true" />
+		<context name="_metaModel" expr="eval: __parent__.metaModel" />
+		<context name="_printTemplateLine" expr="eval: __self__"/>
+		<context name="_showRecord" expr="eval: printTemplateLineTest.id" if="printTemplateLineTest != null" />
+	</action-view>
+
+</object-views>
