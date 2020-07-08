@@ -18,7 +18,9 @@
 package com.axelor.apps.base.service;
 
 import com.axelor.apps.base.db.PrintTemplateLine;
+import com.axelor.apps.base.db.PrintTemplateLineTest;
 import com.axelor.apps.base.db.repo.PrintTemplateLineRepository;
+import com.axelor.apps.base.exceptions.IExceptionMessage;
 import com.axelor.apps.message.service.TemplateContextService;
 import com.axelor.common.ObjectUtils;
 import com.axelor.common.StringUtils;
@@ -26,6 +28,8 @@ import com.axelor.db.JPA;
 import com.axelor.db.Model;
 import com.axelor.db.mapper.Mapper;
 import com.axelor.exception.AxelorException;
+import com.axelor.exception.db.repo.TraceBackRepository;
+import com.axelor.i18n.I18n;
 import com.axelor.inject.Beans;
 import com.axelor.meta.db.MetaModel;
 import com.axelor.meta.db.MetaSelect;
@@ -36,7 +40,6 @@ import com.axelor.rpc.Context;
 import com.axelor.tool.template.TemplateMaker;
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
-import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
@@ -60,12 +63,13 @@ public class PrintTemplateLineServiceImpl implements PrintTemplateLineService {
   @Override
   public void checkExpression(
       Long objectId, MetaModel metaModel, PrintTemplateLine printTemplateLine)
-      throws AxelorException, IOException, ClassNotFoundException {
+      throws ClassNotFoundException, AxelorException {
     if (metaModel == null) {
       return;
     }
     String model = metaModel.getFullName();
     String simpleModel = metaModel.getName();
+    PrintTemplateLineTest test = printTemplateLine.getPrintTemplateLineTest();
 
     Context scriptContext = null;
     if (StringUtils.notEmpty(model)) {
@@ -75,7 +79,7 @@ public class PrintTemplateLineServiceImpl implements PrintTemplateLineService {
         scriptContext = new Context(Mapper.toMap(modelObject), modelClass);
       }
     }
-    Boolean present = true;
+    Boolean present = Boolean.TRUE;
     if (StringUtils.notEmpty(printTemplateLine.getConditions())) {
       Object evaluation =
           templateContextService.computeTemplateContext(
@@ -83,30 +87,36 @@ public class PrintTemplateLineServiceImpl implements PrintTemplateLineService {
       if (evaluation instanceof Boolean) {
         present = (Boolean) evaluation;
       } else {
-        present = (Boolean) null;
+        throw new AxelorException(
+            TraceBackRepository.CATEGORY_INCONSISTENCY,
+            I18n.get(IExceptionMessage.PRINT_TEMPLATE_CONDITION_MUST_BE_BOOLEAN));
       }
     }
+    test.setConditionsResult(present);
 
-    printTemplateLine.getPrintTemplateLineTest().setConditionsResult(present);
+    String resultOfTitle = null;
+    String resultOfContent = null;
+    TemplateMaker maker = initMaker(objectId, model, simpleModel);
 
-    if (present) {
-      String resultOfTitle = null;
-      String resultOfContent = null;
-      TemplateMaker maker = initMaker(objectId, model, simpleModel);
-
+    try {
       if (StringUtils.notEmpty(printTemplateLine.getTitle())) {
         maker.setTemplate(printTemplateLine.getTitle());
-        resultOfTitle = maker.make() + " ";
+        resultOfTitle = maker.make();
       }
+    } catch (Exception e) {
+      resultOfTitle = "Error in title";
+    }
+
+    try {
       if (StringUtils.notEmpty(printTemplateLine.getContent())) {
         maker.setTemplate(printTemplateLine.getContent());
         resultOfContent = maker.make();
-        if (StringUtils.notEmpty(resultOfContent)) {
-          resultOfContent = resultOfTitle + resultOfContent;
-        }
       }
-      printTemplateLine.getPrintTemplateLineTest().setContentResult(resultOfContent);
+    } catch (Exception e) {
+      resultOfContent = "Error in content";
     }
+
+    test.setContentResult(resultOfTitle + "<br>" + resultOfContent);
     printTemplateLineRepo.save(printTemplateLine);
   }
 

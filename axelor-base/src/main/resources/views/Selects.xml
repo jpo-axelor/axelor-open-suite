@@ -519,7 +519,7 @@
     </selection>
     
     <selection name="print.template.line.test.reference.select">
-    	<option value="" order="0">Default</option>
+    	<option value="Default" order="0" hidden="true">Default</option>
     </selection>
 
 </object-views>
