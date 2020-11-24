@@ -417,4 +417,5 @@ public interface IExceptionMessage {
   /* Scheduler */
   public static final String QUARTZ_SCHEDULER_ENABLED = /*$$(*/
       "The scheduler service is enabled." /*)*/;
+  public static final String NO_SUCH_FIELD = /*$$(*/ "No such field like : " /*)*/;
 }
