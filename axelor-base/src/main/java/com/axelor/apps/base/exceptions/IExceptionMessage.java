@@ -419,4 +419,7 @@ public interface IExceptionMessage {
       "The scheduler service is enabled." /*)*/;
   public static final String NO_SUCH_FIELD = /*$$(*/ "No such field like : " /*)*/;
   public static final String FONT_NOT_SUPPORTED = /*$$(*/ "Font not supported : " /*)*/;
+  public static final String NO_TEMPLATE_SHEET_FOUND = /*$$(*/ "No template sheet found" /*)*/;
+  public static final String NO_RECORD_FOUND = /*$$(*/ "No records found for : " /*)*/;
+  public static final String INVALID_CONDITION_FORMAT = /*$$(*/ "Invalid condition format : " /*)*/;
 }
