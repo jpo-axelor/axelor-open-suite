@@ -600,7 +600,7 @@ public class ExcelReportTemplateServiceImpl implements ExcelReportTemplateServic
       Drawing<?> drawing = sheet.createDrawingPatriarch();
       ClientAnchor anchor = helper.createClientAnchor();
       anchor.setCol1(picture.getClientAnchor().getCol1());
-      anchor.setCol2(picture.getClientAnchor().getCol2());
+      anchor.setCol2(picture.getClientAnchor().getCol2() + 1);
 
       int offset = 0;
       if (sheetType.equalsIgnoreCase(TEMPLATE_SHEET_TITLE)) {
@@ -613,7 +613,7 @@ public class ExcelReportTemplateServiceImpl implements ExcelReportTemplateServic
       }
 
       anchor.setRow1(picture.getClientAnchor().getRow1() + offset);
-      anchor.setRow2(picture.getClientAnchor().getRow2() + offset);
+      anchor.setRow2(picture.getClientAnchor().getRow2() + offset + 1);
       drawing.createPicture(anchor, pictureIndex);
     }
   }
