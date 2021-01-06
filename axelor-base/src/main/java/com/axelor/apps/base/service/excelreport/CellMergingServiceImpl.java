@@ -42,7 +42,8 @@ public class CellMergingServiceImpl implements CellMergingService {
       Mapper mapper,
       List<CellRangeAddress> mergedCellsRangeAddressList) {
     int mergeRowNumber;
-    int lastRow, firstRow;
+    int lastRow;
+    int firstRow;
     Property property;
     String content = "";
     int mergeOffset = 0;
@@ -83,7 +84,7 @@ public class CellMergingServiceImpl implements CellMergingService {
   public Set<CellRangeAddress> getBlankMergedCells(
       Sheet originSheet, List<CellRangeAddress> mergedCellsRangeAddressList, String sheetType) {
 
-    Set<CellRangeAddress> blankMergedCells = new HashSet<CellRangeAddress>();
+    Set<CellRangeAddress> blankMergedCells = new HashSet<>();
     Cell cell = null;
     for (CellRangeAddress cellRange : mergedCellsRangeAddressList) {
       cell = originSheet.getRow(cellRange.getFirstRow()).getCell(cellRange.getFirstColumn());
@@ -109,11 +110,8 @@ public class CellMergingServiceImpl implements CellMergingService {
     int firstCellRow = cellRange.getFirstRow() + totalRecord;
     int lastCellRow = cellRange.getLastRow() + totalRecord;
 
-    CellRangeAddress newAddress =
-        new CellRangeAddress(
-            firstCellRow, lastCellRow, cellRange.getFirstColumn(), cellRange.getLastColumn());
-
-    return newAddress;
+    return new CellRangeAddress(
+        firstCellRow, lastCellRow, cellRange.getFirstColumn(), cellRange.getLastColumn());
   }
 
   @Override // shifts only single merged region according to the given offset and returns both
@@ -138,8 +136,7 @@ public class CellMergingServiceImpl implements CellMergingService {
             originalCellRange.getFirstColumn(),
             originalCellRange.getLastColumn());
 
-    return new ImmutablePair<CellRangeAddress, CellRangeAddress>(
-        originalCellRange, offsettedCellRange);
+    return new ImmutablePair<>(originalCellRange, offsettedCellRange);
   }
 
   protected CellRangeAddress findMergedRegion(

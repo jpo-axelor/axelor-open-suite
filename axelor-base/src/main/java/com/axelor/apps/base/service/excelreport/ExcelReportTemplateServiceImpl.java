@@ -1650,7 +1650,7 @@ public class ExcelReportTemplateServiceImpl implements ExcelReportTemplateServic
     return headerLines + 1;
   }
 
-  protected void getHeadersAndFooters(Workbook wb) throws IOException, AxelorException {
+  protected void getHeadersAndFooters(Workbook wb) {
     headerInputMap = this.getHeaderInputMap(wb);
     footerInputMap = this.getFooterInputMap(wb);
   }
