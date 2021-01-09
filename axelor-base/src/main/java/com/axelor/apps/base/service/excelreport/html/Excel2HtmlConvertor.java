@@ -206,8 +206,10 @@ public class Excel2HtmlConvertor {
 
   protected Element getFooter() {
     Element footer = new Element("footer");
-    footer.html(this.footerHtml);
-    footer.attr("style", "position: running(footer);");
+    if (ObjectUtils.notEmpty(this.footerHtml)) {
+      footer.html(this.footerHtml);
+      footer.attr("style", "position: running(footer);");
+    }
     return footer;
   }
 

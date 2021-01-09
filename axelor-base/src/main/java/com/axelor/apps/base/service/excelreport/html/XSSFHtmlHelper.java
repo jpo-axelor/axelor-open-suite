@@ -91,6 +91,9 @@ public class XSSFHtmlHelper implements HtmlHelper {
 
     for (XSSFColor color : colorList) {
       byte[] rgb = ObjectUtils.isEmpty(color) ? black.getRGB() : color.getRGB();
+      if (ObjectUtils.isEmpty(rgb)) {
+        return;
+      }
       borderColor.append(String.format(" #%02x%02x%02x", rgb[0], rgb[1], rgb[2]));
     }
 
