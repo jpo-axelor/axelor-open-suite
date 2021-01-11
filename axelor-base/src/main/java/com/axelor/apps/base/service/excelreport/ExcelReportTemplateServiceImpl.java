@@ -192,7 +192,10 @@ public class ExcelReportTemplateServiceImpl implements ExcelReportTemplateServic
       ZipSecureFile.setMinInflateRatio(0);
       Excel2HtmlConvertor toHtml =
           Excel2HtmlConvertor.create(
-              outputFile.getPath(), generateHeaderHtml(print), print.getPrintPdfFooter());
+              outputFile.getPath(),
+              generateHeaderHtml(print),
+              print.getPrintPdfFooter(),
+              isLandscape);
       File html = toHtml.printPage();
       String attachmentPath = AppSettings.get().getPath("file.upload.dir", "");
       if (attachmentPath != null) {

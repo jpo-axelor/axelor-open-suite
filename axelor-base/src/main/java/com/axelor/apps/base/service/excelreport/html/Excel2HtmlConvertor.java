@@ -74,6 +74,7 @@ public class Excel2HtmlConvertor {
   private HtmlHelper helper;
   private String headerHtml;
   private String footerHtml;
+  private boolean landscape;
 
   private static final String DEFAULTS_CLASS = "excelDefaults";
 
@@ -141,28 +142,30 @@ public class Excel2HtmlConvertor {
     return map;
   }
 
-  public static Excel2HtmlConvertor create(Workbook wb, String header, String footer) {
-    return new Excel2HtmlConvertor(wb, header, footer);
+  public static Excel2HtmlConvertor create(
+      Workbook wb, String header, String footer, boolean isLandscape) {
+    return new Excel2HtmlConvertor(wb, header, footer, isLandscape);
   }
 
-  public static Excel2HtmlConvertor create(String path, String header, String footer)
-      throws IOException {
-    return create(new FileInputStream(path), header, footer);
+  public static Excel2HtmlConvertor create(
+      String path, String header, String footer, boolean isLandscape) throws IOException {
+    return create(new FileInputStream(path), header, footer, isLandscape);
   }
 
-  public static Excel2HtmlConvertor create(InputStream in, String header, String footer)
-      throws IOException {
+  public static Excel2HtmlConvertor create(
+      InputStream in, String header, String footer, boolean isLandscape) throws IOException {
     Workbook wb = WorkbookFactory.create(in);
-    return create(wb, header, footer);
+    return create(wb, header, footer, isLandscape);
   }
 
-  private Excel2HtmlConvertor(Workbook wb, String header, String footer) {
+  private Excel2HtmlConvertor(Workbook wb, String header, String footer, boolean isLandscape) {
     if (wb == null) {
       throw new NullPointerException("wb");
     }
     this.wb = wb;
     this.footerHtml = footer;
     this.headerHtml = header;
+    this.landscape = isLandscape;
     setupColorMap();
   }
 
@@ -258,7 +261,11 @@ public class Excel2HtmlConvertor {
         }
       }
     }
-    data.setWholeData(sb.toString());
+    String cssStyles = sb.toString();
+    if (landscape) {
+      cssStyles = cssStyles.replace("size: A4;", "size: A4 landscape;");
+    }
+    data.setWholeData(cssStyles);
     style.appendChild(data);
     return style;
   }
