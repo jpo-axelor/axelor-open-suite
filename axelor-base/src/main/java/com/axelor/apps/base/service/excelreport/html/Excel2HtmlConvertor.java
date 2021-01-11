@@ -424,6 +424,9 @@ public class Excel2HtmlConvertor {
               rowColspan = getRowAndColumnSpan(mergedRegionAddr, cell);
             }
             if (StringUtils.isBlank(content) || content.toLowerCase().equals("space")) {
+              if (isInMergedRegion) {
+                continue;
+              }
               content = "<span style=\"display:inline-block;width:0.5em;\"></span>";
             }
           }
