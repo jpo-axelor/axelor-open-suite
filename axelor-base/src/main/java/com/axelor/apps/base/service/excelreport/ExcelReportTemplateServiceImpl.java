@@ -149,6 +149,9 @@ public class ExcelReportTemplateServiceImpl implements ExcelReportTemplateServic
     modelName = printTemplate.getMetaModel().getName();
     String formatType = printTemplate.getFormatSelect();
     boolean isLandscape = printTemplate.getDisplayTypeSelect() == 2;
+    ImmutablePair<Integer, Integer> headerFooterHeightPair =
+        new ImmutablePair<Integer, Integer>(
+            printTemplate.getHeaderHeight().intValue(), printTemplate.getFooterHeight().intValue());
     BigDecimal dataSizeReduction = printTemplate.getDataSizeReduction();
     maxRows = Beans.get(AppBaseService.class).getAppBase().getMaxRows();
     maxColumns = Beans.get(AppBaseService.class).getAppBase().getMaxColumns();
@@ -195,7 +198,8 @@ public class ExcelReportTemplateServiceImpl implements ExcelReportTemplateServic
               outputFile.getPath(),
               generateHeaderHtml(print),
               print.getPrintPdfFooter(),
-              isLandscape);
+              isLandscape,
+              headerFooterHeightPair);
       File html = toHtml.printPage();
       String attachmentPath = AppSettings.get().getPath("file.upload.dir", "");
       if (attachmentPath != null) {

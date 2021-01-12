@@ -75,6 +75,8 @@ public class Excel2HtmlConvertor {
   private String headerHtml;
   private String footerHtml;
   private boolean landscape;
+  private int headerHeight;
+  private int footerHeight;
 
   private static final String DEFAULTS_CLASS = "excelDefaults";
 
@@ -143,22 +145,41 @@ public class Excel2HtmlConvertor {
   }
 
   public static Excel2HtmlConvertor create(
-      Workbook wb, String header, String footer, boolean isLandscape) {
-    return new Excel2HtmlConvertor(wb, header, footer, isLandscape);
+      Workbook wb,
+      String header,
+      String footer,
+      boolean isLandscape,
+      ImmutablePair<Integer, Integer> headerFooterHeightPair) {
+    return new Excel2HtmlConvertor(wb, header, footer, isLandscape, headerFooterHeightPair);
   }
 
   public static Excel2HtmlConvertor create(
-      String path, String header, String footer, boolean isLandscape) throws IOException {
-    return create(new FileInputStream(path), header, footer, isLandscape);
+      String path,
+      String header,
+      String footer,
+      boolean isLandscape,
+      ImmutablePair<Integer, Integer> headerFooterHeightPair)
+      throws IOException {
+    return create(new FileInputStream(path), header, footer, isLandscape, headerFooterHeightPair);
   }
 
   public static Excel2HtmlConvertor create(
-      InputStream in, String header, String footer, boolean isLandscape) throws IOException {
+      InputStream in,
+      String header,
+      String footer,
+      boolean isLandscape,
+      ImmutablePair<Integer, Integer> headerFooterHeightPair)
+      throws IOException {
     Workbook wb = WorkbookFactory.create(in);
-    return create(wb, header, footer, isLandscape);
+    return create(wb, header, footer, isLandscape, headerFooterHeightPair);
   }
 
-  private Excel2HtmlConvertor(Workbook wb, String header, String footer, boolean isLandscape) {
+  private Excel2HtmlConvertor(
+      Workbook wb,
+      String header,
+      String footer,
+      boolean isLandscape,
+      ImmutablePair<Integer, Integer> headerFooterHeightPair) {
     if (wb == null) {
       throw new NullPointerException("wb");
     }
@@ -166,6 +187,8 @@ public class Excel2HtmlConvertor {
     this.footerHtml = footer;
     this.headerHtml = header;
     this.landscape = isLandscape;
+    this.headerHeight = headerFooterHeightPair.getLeft();
+    this.footerHeight = headerFooterHeightPair.getRight();
     setupColorMap();
   }
 
@@ -265,9 +288,25 @@ public class Excel2HtmlConvertor {
     if (landscape) {
       cssStyles = cssStyles.replace("size: A4;", "size: A4 landscape;");
     }
+    cssStyles = this.setHeaderFooterHeight(cssStyles);
     data.setWholeData(cssStyles);
     style.appendChild(data);
     return style;
+  }
+
+  protected String setHeaderFooterHeight(String cssStyles) {
+    if (headerHeight > 125) {
+      cssStyles =
+          cssStyles.replaceFirst(
+              "margin-top: 125px;", String.format("margin-top: %dpx;", headerHeight));
+    }
+
+    if (footerHeight > 125) {
+      cssStyles =
+          cssStyles.replaceFirst(
+              "margin-bottom: 125px;", String.format("margin-bottom: %dpx;", footerHeight));
+    }
+    return cssStyles;
   }
 
   protected String printStyle(CellStyle style) {
