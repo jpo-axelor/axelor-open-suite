@@ -87,6 +87,8 @@ public class PrintTemplateController {
               createExcelTemplateReport(response, printTemplate, context.getId());
           if (ObjectUtils.notEmpty(view)) {
             response.setView(view);
+          } else if (inputTypeSelect == 3) {
+            // new code here
           }
         }
 

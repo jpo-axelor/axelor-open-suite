@@ -603,6 +603,7 @@
 	<selection name="base.print.template.input.type.select">
 		<option value="1">String Template</option>
 		<option value="2">Excel</option>
+		<option value="3">Docx</option>
 	</selection>
 
 </object-views>

@@ -160,6 +160,9 @@
 	</form>
 
 	<form id="sale-order-form" name="sale-order-form" title="Sale order" model="com.axelor.apps.sale.db.SaleOrder" onLoad="action-group-sale-saleorder-onload" onNew="action-group-sale-saleorder-onnew">
+	  <toolbar>
+	  	<button name="printSaleOrderBtn" title="Print SaleOrder Btn" onClick="action-print-template-method-open-print"/>
+	  </toolbar>
 	  <menubar>
 	    <menu name="saleOrderReportsMenu" title="Reports">
 	      <item name="printItem" title="Print" hideIf="clientPartner == null" action="save,action-sale-order-method-show-sale-order"/>

@@ -21,6 +21,9 @@ libs.flying_saucer_pdf = 'org.xhtmlrenderer:flying-saucer-pdf:9.1.4'
 libs.open_html_pdf_core = 'com.openhtmltopdf:openhtmltopdf-core:1.0.0'
 libs.open_html_pdf_pdfbox = 'com.openhtmltopdf:openhtmltopdf-pdfbox:1.0.0'
 
+// https://mvnrepository.com/artifact/org.docx4j/docx4j
+libs.docx4j ='org.docx4j:docx4j:6.1.2'
+
 libs.iban4j = 'org.iban4j:iban4j:3.2.1'
 
 libs.ical4j = 'org.mnode.ical4j:ical4j:2.2.0'
