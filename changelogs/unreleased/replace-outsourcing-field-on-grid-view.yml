@@ -1,0 +1,5 @@
+---
+title: "Manuf Order : Display field outsourcing instead of outsourcing.outsourcing in all grid-view"
+type: change
+description: |
+  "Also for the operation order grid-view, outsourcing field is displayed instead of prodProcessLine.outsourcing"
