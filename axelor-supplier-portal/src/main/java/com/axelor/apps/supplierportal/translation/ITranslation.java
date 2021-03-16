@@ -17,4 +17,7 @@
  */
 package com.axelor.apps.supplierportal.translation;
 
-public interface ITranslation {}
+public interface ITranslation {
+
+  public static final String EDITOR_CHOOSE_APP = /*$$(*/ "Supplier Portal"; /*)*/
+}
