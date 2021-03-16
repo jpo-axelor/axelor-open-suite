@@ -111,7 +111,12 @@ public class ExportDbObjectService {
       metaFile = Beans.get(MetaFileRepository.class).save(metaFile);
 
       SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
-      saxParserFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+      saxParserFactory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+      saxParserFactory.setFeature("http://xml.org/sax/features/external-general-entities", false);
+      saxParserFactory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+      saxParserFactory.setFeature(
+          "http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+      saxParserFactory.setXIncludeAware(false);
 
       SAXParser parser = saxParserFactory.newSAXParser();
 
