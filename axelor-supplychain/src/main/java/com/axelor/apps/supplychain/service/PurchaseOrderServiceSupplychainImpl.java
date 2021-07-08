@@ -409,7 +409,7 @@ public class PurchaseOrderServiceSupplychainImpl extends PurchaseOrderServiceImp
     PurchaseOrderLine shippingCostLine = new PurchaseOrderLine();
     shippingCostLine.setPurchaseOrder(purchaseOrder);
     shippingCostLine.setProduct(shippingCostProduct);
-    purchaseOrderLineService.fill(shippingCostLine, purchaseOrder);
+    purchaseOrderLineService.fill(shippingCostLine, purchaseOrder, true);
     purchaseOrderLineService.compute(shippingCostLine, purchaseOrder);
     return shippingCostLine;
   }

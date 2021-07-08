@@ -56,10 +56,11 @@ public class PurchaseOrderLineServiceSupplychainImpl extends PurchaseOrderLineSe
 
   private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-  public PurchaseOrderLine fill(PurchaseOrderLine purchaseOrderLine, PurchaseOrder purchaseOrder)
+  public PurchaseOrderLine fill(
+      PurchaseOrderLine purchaseOrderLine, PurchaseOrder purchaseOrder, boolean needQtyReset)
       throws AxelorException {
 
-    purchaseOrderLine = super.fill(purchaseOrderLine, purchaseOrder);
+    purchaseOrderLine = super.fill(purchaseOrderLine, purchaseOrder, needQtyReset);
 
     this.getAndComputeAnalyticDistribution(purchaseOrderLine, purchaseOrder);
 

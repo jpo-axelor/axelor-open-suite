@@ -121,7 +121,7 @@ public interface PurchaseOrderLineService {
   public String[] getProductSupplierInfos(
       PurchaseOrder purchaseOrder, PurchaseOrderLine purchaseOrderLine) throws AxelorException;
 
-  PurchaseOrderLine fill(PurchaseOrderLine line, PurchaseOrder purchaseOrder)
+  PurchaseOrderLine fill(PurchaseOrderLine line, PurchaseOrder purchaseOrder, boolean needQtyReset)
       throws AxelorException;
 
   PurchaseOrderLine reset(PurchaseOrderLine line);

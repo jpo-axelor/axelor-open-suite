@@ -255,7 +255,8 @@ public class PurchaseOrderLineServiceImpl implements PurchaseOrderLineService {
         .setScale(appBaseService.getNbDecimalDigitForUnitPrice(), RoundingMode.HALF_UP);
   }
 
-  public PurchaseOrderLine fill(PurchaseOrderLine line, PurchaseOrder purchaseOrder)
+  public PurchaseOrderLine fill(
+      PurchaseOrderLine line, PurchaseOrder purchaseOrder, boolean needQtyReset)
       throws AxelorException {
     Preconditions.checkNotNull(line, I18n.get("The line cannot be null."));
     Preconditions.checkNotNull(
@@ -266,7 +267,9 @@ public class PurchaseOrderLineServiceImpl implements PurchaseOrderLineService {
     String[] productSupplierInfos = getProductSupplierInfos(purchaseOrder, line);
     if (!line.getEnableFreezeFields()) {
       line.setProductName(productSupplierInfos[0]);
-      line.setQty(getQty(purchaseOrder, line));
+      if (needQtyReset) {
+        line.setQty(getQty(purchaseOrder, line));
+      }
     }
     line.setProductCode(productSupplierInfos[1]);
     line.setUnit(getPurchaseUnit(line));
@@ -491,10 +494,12 @@ public class PurchaseOrderLineServiceImpl implements PurchaseOrderLineService {
     purchaseOrderLine.setPurchaseOrder(purchaseOrder);
 
     purchaseOrderLine.setEstimatedDelivDate(purchaseOrder.getDeliveryDate());
-
+    if (qty != null) {
+      purchaseOrderLine.setQty(qty);
+    }
     if (product != null) {
       purchaseOrderLine.setProduct(product);
-      fill(purchaseOrderLine, purchaseOrder);
+      fill(purchaseOrderLine, purchaseOrder, false);
       compute(purchaseOrderLine, purchaseOrder);
     }
 
@@ -504,9 +509,6 @@ public class PurchaseOrderLineServiceImpl implements PurchaseOrderLineService {
 
     purchaseOrderLine.setIsOrdered(false);
 
-    if (qty != null) {
-      purchaseOrderLine.setQty(qty);
-    }
     purchaseOrderLine.setSequence(sequence);
     sequence++;
 
@@ -545,12 +547,13 @@ public class PurchaseOrderLineServiceImpl implements PurchaseOrderLineService {
         supplierCatalogService.getSupplierCatalog(
             product, purchaseOrder.getSupplierPartner(), purchaseOrder.getCompany());
 
-    //		If there is no catalog for supplier, then we don't take the default catalog.
+    // If there is no catalog for supplier, then we don't take the default catalog.
 
-    //		if(supplierCatalog == null)  {
+    // if(supplierCatalog == null) {
     //
-    //			supplierCatalog = this.getSupplierCatalog(product, product.getDefaultSupplierPartner());
-    //		}
+    // supplierCatalog = this.getSupplierCatalog(product,
+    // product.getDefaultSupplierPartner());
+    // }
 
     return supplierCatalog;
   }
