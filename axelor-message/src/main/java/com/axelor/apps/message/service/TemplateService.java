@@ -26,6 +26,8 @@ import com.axelor.db.JPA;
 import com.axelor.db.Model;
 import com.axelor.db.mapper.Mapper;
 import com.axelor.db.mapper.Property;
+import com.axelor.event.Observes;
+import com.axelor.events.StartupEvent;
 import com.axelor.exception.AxelorException;
 import com.axelor.exception.db.repo.TraceBackRepository;
 import com.axelor.exception.service.TraceBackService;
@@ -34,7 +36,7 @@ import com.axelor.inject.Beans;
 import com.axelor.meta.db.MetaModel;
 import com.axelor.meta.db.MetaSelect;
 import com.axelor.meta.db.MetaSelectItem;
-import com.axelor.meta.db.repo.MetaSelectItemRepository;
+import com.axelor.meta.db.repo.MetaModelRepository;
 import com.axelor.meta.db.repo.MetaSelectRepository;
 import com.axelor.tool.template.TemplateMaker;
 import com.google.common.base.Splitter;
@@ -110,23 +112,26 @@ public class TemplateService {
     return maker.make();
   }
 
-  public void addItemToReferenceSelection(MetaModel model) {
-    MetaSelect metaSelect =
-        Beans.get(MetaSelectRepository.class)
-            .findByName("print.template.line.test.reference.select");
-    List<MetaSelectItem> items = metaSelect.getItems();
-    if (items != null && !items.stream().anyMatch(x -> x.getValue().equals(model.getFullName()))) {
-      MetaSelectItem metaSelectItem = new MetaSelectItem();
-      metaSelectItem.setTitle(model.getName());
-      metaSelectItem.setValue(model.getFullName());
-      metaSelectItem.setSelect(metaSelect);
-      saveMetaSelectItem(metaSelectItem);
-    }
-  }
-
   @Transactional
-  public void saveMetaSelectItem(MetaSelectItem metaSelectItem) {
-    Beans.get(MetaSelectItemRepository.class).save(metaSelectItem);
+  public void createSelectionForTemplateTest(@Observes StartupEvent event) {
+    System.err.println("addItemToReferenceSelection ....");
+    String metaSelectName = "print.template.line.test.reference.select";
+    MetaSelect metaSelect = Beans.get(MetaSelectRepository.class).findByName(metaSelectName);
+
+    if (metaSelect != null) {
+      metaSelect.clearItems();
+    } else {
+      metaSelect = new MetaSelect();
+    }
+    List<MetaModel> metaModelList = Beans.get(MetaModelRepository.class).all().fetch();
+    for (MetaModel model : metaModelList) {
+      MetaSelectItem item = new MetaSelectItem();
+      item.setTitle(model.getName());
+      item.setValue(model.getFullName());
+      item.setSelect(metaSelect);
+      metaSelect.addItem(item);
+    }
+    Beans.get(MetaSelectRepository.class).save(metaSelect);
   }
 
   @SuppressWarnings("unchecked")
